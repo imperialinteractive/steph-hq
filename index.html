@@ -618,7 +618,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v6';
+const APP_VERSION = '2026-02-28-v7';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -713,21 +713,38 @@ const HOUSE_ITEMS = [
   { id: 5, text: '🧱 Garage — Joel to work on', done: false },
 ];
 
-// ---- STATE (version-aware: only ADD new items, never restore deleted ones) ----
+// ---- STATE (version-aware: only add truly NEW items by tracking seen ids) ----
 const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
-  // Merge: add any new default items not already in the saved list (by id)
   function mergeNewItems(saved, defaults) {
-    const savedIds = new Set((saved || []).map(x => x.id));
-    const newItems = defaults.filter(x => !savedIds.has(x.id));
-    return [...(saved || []), ...newItems];
+    // Track all ids Steph has ever seen (so deletes are respected)
+    const seenKey = 'steph-seen-ids-grocery';
+    // Use a separate "seen ids" store per list
+    return { saved, defaults };
   }
-  const savedGrocery = JSON.parse(localStorage.getItem('steph-grocery') || 'null');
-  const savedTodo = JSON.parse(localStorage.getItem('steph-todo') || 'null');
-  const savedHouse = JSON.parse(localStorage.getItem('steph-house') || 'null');
-  if (savedGrocery !== null) localStorage.setItem('steph-grocery', JSON.stringify(mergeNewItems(savedGrocery, GROCERY_ITEMS)));
-  if (savedTodo !== null) localStorage.setItem('steph-todo', JSON.stringify(mergeNewItems(savedTodo, TODO_ITEMS)));
-  if (savedHouse !== null) localStorage.setItem('steph-house', JSON.stringify(mergeNewItems(savedHouse, HOUSE_ITEMS)));
+  // Simpler: track which default ids have been seen before
+  const seenGrocery = new Set(JSON.parse(localStorage.getItem('steph-seen-grocery') || '[]'));
+  const seenTodo = new Set(JSON.parse(localStorage.getItem('steph-seen-todo') || '[]'));
+  const seenHouse = new Set(JSON.parse(localStorage.getItem('steph-seen-house') || '[]'));
+
+  function addOnlyNewItems(savedRaw, defaults, seenSet, seenKey) {
+    const saved = JSON.parse(savedRaw || 'null') || [];
+    const savedIds = new Set(saved.map(x => x.id));
+    // Only add items that have never been seen before (truly new from Lumen)
+    const brandNewItems = defaults.filter(x => !seenSet.has(x.id));
+    // Update seen set to include all current defaults
+    defaults.forEach(x => seenSet.add(x.id));
+    localStorage.setItem(seenKey, JSON.stringify([...seenSet]));
+    return [...saved, ...brandNewItems];
+  }
+
+  const newGrocery = addOnlyNewItems(localStorage.getItem('steph-grocery'), GROCERY_ITEMS, seenGrocery, 'steph-seen-grocery');
+  const newTodo = addOnlyNewItems(localStorage.getItem('steph-todo'), TODO_ITEMS, seenTodo, 'steph-seen-todo');
+  const newHouse = addOnlyNewItems(localStorage.getItem('steph-house'), HOUSE_ITEMS, seenHouse, 'steph-seen-house');
+
+  localStorage.setItem('steph-grocery', JSON.stringify(newGrocery));
+  localStorage.setItem('steph-todo', JSON.stringify(newTodo));
+  localStorage.setItem('steph-house', JSON.stringify(newHouse));
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
