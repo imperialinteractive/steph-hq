@@ -594,8 +594,9 @@
 
 <!-- KIDS HOME -->
 <div class="screen" id="screen-kids">
-  <div class="home-header" style="padding:56px 20px 16px;">
-    <h1 style="font-size:28px;font-style:italic;font-weight:700;">Kids 👶</h1>
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Kids 👶</h1>
   </div>
   <div class="grid">
     <div class="tile" onclick="showScreen('kids-rush')">
@@ -911,7 +912,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v47';
+const APP_VERSION = '2026-02-28-v48';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
