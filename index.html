@@ -615,7 +615,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v16';
+const APP_VERSION = '2026-02-28-v17';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -715,20 +715,30 @@ const HOUSE_ITEMS = [];
 // ---- STATE (add only brand-new Lumen items, never restore deleted ones) ----
 const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
-  const seenGrocery = new Set(JSON.parse(localStorage.getItem('steph-seen-grocery') || '[]'));
-  function injectNewItems(storageKey, defaults, seenSet, seenStorageKey) {
-    const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  // Fix any items missing categories (old data from before categories were added)
+  function fixCategories(items, categorizeFn) {
+    return items.map(item => {
+      if (!item.cat) item.cat = categorizeFn(item.text);
+      return item;
+    });
+  }
+
+  function injectNewItems(storageKey, defaults, seenStorageKey, categorizeFn) {
+    const seenSet = new Set(JSON.parse(localStorage.getItem(seenStorageKey) || '[]'));
+    let current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    // Fix missing categories on existing items
+    if (categorizeFn) current = fixCategories(current, categorizeFn);
     const currentIds = new Set(current.map(x => x.id));
     const brandNew = defaults.filter(x => !seenSet.has(x.id) && !currentIds.has(x.id));
     defaults.forEach(x => seenSet.add(x.id));
     localStorage.setItem(seenStorageKey, JSON.stringify([...seenSet]));
-    if (brandNew.length) localStorage.setItem(storageKey, JSON.stringify([...current, ...brandNew]));
+    const merged = [...current, ...brandNew];
+    localStorage.setItem(storageKey, JSON.stringify(merged));
   }
-  injectNewItems('steph-grocery', GROCERY_ITEMS, seenGrocery, 'steph-seen-grocery');
-  const seenTodo = new Set(JSON.parse(localStorage.getItem('steph-seen-todo') || '[]'));
-  injectNewItems('steph-todo', TODO_ITEMS, seenTodo, 'steph-seen-todo');
-  const seenHouse = new Set(JSON.parse(localStorage.getItem('steph-seen-house') || '[]'));
-  injectNewItems('steph-house', HOUSE_ITEMS, seenHouse, 'steph-seen-house');
+
+  injectNewItems('steph-grocery', GROCERY_ITEMS, 'steph-seen-grocery', categorizeGroceryItem);
+  injectNewItems('steph-todo', TODO_ITEMS, 'steph-seen-todo', null);
+  injectNewItems('steph-house', HOUSE_ITEMS, 'steph-seen-house', null);
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
