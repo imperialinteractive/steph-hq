@@ -449,10 +449,6 @@
       <span class="tile-emoji">💪</span>
       <span class="tile-label">Workouts</span>
     </div>
-    <div class="tile" onclick="showScreen('house')">
-      <span class="tile-emoji">🏠</span>
-      <span class="tile-label">House Projects</span>
-    </div>
     <div class="tile" onclick="showScreen('wellness')">
       <span class="tile-emoji">🌿</span>
       <span class="tile-label">Wellness</span>
@@ -545,18 +541,6 @@
   <div class="recipe-detail" id="recipe-detail-content"></div>
 </div>
 
-<!-- HOUSE -->
-<div class="screen" id="screen-house">
-  <div class="header">
-    <span class="back" onclick="showScreen('home')">← HQ</span>
-    <h1>House Projects</h1>
-  </div>
-  <div class="list-section" id="house-list"></div>
-  <div class="add-row">
-    <input class="add-input" id="house-input" placeholder="Add a project..." onkeydown="if(event.key==='Enter')addHouse()">
-    <button class="add-btn" onclick="addHouse()">Add</button>
-  </div>
-</div>
 
 <!-- CALENDAR -->
 <div class="screen" id="screen-calendar">
@@ -702,7 +686,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v26';
+const APP_VERSION = '2026-02-28-v27';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -797,7 +781,6 @@ function categorizeGroceryItem(text) {
   return '🛒 Other';
 }
 
-const HOUSE_ITEMS = [];
 
 // ---- WORKOUT DATA ----
 const WORKOUT_DAYS = [
@@ -946,7 +929,6 @@ const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
   localStorage.clear();
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
-  localStorage.setItem('steph-house', JSON.stringify(HOUSE_ITEMS));
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-wellness-goals', JSON.stringify(WELLNESS_GOALS_DEFAULT));
   localStorage.setItem('steph-wellness-selfcare', JSON.stringify(WELLNESS_SELFCARE_DEFAULT));
@@ -956,7 +938,6 @@ if (storedVersion !== APP_VERSION) {
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
-let houseItems = JSON.parse(localStorage.getItem('steph-house') || 'null') || HOUSE_ITEMS;
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
 let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
 
@@ -969,7 +950,6 @@ function showScreen(name) {
   if (name === 'todo') renderTodo();
   if (name === 'todo-cat') renderTodoCatList();
   if (name === 'grocery') renderGrocery();
-  if (name === 'house') renderHouse();
   if (name === 'recipes') renderRecipes();
   if (name === 'wellness') renderWellness();
   if (name === 'kids') renderKids();
@@ -1032,7 +1012,6 @@ function renderList(containerId, items, toggleFn, deleteFn) {
 function saveEdit(listId, id, text) {
   if (listId === 'todo-list' || listId === 'todo-cat-list') { const i = todoItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-todo', JSON.stringify(todoItems)); }
   if (listId === 'grocery-list') { const i = groceryItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); }
-  if (listId === 'house-list') { const i = houseItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-house', JSON.stringify(houseItems)); }
 }
 
 // ---- TODO ----
@@ -1165,17 +1144,6 @@ function addGrocery() {
 }
 
 // ---- HOUSE ----
-function renderHouse() { renderList('house-list', houseItems, 'toggleHouse', 'deleteHouse'); }
-function toggleHouse(id) { const i = houseItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-house',JSON.stringify(houseItems)); renderHouse(); }
-function deleteHouse(id) { houseItems = houseItems.filter(x=>x.id!==id); localStorage.setItem('steph-house',JSON.stringify(houseItems)); renderHouse(); }
-function addHouse() {
-  const inp = document.getElementById('house-input');
-  if (!inp.value.trim()) return;
-  houseItems.push({ id: Date.now(), text: inp.value.trim(), done: false });
-  localStorage.setItem('steph-house', JSON.stringify(houseItems));
-  inp.value = '';
-  renderHouse();
-}
 
 // ---- WORKOUTS ----
 function renderWorkouts() {
