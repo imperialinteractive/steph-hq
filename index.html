@@ -433,9 +433,9 @@
       <span class="tile-emoji">🍽️</span>
       <span class="tile-label">Recipes</span>
     </div>
-    <div class="tile" onclick="showScreen('house')">
-      <span class="tile-emoji">🏠</span>
-      <span class="tile-label">House Projects</span>
+    <div class="tile" onclick="showScreen('calendar')">
+      <span class="tile-emoji">📅</span>
+      <span class="tile-label">Calendar</span>
     </div>
     <div class="tile" onclick="showScreen('kids')">
       <span class="tile-emoji">👶</span>
@@ -449,9 +449,9 @@
       <span class="tile-emoji">💪</span>
       <span class="tile-label">Workouts</span>
     </div>
-    <div class="tile" onclick="showScreen('events')">
-      <span class="tile-emoji">📅</span>
-      <span class="tile-label">Events</span>
+    <div class="tile" onclick="showScreen('house')">
+      <span class="tile-emoji">🏠</span>
+      <span class="tile-label">House Projects</span>
     </div>
     <div class="tile" onclick="showScreen('wellness')">
       <span class="tile-emoji">🌿</span>
@@ -558,6 +558,18 @@
   </div>
 </div>
 
+<!-- CALENDAR -->
+<div class="screen" id="screen-calendar">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Calendar</h1>
+    <p id="calendar-updated"></p>
+  </div>
+  <div class="list-section" id="calendar-content">
+    <!-- Updated by Lumen 3x daily -->
+  </div>
+</div>
+
 <!-- KIDS -->
 <div class="screen" id="screen-kids">
   <div class="header">
@@ -568,12 +580,14 @@
     <h2>👦 Rush — Age 3.5</h2>
     <div class="list-item"><span class="li-text">Born Aug 27, 2022 — strong-willed, big personality 🦁</span></div>
     <div class="list-item"><span class="li-text">No melted cheese 🧀</span></div>
+  </div>
+  <div class="list-section">
     <h2>👶 Hayes — 5 months</h2>
     <div class="list-item"><span class="li-text">Take monthly photo! 📸</span></div>
-    <div class="list-item"><span class="li-text">Book 6-month appointment with Celine Quinn</span></div>
-    <div class="list-item"><span class="li-text">Book 9-month appointment with Dr. Wong</span></div>
-    <h2>📅 Upcoming</h2>
-    <div class="list-item"><span class="li-text">Hayes 6-month — ~end of March</span></div>
+  </div>
+  <div class="list-section" id="kids-todo-section">
+    <h2>📋 Kids To-Dos</h2>
+    <div id="kids-todo-list"></div>
   </div>
 </div>
 
@@ -681,7 +695,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v23';
+const APP_VERSION = '2026-02-28-v24';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -778,6 +792,33 @@ function categorizeGroceryItem(text) {
 
 const HOUSE_ITEMS = [];
 
+// ---- CALENDAR DATA (updated by Lumen 3x daily) ----
+const CALENDAR_DATA = {
+  lastUpdated: 'Sat Feb 28, 2026 — 12:30 PM',
+  days: [
+    {
+      date: 'Saturday, Feb 28',
+      events: [
+        { time: '8:00 AM', title: 'Outdoor show pen' },
+        { time: '10:45 AM', title: 'Parent & Tot swim (Aquatic Centre)' },
+        { time: 'All day', title: '📸 Hayes 5-month photo reminder' },
+      ]
+    },
+    {
+      date: 'Sunday, Mar 1',
+      events: [
+        { time: 'All day', title: 'Rest day' },
+      ]
+    },
+    {
+      date: 'Monday, Mar 2',
+      events: [
+        { time: 'All day', title: '💛 Mom\'s Birthday — tender day' },
+      ]
+    },
+  ]
+};
+
 const WELLNESS_GOALS_DEFAULT = [
   { id: 2001, text: '🎯 Lose baby weight (postpartum — Hayes 5 months)' },
   { id: 2002, text: '💪 Build strength back progressively' },
@@ -823,6 +864,8 @@ function showScreen(name) {
   if (name === 'house') renderHouse();
   if (name === 'recipes') renderRecipes();
   if (name === 'wellness') renderWellness();
+  if (name === 'kids') renderKids();
+  if (name === 'calendar') renderCalendar();
 }
 
 // ---- TODAY ----
@@ -1023,6 +1066,50 @@ function addHouse() {
   localStorage.setItem('steph-house', JSON.stringify(houseItems));
   inp.value = '';
   renderHouse();
+}
+
+// ---- CALENDAR ----
+function renderCalendar() {
+  document.getElementById('calendar-updated').textContent = 'Updated ' + CALENDAR_DATA.lastUpdated;
+  const container = document.getElementById('calendar-content');
+  container.innerHTML = '';
+  CALENDAR_DATA.days.forEach(day => {
+    const section = document.createElement('div');
+    section.innerHTML = `<h2 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:20px 0 10px;">${day.date}</h2>`;
+    if (!day.events.length) {
+      const empty = document.createElement('div');
+      empty.className = 'list-item';
+      empty.innerHTML = `<span class="li-text" style="color:var(--text-light)">Nothing scheduled</span>`;
+      section.appendChild(empty);
+    }
+    day.events.forEach(ev => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `<span style="font-size:12px;color:var(--brown);font-family:-apple-system,sans-serif;min-width:70px;font-weight:600;">${ev.time}</span><span class="li-text">${ev.title}</span>`;
+      section.appendChild(div);
+    });
+    container.appendChild(section);
+  });
+}
+
+// ---- KIDS ----
+function renderKids() {
+  const list = document.getElementById('kids-todo-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const kidsTodos = todoItems.filter(x => (x.cat || '') === '👶 Kids & Health' && !x.done);
+  if (!kidsTodos.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">All caught up! ✅</span></div>`;
+    return;
+  }
+  kidsTodos.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <div class="li-check" onclick="toggleTodo(${item.id});renderKids();"></div>
+      <span class="li-text">${item.text}</span>`;
+    list.appendChild(div);
+  });
 }
 
 // ---- WELLNESS ----
