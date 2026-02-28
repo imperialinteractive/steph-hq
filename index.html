@@ -618,7 +618,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v4';
+const APP_VERSION = '2026-02-28-v5';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -713,13 +713,21 @@ const HOUSE_ITEMS = [
   { id: 5, text: '🧱 Garage — Joel to work on', done: false },
 ];
 
-// ---- STATE (version-aware: auto-sync lists when app updates) ----
+// ---- STATE (version-aware: only ADD new items, never restore deleted ones) ----
 const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
-  // New version — reset lists to latest defaults, keep today's checkmarks
-  localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
-  localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
-  localStorage.setItem('steph-house', JSON.stringify(HOUSE_ITEMS));
+  // Merge: add any new default items not already in the saved list (by id)
+  function mergeNewItems(saved, defaults) {
+    const savedIds = new Set((saved || []).map(x => x.id));
+    const newItems = defaults.filter(x => !savedIds.has(x.id));
+    return [...(saved || []), ...newItems];
+  }
+  const savedGrocery = JSON.parse(localStorage.getItem('steph-grocery') || 'null');
+  const savedTodo = JSON.parse(localStorage.getItem('steph-todo') || 'null');
+  const savedHouse = JSON.parse(localStorage.getItem('steph-house') || 'null');
+  if (savedGrocery !== null) localStorage.setItem('steph-grocery', JSON.stringify(mergeNewItems(savedGrocery, GROCERY_ITEMS)));
+  if (savedTodo !== null) localStorage.setItem('steph-todo', JSON.stringify(mergeNewItems(savedTodo, TODO_ITEMS)));
+  if (savedHouse !== null) localStorage.setItem('steph-house', JSON.stringify(mergeNewItems(savedHouse, HOUSE_ITEMS)));
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
