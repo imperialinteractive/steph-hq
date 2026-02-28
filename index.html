@@ -719,7 +719,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v34';
+const APP_VERSION = '2026-02-28-v35';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -739,26 +739,162 @@ const RECIPES = [
   {
     id: 1,
     name: 'One Pan Lemon Pepper Yogurt Chicken & Rice',
-    desc: 'Half Baked Harvest · Family dinner',
+    desc: 'Half Baked Harvest · Family favourite · 55 min',
     cat: '🥘 One Pan / One Pot',
     source: 'https://www.halfbakedharvest.com/lemon-pepper-yogurt-chicken/',
-    body: `<h3>What you need</h3><p>Chicken thighs or breasts, Greek yogurt, lemon, garlic, pepper, oregano, thyme, paprika, basmati rice, broccoli, olive oil</p><h3>How to make it</h3><ol><li>Marinate chicken in Greek yogurt, lemon juice, garlic, pepper, oregano, thyme, paprika</li><li>Add dry basmati rice and broccoli to baking dish</li><li>Place chicken on top, pour any extra marinade over</li><li>Bake covered at 375°F for 45 min, then uncovered 15 min</li></ol><h3>Notes</h3><p>Rush-approved ✅ · No melted cheese ✅ · No seafood ✅</p>`
+    body: `
+      <h3>Ingredients (Serves 6)</h3>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">Chicken Marinade</p>
+      <ul>
+        <li>6 chicken thighs or breasts (skin on or off)</li>
+        <li>¼ cup extra virgin olive oil</li>
+        <li>⅓ cup plain Greek yogurt</li>
+        <li>1 tbsp lemon zest</li>
+        <li>2–4 cloves garlic, chopped</li>
+        <li>1–2 tsp black pepper</li>
+        <li>2 tsp dried oregano</li>
+        <li>1 tsp dried thyme</li>
+        <li>1 tsp paprika</li>
+        <li>1 tsp onion powder</li>
+        <li>Kosher salt + chili flakes to taste</li>
+      </ul>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">Pan</p>
+      <ul>
+        <li>1¾ cups dry basmati rice</li>
+        <li>2 cups water</li>
+        <li>2 tbsp salted butter</li>
+        <li>2 cups roughly chopped broccoli</li>
+        <li>Lemon wedges + fresh basil/thyme to serve</li>
+      </ul>
+      <h3>Method</h3>
+      <ol>
+        <li>Toss chicken with all marinade ingredients. Marinate 30 min or overnight if you have time (totally fine to skip).</li>
+        <li>Preheat oven to 400°F.</li>
+        <li>Pour dry rice and broccoli into a 9×13 baking dish. Pour over 2 cups of water. Add butter.</li>
+        <li>Arrange marinated chicken over the rice and broccoli. Add lemon wedges if desired.</li>
+        <li>Bake 30–40 min until rice is fluffy and chicken is cooked through. If rice is still hard, add ⅓ cup water and bake 10 more min.</li>
+        <li>Serve topped with fresh basil or thyme.</li>
+      </ol>
+      <h3>Notes</h3>
+      <p>Rush-approved ✅ · No melted cheese ✅ · Chicken juices drip into the rice as it cooks — that's where all the flavour comes from. Don't cover the pan.</p>`
   },
   {
     id: 2,
-    name: 'Jack Astor\'s Asiago Chicken Bow Ties',
+    name: "Jack Astor's Asiago Chicken Bow Ties",
     desc: 'Copycat · Reddit-verified · 4 cheese cream sauce',
     cat: '🍝 Pasta',
     source: null,
-    body: `<h3>The Chicken</h3><ul><li>Boneless chicken breast</li><li>Egg wash (egg + splash of cream)</li><li>2:1 mix shredded Asiago + seasoned flour</li><li>Pan fry until golden</li></ul><h3>Four Cheese Cream Sauce</h3><ul><li>Butter + heavy cream (low heat)</li><li>Asiago, Parmesan, Romano, Mozzarella — add gradually</li><li>Pinch smoked paprika + 1 tbsp chicken bouillon</li><li>Salt + dried parsley</li><li>Thin with pasta water as needed</li></ul><h3>Assembly</h3><ul><li>Bowtie pasta, al dente</li><li>Sun-dried tomatoes (sliced thin)</li><li>Toss pasta in sauce, top with sliced chicken</li><li>Garnish with parsley</li></ul><h3>Notes</h3><p>Rush: serve his pasta plain on the side. Make extra breading — it clumps.</p>`
+    body: `
+      <h3>Ingredients</h3>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">Chicken</p>
+      <ul>
+        <li>Boneless chicken breasts</li>
+        <li>1 egg + splash of heavy cream (egg wash)</li>
+        <li>Shredded Asiago cheese (generous amount)</li>
+        <li>Seasoned flour (half the amount of Asiago — 2:1 ratio Asiago to flour)</li>
+        <li>Oil for pan frying</li>
+      </ul>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">Four Cheese Cream Sauce</p>
+      <ul>
+        <li>2 tbsp butter</li>
+        <li>1½ cups heavy cream</li>
+        <li>Asiago cheese — generous handful</li>
+        <li>Parmesan — generous handful</li>
+        <li>Romano — smaller handful</li>
+        <li>Mozzarella — smaller handful</li>
+        <li>Pinch smoked paprika</li>
+        <li>1 tbsp chicken bouillon</li>
+        <li>Salt + dried parsley to taste</li>
+        <li>Pasta water to thin as needed</li>
+      </ul>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">To Assemble</p>
+      <ul>
+        <li>1 lb bowtie pasta (farfalle)</li>
+        <li>Sun-dried tomatoes, sliced thin</li>
+        <li>Fresh or dried parsley to garnish</li>
+      </ul>
+      <h3>Method</h3>
+      <ol>
+        <li>Mix egg and cream for egg wash. Mix Asiago and seasoned flour 2:1 in a shallow dish.</li>
+        <li>Dip chicken in egg wash, then coat in Asiago-flour mix. Pan fry on medium heat a few minutes per side until golden and cooked through. Slice and set aside.</li>
+        <li>Melt butter in a pan on low-medium. Add heavy cream slowly — don't rush it.</li>
+        <li>Add cheeses gradually, stirring constantly until smooth.</li>
+        <li>Add smoked paprika, chicken bouillon, parsley, and salt. Thin with pasta water if too thick.</li>
+        <li>Cook bowtie pasta al dente. Drain, reserving some pasta water.</li>
+        <li>Toss pasta in sauce. Plate with sun-dried tomatoes, top with sliced chicken. Garnish with parsley.</li>
+      </ol>
+      <h3>Notes</h3>
+      <p>Breading clumps after a couple pieces — make extra and work in batches. Don't season the chicken itself — Asiago does the work. Rush: serve his pasta plain on the side, no sauce. Store sauce and pasta separately for leftovers — reheat sauce gently on low.</p>`
   },
   {
     id: 3,
     name: 'Penne alla Vodka',
-    desc: 'The Pasta Renaissance · p.218 · Family staple',
+    desc: 'The Pasta Renaissance p.218 · Family staple · 30 min',
     cat: '🍝 Pasta',
     source: null,
-    body: `<h3>Ingredients (Serves 4)</h3><ul><li>1 shallot, diced · 1 garlic clove, minced</li><li>3 tbsp extra-virgin olive oil</li><li>¼ cup tomato paste</li><li>1 cup vodka</li><li>1 can (14.5oz) whole peeled tomatoes, crushed</li><li>1 cup heavy cream</li><li>1 tsp chili flakes</li><li>¾ lb medium shrimp, peeled & deveined</li><li>1 lb penne · Fresh parsley</li></ul><h3>Method</h3><ol><li>Cook shallot + garlic in olive oil 1–2 min</li><li>Add tomato paste, fry until brick-coloured, ~2 min</li><li>Add vodka, reduce by half ~1.5 min</li><li>Add tomatoes + cream, simmer 5 min</li><li>Add chili + shrimp, cook ~2.5 min</li><li>Cook penne al dente, toss with sauce</li></ol>`
+    body: `
+      <h3>Ingredients (Serves 4)</h3>
+      <ul>
+        <li>1 shallot, diced</li>
+        <li>1 garlic clove, minced</li>
+        <li>Sea salt</li>
+        <li>3 tbsp extra-virgin olive oil</li>
+        <li>¼ cup tomato paste</li>
+        <li>1 cup vodka</li>
+        <li>1 can (14.5 oz) whole peeled tomatoes, crushed by hand</li>
+        <li>1 cup heavy cream</li>
+        <li>Freshly ground black pepper</li>
+        <li>1 tsp chili flakes (or 1 fresh chili)</li>
+        <li>1 lb penne</li>
+        <li>Fresh parsley, roughly chopped</li>
+      </ul>
+      <h3>Method</h3>
+      <ol>
+        <li>Bring a large pot of water to a rolling boil.</li>
+        <li>In a large deep sauté pan, cook shallot, garlic, and a pinch of salt in olive oil over medium-low until sizzling with small bubbles, <strong>1–2 min</strong>.</li>
+        <li>Add tomato paste, increase to medium-high. Fry stirring until paste turns brick-coloured, about <strong>2 min</strong>.</li>
+        <li>Add vodka and simmer until alcohol aroma fades and liquid reduces by half, about <strong>1½ min</strong>.</li>
+        <li>Add tomatoes and cream. Season with salt and pepper. Simmer stirring frequently for <strong>5 min</strong> to thicken.</li>
+        <li>Add chili flakes. Season pasta water generously with salt. Cook penne al dente.</li>
+        <li>Drain and toss with sauce. Garnish with parsley.</li>
+      </ol>
+      <h3>Notes</h3>
+      <p>Steph's family staple 🩷 · Don't rush the tomato paste browning — that's where the depth comes from. Sub chicken for the protein or make it plain. Alternate pasta shape: ziti.</p>`
+  },
+  {
+    id: 4,
+    name: 'The BEST Apple Pie',
+    desc: "Natasha's Kitchen · Crowd-pleaser · Thanksgiving favourite",
+    cat: '🍰 Baking & Desserts',
+    source: 'https://natashaskitchen.com/apple-pie-recipe/',
+    body: `
+      <h3>Ingredients (Serves 8)</h3>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">Crust</p>
+      <ul>
+        <li>2 disks homemade all-butter pie crust (or store-bought)</li>
+      </ul>
+      <p style="font-weight:600;margin:8px 0 4px;font-family:-apple-system,sans-serif;">Filling</p>
+      <ul>
+        <li>2¼ lbs Granny Smith apples, peeled, cored, thinly sliced (6–7 apples, about 7 cups)</li>
+        <li>1½ tsp cinnamon</li>
+        <li>8 tbsp unsalted butter</li>
+        <li>3 tbsp all-purpose flour</li>
+        <li>¼ cup water</li>
+        <li>1 cup granulated sugar</li>
+        <li>1 egg + 1 tbsp water (egg wash)</li>
+      </ul>
+      <h3>Method</h3>
+      <ol>
+        <li>Make pie crust and chill per instructions. Preheat oven to 425°F.</li>
+        <li>Melt butter in a saucepan over medium heat. Whisk in flour, cook 1 min whisking constantly. Whisk in water and sugar, bring to a boil. Reduce heat and simmer 3 min. Remove from heat. <em>Don't overcook.</em></li>
+        <li>Peel, core, and thinly slice apples into a large bowl. Sprinkle with cinnamon, toss to combine. Pour sauce over apples and stir to coat.</li>
+        <li>Roll bottom crust to 12" diameter. Transfer to 9" deep pie pan. Add apple filling, mounding slightly in the center. Keep filling away from the edges.</li>
+        <li>Roll second crust to 11" round. Cut into 10 strips. Weave in a lattice pattern over the top. Crimp edges to seal. Brush with egg wash.</li>
+        <li>Bake at 425°F for 15 min. Reduce to 350°F and bake 45 more min until thick juices bubble through lattice for at least 5 min.</li>
+        <li>Rest at room temp at least 1 hour before slicing.</li>
+      </ol>
+      <h3>Notes</h3>
+      <p>If edges brown too fast — cover loosely with foil with a 3" hole cut in the center. Granny Smith = best. Can sub Honeycrisp or Golden Delicious (use less sugar). Keeps 2 days on counter, 4 days fridge. Serve with vanilla ice cream. 🍎</p>`
   },
 ];
 
