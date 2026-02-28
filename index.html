@@ -447,9 +447,7 @@
     <span class="back" onclick="showScreen('home')">← HQ</span>
     <h1>To-Do</h1>
   </div>
-  <div class="list-section" id="todo-list">
-    <h2>🏠 House & Organizing</h2>
-  </div>
+  <div id="todo-list"></div>
   <div class="add-row">
     <input class="add-input" id="todo-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()">
     <button class="add-btn" onclick="addTodo()">Add</button>
@@ -617,7 +615,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v13';
+const APP_VERSION = '2026-02-28-v14';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -660,7 +658,33 @@ const RECIPES = [
   },
 ];
 
-const TODO_ITEMS = [];
+const TODO_ITEMS = [
+  { id: 101, text: 'Organize top of vanity room dresser and side area', done: false, cat: '🏠 House & Organizing' },
+  { id: 102, text: 'Put polka dots up in kid corner and playroom sprinkles', done: false, cat: '🏠 House & Organizing' },
+  { id: 103, text: 'Order stickers for Hayes\' room wall', done: false, cat: '🏠 House & Organizing' },
+  { id: 104, text: 'Finish sticker wall in Hayes\' room', done: false, cat: '🏠 House & Organizing' },
+  { id: 105, text: 'Tidy laundry room', done: false, cat: '🏠 House & Organizing' },
+  { id: 106, text: 'Finish storage room', done: false, cat: '🏠 House & Organizing' },
+  { id: 107, text: 'Organize front entrance closet', done: false, cat: '🏠 House & Organizing' },
+  { id: 108, text: 'Put up pictures in Rush\'s get ready station', done: false, cat: '🏠 House & Organizing' },
+  { id: 109, text: 'Finish organizing clinic and spare room', done: false, cat: '🏠 House & Organizing' },
+  { id: 110, text: 'Go through clothes and organize them', done: false, cat: '🏠 House & Organizing' },
+  { id: 111, text: 'Put pads on kitchen table chairs', done: false, cat: '🏠 House & Organizing' },
+  { id: 112, text: 'Put up last few lights', done: false, cat: '🏠 House & Organizing' },
+  { id: 113, text: 'Organize door keys', done: false, cat: '🏠 House & Organizing' },
+  { id: 114, text: 'Add Rush\'s fingerprint to door + left thumb', done: false, cat: '🏠 House & Organizing' },
+  { id: 115, text: 'Hot glue gun baby gate', done: false, cat: '🏠 House & Organizing' },
+  { id: 116, text: 'Book hair appointment — deadline March 3rd', done: false, cat: '💅 Personal' },
+  { id: 117, text: 'Book Hayes 6-month appointment (Celine Quinn)', done: false, cat: '👶 Kids & Health' },
+  { id: 118, text: 'Book Hayes 9-month appointment (Dr. Wong)', done: false, cat: '👶 Kids & Health' },
+  { id: 119, text: 'Send Rush and Hayes birth photos to Lumen for Chatbooks', done: false, cat: '📸 Photos' },
+  { id: 120, text: 'Shop for cookware — Staub 11" skillet, Le Creuset options, 7" pan + small pot', done: false, cat: '🛒 Shopping' },
+  { id: 121, text: 'Grocery run (meal plan items)', done: false, cat: '🛒 Shopping' },
+  { id: 122, text: 'Joel to transfer RESP money for Rush and Hayes', done: false, cat: '💰 Joel To-Do' },
+  { id: 123, text: 'Discuss outdoor and indoor play gyms with Joel', done: false, cat: '💬 Discuss with Joel' },
+  { id: 124, text: 'Joel to work on garage', done: false, cat: '💬 Discuss with Joel' },
+  { id: 125, text: 'Joel to update barn project progress', done: false, cat: '💬 Discuss with Joel' },
+];
 
 const GROCERY_ITEMS = [
   { id: 1001, text: 'Rush milk 🥛', done: false },
@@ -764,13 +788,38 @@ function saveEdit(listId, id, text) {
 }
 
 // ---- TODO ----
-function renderTodo() { renderList('todo-list', todoItems, 'toggleTodo', 'deleteTodo'); }
+function renderTodo() {
+  const container = document.getElementById('todo-list');
+  container.innerHTML = '';
+  // Group by category
+  const cats = {};
+  todoItems.forEach(item => {
+    const cat = item.cat || '📋 Other';
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push(item);
+  });
+  Object.entries(cats).forEach(([cat, items]) => {
+    const section = document.createElement('div');
+    section.className = 'list-section';
+    section.innerHTML = `<h2>${cat}</h2>`;
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'list-item' + (item.done ? ' done' : '');
+      div.innerHTML = `
+        <div class="li-check" onclick="toggleTodo(${item.id})"></div>
+        <span class="li-text" contenteditable="true" onblur="saveEdit('todo-list',${item.id},this.textContent)">${item.text}</span>
+        <span class="li-delete" onclick="deleteTodo(${item.id})">×</span>`;
+      section.appendChild(div);
+    });
+    container.appendChild(section);
+  });
+}
 function toggleTodo(id) { const i = todoItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-todo',JSON.stringify(todoItems)); renderTodo(); }
 function deleteTodo(id) { todoItems = todoItems.filter(x=>x.id!==id); localStorage.setItem('steph-todo',JSON.stringify(todoItems)); renderTodo(); }
 function addTodo() {
   const inp = document.getElementById('todo-input');
   if (!inp.value.trim()) return;
-  todoItems.push({ id: Date.now(), text: inp.value.trim(), done: false });
+  todoItems.push({ id: Date.now(), text: inp.value.trim(), done: false, cat: '📋 Other' });
   localStorage.setItem('steph-todo', JSON.stringify(todoItems));
   inp.value = '';
   renderTodo();
