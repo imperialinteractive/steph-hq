@@ -615,7 +615,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v18';
+const APP_VERSION = '2026-02-28-v19';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -713,20 +713,13 @@ function categorizeGroceryItem(text) {
 const HOUSE_ITEMS = [];
 
 // ---- STATE ----
+// Full hard reset to clean categorized data
 const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
-  // One-time clean migration: remove all old items with ids < 100 (pre-category era)
-  // and reset todo/house to the clean categorized defaults
-  localStorage.removeItem('steph-seen-todo');
-  localStorage.removeItem('steph-seen-house');
-  localStorage.removeItem('steph-seen-grocery');
+  localStorage.clear();
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
   localStorage.setItem('steph-house', JSON.stringify(HOUSE_ITEMS));
-  // For grocery: keep any user-added items (id > 9000) but clear defaults
-  const savedGrocery = JSON.parse(localStorage.getItem('steph-grocery') || '[]');
-  const userGrocery = savedGrocery.filter(x => x.id > 9000);
-  const newGrocery = [...GROCERY_ITEMS, ...userGrocery];
-  localStorage.setItem('steph-grocery', JSON.stringify(newGrocery));
+  localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
