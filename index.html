@@ -592,31 +592,45 @@
   </div>
 </div>
 
-<!-- KIDS -->
+<!-- KIDS HOME -->
 <div class="screen" id="screen-kids">
+  <div class="home-header" style="padding:56px 20px 16px;">
+    <h1 style="font-size:28px;font-style:italic;font-weight:700;">Kids 👶</h1>
+  </div>
+  <div class="grid">
+    <div class="tile" onclick="showScreen('kids-rush')">
+      <span class="tile-emoji">🦁</span>
+      <span class="tile-label">Rush</span>
+    </div>
+    <div class="tile" onclick="showScreen('kids-hayes')">
+      <span class="tile-emoji">🍼</span>
+      <span class="tile-label">Hayes</span>
+    </div>
+    <div class="tile" onclick="showScreen('kids-todos')">
+      <span class="tile-emoji">📋</span>
+      <span class="tile-label">To-Dos</span>
+    </div>
+    <div class="tile" onclick="showScreen('kids-playdates')">
+      <span class="tile-emoji">🤝</span>
+      <span class="tile-label">Playdates</span>
+    </div>
+  </div>
+</div>
+
+<!-- KIDS: RUSH -->
+<div class="screen" id="screen-kids-rush">
   <div class="header">
-    <span class="back" onclick="showScreen('home')">← HQ</span>
-    <h1>Kids</h1>
+    <span class="back" onclick="showScreen('kids')">← Kids</span>
+    <h1>Rush 🦁</h1>
   </div>
   <div class="list-section">
-    <h2>👦 Rush — Age 3.5</h2>
-    <div class="list-item"><span class="li-text">Born Aug 27, 2022 — strong-willed, big personality 🦁</span></div>
+    <h2>About Rush</h2>
+    <div class="list-item"><span class="li-text">Born Aug 27, 2022 — age 3.5</span></div>
+    <div class="list-item"><span class="li-text">Strong-willed, big personality 🦁</span></div>
     <div class="list-item"><span class="li-text">No melted cheese 🧀</span></div>
   </div>
   <div class="list-section">
-    <h2>👶 Hayes — 5 months</h2>
-    <div class="list-item"><span class="li-text">Take monthly photo! 📸</span></div>
-  </div>
-  <div class="list-section" id="kids-todo-section">
-    <h2>📋 Kids To-Dos</h2>
-    <div id="kids-todo-list"></div>
-    <div class="add-row">
-      <input class="add-input" id="kids-todo-input" placeholder="Add kids to-do..." onkeydown="if(event.key==='Enter')addKidsTodo()">
-      <button class="add-btn" onclick="addKidsTodo()">Add</button>
-    </div>
-  </div>
-  <div class="list-section">
-    <h2>📖 Rush's Memories</h2>
+    <h2>📖 Memories</h2>
     <div id="kids-rush-memories"></div>
     <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
       <input class="add-input" id="rush-memory-month" placeholder="Month & Year (e.g. Feb 2026)..." style="width:100%;">
@@ -626,8 +640,21 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- KIDS: HAYES -->
+<div class="screen" id="screen-kids-hayes">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids')">← Kids</span>
+    <h1>Hayes 🍼</h1>
+  </div>
   <div class="list-section">
-    <h2>📖 Hayes's Memories</h2>
+    <h2>About Hayes</h2>
+    <div class="list-item"><span class="li-text">Born Sep 28, 2025 — 5 months old</span></div>
+    <div class="list-item"><span class="li-text">Take monthly photo! 📸</span></div>
+  </div>
+  <div class="list-section">
+    <h2>📖 Memories</h2>
     <div id="kids-hayes-memories"></div>
     <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
       <input class="add-input" id="hayes-memory-month" placeholder="Month & Year (e.g. Feb 2026)..." style="width:100%;">
@@ -637,8 +664,30 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- KIDS: TO-DOS -->
+<div class="screen" id="screen-kids-todos">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids')">← Kids</span>
+    <h1>Kids To-Dos 📋</h1>
+  </div>
+  <div class="list-section" id="kids-todo-section">
+    <div id="kids-todo-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="kids-todo-input" placeholder="Add kids to-do..." onkeydown="if(event.key==='Enter')addKidsTodo()">
+      <button class="add-btn" onclick="addKidsTodo()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- KIDS: PLAYDATES -->
+<div class="screen" id="screen-kids-playdates">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids')">← Kids</span>
+    <h1>Playdates 🤝</h1>
+  </div>
   <div class="list-section">
-    <h2>🤝 Playdate Potentials</h2>
     <div id="kids-playdates-list"></div>
     <div class="add-row">
       <input class="add-input" id="kids-playdates-input" placeholder="Add name (e.g. Liam — from gym)..." onkeydown="if(event.key==='Enter')addPlaydate()">
@@ -848,7 +897,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v44';
+const APP_VERSION = '2026-02-28-v45';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1362,7 +1411,11 @@ function showScreen(name) {
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
-  if (name === 'kids') renderKids();
+  if (name === 'kids') {}
+  if (name === 'kids-rush') renderMemories();
+  if (name === 'kids-hayes') renderMemories();
+  if (name === 'kids-todos') { renderKidsTodos(); }
+  if (name === 'kids-playdates') renderPlaydates();
   if (name === 'calendar') renderCalendar();
   if (name === 'workouts') renderWorkouts();
 }
@@ -1791,9 +1844,8 @@ function renderCalendar() {
 }
 
 // ---- KIDS ----
-function renderKids() {
-  renderPlaydates();
-  renderMemories();
+function renderKids() {}
+function renderKidsTodos() {
   const list = document.getElementById('kids-todo-list');
   if (!list) return;
   list.innerHTML = '';
@@ -1806,7 +1858,7 @@ function renderKids() {
     const div = document.createElement('div');
     div.className = 'list-item';
     div.innerHTML = `
-      <div class="li-check" onclick="toggleTodo(${item.id});renderKids();"></div>
+      <div class="li-check" onclick="toggleTodo(${item.id});renderKidsTodos();"></div>
       <span class="li-text">${item.text}</span>`;
     list.appendChild(div);
   });
@@ -1818,7 +1870,7 @@ function addKidsTodo() {
   todoItems.push(newItem);
   localStorage.setItem('steph-todo', JSON.stringify(todoItems));
   inp.value = '';
-  renderKids();
+  renderKidsTodos();
 }
 function renderMemories() {
   renderKidMemories('kids-rush-memories', memoriesData.rush);
