@@ -483,13 +483,13 @@
       <span class="tile-emoji">📦</span>
       <span class="tile-label">Packages</span>
     </div>
-    <div class="tile" onclick="showScreen('wellness')">
-      <span class="tile-emoji">🌿</span>
-      <span class="tile-label">Wellness</span>
-    </div>
     <div class="tile" onclick="showScreen('thrive')">
       <span class="tile-emoji">✨</span>
       <span class="tile-label">Thrive</span>
+    </div>
+    <div class="tile" onclick="showScreen('household')">
+      <span class="tile-emoji">🏡</span>
+      <span class="tile-label">Household Admin</span>
     </div>
   </div>
 </div>
@@ -527,10 +527,14 @@
   <div class="grid" id="todo-cat-grid">
     <!-- rendered by JS -->
   </div>
-  <div style="padding:0 16px 16px;">
+  <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px;">
     <div class="tile" onclick="showScreen('longterm')" style="display:flex;flex-direction:row;align-items:center;gap:12px;padding:18px 20px;border-radius:20px;">
       <span style="font-size:28px;">🌟</span>
       <span style="font-family:-apple-system,sans-serif;font-size:15px;font-weight:600;color:var(--text);">Long Term Goals</span>
+    </div>
+    <div class="tile" onclick="showScreen('wellness')" style="display:flex;flex-direction:row;align-items:center;gap:12px;padding:18px 20px;border-radius:20px;">
+      <span style="font-size:28px;">🌿</span>
+      <span style="font-family:-apple-system,sans-serif;font-size:15px;font-weight:600;color:var(--text);">Wellness</span>
     </div>
   </div>
 </div>
@@ -545,6 +549,78 @@
   <div class="add-row">
     <input class="add-input" id="todo-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()">
     <button class="add-btn" onclick="addTodo()">Add</button>
+  </div>
+</div>
+
+<!-- HOUSEHOLD ADMIN HOME -->
+<div class="screen" id="screen-household">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Household Admin 🏡</h1>
+  </div>
+  <div class="grid">
+    <div class="tile" onclick="showScreen('household-bills')">
+      <span class="tile-emoji">💳</span>
+      <span class="tile-label">Bills & Subscriptions</span>
+    </div>
+    <div class="tile" onclick="showScreen('household-warranty')">
+      <span class="tile-emoji">📄</span>
+      <span class="tile-label">Warranty & Docs</span>
+    </div>
+    <div class="tile" onclick="showScreen('household-maintenance')">
+      <span class="tile-emoji">🔧</span>
+      <span class="tile-label">Maintenance</span>
+    </div>
+  </div>
+</div>
+
+<!-- HOUSEHOLD: BILLS & SUBSCRIPTIONS -->
+<div class="screen" id="screen-household-bills">
+  <div class="header">
+    <span class="back" onclick="showScreen('household')">← Household</span>
+    <h1>Bills & Subscriptions 💳</h1>
+  </div>
+  <div class="list-section">
+    <div id="household-bills-list"></div>
+    <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
+      <input class="add-input" id="bills-name" placeholder="Name (e.g. Netflix, Mortgage...)..." style="width:100%;">
+      <div style="display:flex;gap:8px;">
+        <input class="add-input" id="bills-amount" placeholder="Amount (e.g. $19.99/mo)..." style="flex:1;" onkeydown="if(event.key==='Enter')addBill()">
+        <button class="add-btn" onclick="addBill()">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOUSEHOLD: WARRANTY & DOCS -->
+<div class="screen" id="screen-household-warranty">
+  <div class="header">
+    <span class="back" onclick="showScreen('household')">← Household</span>
+    <h1>Warranty & Docs 📄</h1>
+  </div>
+  <div class="list-section">
+    <div id="household-warranty-list"></div>
+    <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
+      <input class="add-input" id="warranty-name" placeholder="Item (e.g. Samsung Range, Roof...)..." style="width:100%;">
+      <input class="add-input" id="warranty-expiry" placeholder="Expiry or note (e.g. Expires Jan 2027)..." style="width:100%;" onkeydown="if(event.key==='Enter')addWarranty()">
+      <button class="add-btn" style="width:100%;" onclick="addWarranty()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOUSEHOLD: MAINTENANCE -->
+<div class="screen" id="screen-household-maintenance">
+  <div class="header">
+    <span class="back" onclick="showScreen('household')">← Household</span>
+    <h1>Maintenance 🔧</h1>
+  </div>
+  <div class="list-section">
+    <div id="household-maintenance-list"></div>
+    <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
+      <input class="add-input" id="maintenance-task" placeholder="Task (e.g. Air filter, Car service...)..." style="width:100%;">
+      <input class="add-input" id="maintenance-due" placeholder="Due or frequency (e.g. Every 3 months)..." style="width:100%;" onkeydown="if(event.key==='Enter')addMaintenance()">
+      <button class="add-btn" style="width:100%;" onclick="addMaintenance()">Add</button>
+    </div>
   </div>
 </div>
 
@@ -849,7 +925,7 @@
 <!-- WELLNESS -->
 <div class="screen" id="screen-wellness">
   <div class="header">
-    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <span class="back" onclick="showScreen('todo')">← To-Do</span>
     <h1>Wellness</h1>
   </div>
   <div id="wellness-goals-section" class="list-section">
@@ -988,7 +1064,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v53';
+const APP_VERSION = '2026-02-28-v54';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1402,6 +1478,10 @@ const CALENDAR_DATA = {
 
 const MEMORIES_DEFAULT = { rush: [], hayes: [] };
 
+const HOUSEHOLD_BILLS_DEFAULT = [];
+const HOUSEHOLD_WARRANTY_DEFAULT = [];
+const HOUSEHOLD_MAINTENANCE_DEFAULT = [];
+
 const LONGTERM_GOALS_DEFAULT = [];
 
 const WAITLIST_DEFAULT = [];
@@ -1452,6 +1532,9 @@ if (storedVersion !== APP_VERSION) {
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
   localStorage.setItem('steph-memories', JSON.stringify(MEMORIES_DEFAULT));
+  localStorage.setItem('steph-household-bills', JSON.stringify(HOUSEHOLD_BILLS_DEFAULT));
+  localStorage.setItem('steph-household-warranty', JSON.stringify(HOUSEHOLD_WARRANTY_DEFAULT));
+  localStorage.setItem('steph-household-maintenance', JSON.stringify(HOUSEHOLD_MAINTENANCE_DEFAULT));
   localStorage.setItem('steph-longterm', JSON.stringify(LONGTERM_GOALS_DEFAULT));
   localStorage.setItem('steph-waitlist', JSON.stringify(WAITLIST_DEFAULT));
   localStorage.setItem('steph-thrive', JSON.stringify(THRIVE_DEFAULT));
@@ -1469,6 +1552,9 @@ let packagesData = JSON.parse(localStorage.getItem('steph-packages') || 'null') 
 let thriveData = JSON.parse(localStorage.getItem('steph-thrive') || 'null') || JSON.parse(JSON.stringify(THRIVE_DEFAULT));
 let waitlistData = JSON.parse(localStorage.getItem('steph-waitlist') || '[]');
 let longtermGoals = JSON.parse(localStorage.getItem('steph-longterm') || '[]');
+let householdBills = JSON.parse(localStorage.getItem('steph-household-bills') || '[]');
+let householdWarranty = JSON.parse(localStorage.getItem('steph-household-warranty') || '[]');
+let householdMaintenance = JSON.parse(localStorage.getItem('steph-household-maintenance') || '[]');
 let memoriesData = JSON.parse(localStorage.getItem('steph-memories') || 'null') || JSON.parse(JSON.stringify(MEMORIES_DEFAULT));
 let playdates = JSON.parse(localStorage.getItem('steph-playdates') || '[]');
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
@@ -1517,6 +1603,10 @@ function showScreen(name) {
   if (name === 'thrive-tax') renderThriveTaxList();
   if (name === 'thrive-waitlist') renderWaitlist();
   if (name === 'longterm') renderLongtermGoals();
+  if (name === 'household') {}
+  if (name === 'household-bills') renderHouseholdBills();
+  if (name === 'household-warranty') renderHouseholdWarranty();
+  if (name === 'household-maintenance') renderHouseholdMaintenance();
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
@@ -1759,6 +1849,61 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
 }
+
+// ---- HOUSEHOLD ADMIN ----
+function renderHouseholdList(listId, items, fields) {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">Nothing added yet</span></div>`;
+    return;
+  }
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.style.cssText = 'flex-direction:column;align-items:flex-start;gap:3px;padding:12px 16px;';
+    let inner = `<div style="display:flex;width:100%;align-items:center;"><span class="li-text" style="flex:1;font-weight:600;">${item.name}</span><button onclick="${fields.deleteFn}(${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button></div>`;
+    if (item.amount) inner += `<span style="font-size:13px;color:var(--brown);font-family:-apple-system,sans-serif;font-weight:600;">${item.amount}</span>`;
+    if (item.expiry) inner += `<span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">${item.expiry}</span>`;
+    if (item.due) inner += `<span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">${item.due}</span>`;
+    div.innerHTML = inner;
+    list.appendChild(div);
+  });
+}
+function renderHouseholdBills() { renderHouseholdList('household-bills-list', householdBills, {deleteFn:'deleteBill'}); }
+function renderHouseholdWarranty() { renderHouseholdList('household-warranty-list', householdWarranty, {deleteFn:'deleteWarranty'}); }
+function renderHouseholdMaintenance() { renderHouseholdList('household-maintenance-list', householdMaintenance, {deleteFn:'deleteMaintenance'}); }
+function addBill() {
+  const n = document.getElementById('bills-name');
+  const a = document.getElementById('bills-amount');
+  if (!n || !n.value.trim()) return;
+  householdBills.push({ id: Date.now(), name: n.value.trim(), amount: a ? a.value.trim() : '' });
+  localStorage.setItem('steph-household-bills', JSON.stringify(householdBills));
+  n.value = ''; if (a) a.value = '';
+  renderHouseholdBills();
+}
+function deleteBill(id) { householdBills = householdBills.filter(x => x.id !== id); localStorage.setItem('steph-household-bills', JSON.stringify(householdBills)); renderHouseholdBills(); }
+function addWarranty() {
+  const n = document.getElementById('warranty-name');
+  const e = document.getElementById('warranty-expiry');
+  if (!n || !n.value.trim()) return;
+  householdWarranty.push({ id: Date.now(), name: n.value.trim(), expiry: e ? e.value.trim() : '' });
+  localStorage.setItem('steph-household-warranty', JSON.stringify(householdWarranty));
+  n.value = ''; if (e) e.value = '';
+  renderHouseholdWarranty();
+}
+function deleteWarranty(id) { householdWarranty = householdWarranty.filter(x => x.id !== id); localStorage.setItem('steph-household-warranty', JSON.stringify(householdWarranty)); renderHouseholdWarranty(); }
+function addMaintenance() {
+  const t = document.getElementById('maintenance-task');
+  const d = document.getElementById('maintenance-due');
+  if (!t || !t.value.trim()) return;
+  householdMaintenance.push({ id: Date.now(), name: t.value.trim(), due: d ? d.value.trim() : '' });
+  localStorage.setItem('steph-household-maintenance', JSON.stringify(householdMaintenance));
+  t.value = ''; if (d) d.value = '';
+  renderHouseholdMaintenance();
+}
+function deleteMaintenance(id) { householdMaintenance = householdMaintenance.filter(x => x.id !== id); localStorage.setItem('steph-household-maintenance', JSON.stringify(householdMaintenance)); renderHouseholdMaintenance(); }
 
 // ---- LONG TERM GOALS ----
 function renderLongtermGoals() {
