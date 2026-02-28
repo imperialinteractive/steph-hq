@@ -372,6 +372,7 @@
   <div class="home-header">
     <h1>Home Base 🌿</h1>
     <p>Your headquarters</p>
+    <p style="margin-top:10px;"><button onclick="checkForUpdates()" style="background:var(--card);border:none;border-radius:20px;padding:7px 18px;font-size:13px;color:var(--brown);font-family:-apple-system,sans-serif;cursor:pointer;box-shadow:var(--shadow);">🔄 Check for updates</button></p>
   </div>
   <div class="grid">
     <div class="tile" onclick="showScreen('today')">
@@ -466,6 +467,10 @@
   <div class="add-row">
     <input class="add-input" id="grocery-input" placeholder="Add an item..." onkeydown="if(event.key==='Enter')addGrocery()">
     <button class="add-btn" onclick="addGrocery()">Add</button>
+  </div>
+  <div style="padding: 0 16px 8px; display:flex; gap:10px;">
+    <button class="add-btn" style="background:var(--brown);flex:1;" onclick="clearDoneGrocery()">Clear checked ✓</button>
+    <button class="add-btn" style="background:var(--card2);color:var(--brown);flex:1;" onclick="resetGrocery()">Reset to default</button>
   </div>
 </div>
 
@@ -828,6 +833,29 @@ function showRecipe(id) {
     ${r.body}
   `;
   showScreen('recipe-detail');
+}
+
+// ---- GROCERY CLEAR / RESET ----
+function clearDoneGrocery() {
+  groceryItems = groceryItems.filter(x => !x.done);
+  localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+  renderGrocery();
+}
+function resetGrocery() {
+  if (confirm('Reset grocery list to default? Your custom items will be lost.')) {
+    groceryItems = JSON.parse(JSON.stringify(GROCERY_ITEMS));
+    localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+    renderGrocery();
+  }
+}
+
+// ---- CHECK FOR UPDATES ----
+function checkForUpdates() {
+  if ('caches' in window) {
+    caches.keys().then(names => names.forEach(n => caches.delete(n)));
+  }
+  // Force hard reload bypassing cache
+  window.location.reload(true);
 }
 
 // ---- INIT ----
