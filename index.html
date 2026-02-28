@@ -849,15 +849,35 @@
   </div>
 </div>
 
-<!-- THRIVE -->
+<!-- THRIVE HOME -->
 <div class="screen" id="screen-thrive">
   <div class="header">
     <span class="back" onclick="showScreen('home')">← HQ</span>
     <h1>Thrive ✨</h1>
-    <p>RMT · Pilates</p>
+  </div>
+  <div class="grid">
+    <div class="tile" onclick="showScreen('thrive-income')">
+      <span class="tile-emoji">💰</span>
+      <span class="tile-label">Income</span>
+    </div>
+    <div class="tile" onclick="showScreen('thrive-expenses')">
+      <span class="tile-emoji">🧾</span>
+      <span class="tile-label">Expenses</span>
+    </div>
+    <div class="tile" onclick="showScreen('thrive-tax')">
+      <span class="tile-emoji">📋</span>
+      <span class="tile-label">Tax Notes</span>
+    </div>
+  </div>
+</div>
+
+<!-- THRIVE: INCOME -->
+<div class="screen" id="screen-thrive-income">
+  <div class="header">
+    <span class="back" onclick="showScreen('thrive')">← Thrive</span>
+    <h1>Income 💰</h1>
   </div>
   <div class="list-section">
-    <h2>💰 Income</h2>
     <div id="thrive-income-list"></div>
     <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
       <input class="add-input" id="thrive-income-desc" placeholder="Description (e.g. RMT session — Sarah M.)..." style="width:100%;">
@@ -867,8 +887,15 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- THRIVE: EXPENSES -->
+<div class="screen" id="screen-thrive-expenses">
+  <div class="header">
+    <span class="back" onclick="showScreen('thrive')">← Thrive</span>
+    <h1>Expenses 🧾</h1>
+  </div>
   <div class="list-section">
-    <h2>🧾 Expenses</h2>
     <div id="thrive-expenses-list"></div>
     <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
       <input class="add-input" id="thrive-expenses-desc" placeholder="Description (e.g. Massage table oil, supplies...)..." style="width:100%;">
@@ -878,8 +905,15 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- THRIVE: TAX NOTES -->
+<div class="screen" id="screen-thrive-tax">
+  <div class="header">
+    <span class="back" onclick="showScreen('thrive')">← Thrive</span>
+    <h1>Tax Notes 📋</h1>
+  </div>
   <div class="list-section">
-    <h2>📋 Tax Notes</h2>
     <div id="thrive-tax-list"></div>
     <div class="add-row">
       <input class="add-input" id="thrive-tax-input" placeholder="Add tax note or reminder..." onkeydown="if(event.key==='Enter')addThriveTaxNote()">
@@ -912,7 +946,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v49';
+const APP_VERSION = '2026-02-28-v50';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1427,7 +1461,10 @@ function showScreen(name) {
   if (name === 'todo-cat') renderTodoCatList();
   if (name === 'grocery') renderGrocery();
   if (name === 'recipes') renderRecipes();
-  if (name === 'thrive') renderThrive();
+  if (name === 'thrive') {}
+  if (name === 'thrive-income') { renderThriveList('thrive-income-list', thriveData.income, '💰'); }
+  if (name === 'thrive-expenses') { renderThriveList('thrive-expenses-list', thriveData.expenses, '🧾'); }
+  if (name === 'thrive-tax') renderThriveTaxList();
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
@@ -1729,7 +1766,8 @@ function addThriveItem(cat) {
   localStorage.setItem('steph-thrive', JSON.stringify(thriveData));
   desc.value = '';
   if (amt) amt.value = '';
-  renderThrive();
+  const emojiMap = { income: '💰', expenses: '🧾' };
+  renderThriveList('thrive-' + cat + '-list', thriveData[cat], emojiMap[cat] || '');
 }
 function addThriveTaxNote() {
   const inp = document.getElementById('thrive-tax-input');
@@ -1742,7 +1780,8 @@ function addThriveTaxNote() {
 function deleteThriveItem(cat, id) {
   thriveData[cat] = thriveData[cat].filter(x => x.id !== id);
   localStorage.setItem('steph-thrive', JSON.stringify(thriveData));
-  renderThrive();
+  if (cat === 'tax') renderThriveTaxList();
+  else { const emojiMap = { income: '💰', expenses: '🧾' }; renderThriveList('thrive-' + cat + '-list', thriveData[cat], emojiMap[cat] || ''); }
 }
 
 // ---- PACKAGES ----
