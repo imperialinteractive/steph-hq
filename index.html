@@ -617,6 +617,9 @@
 </div>
 
 <script>
+// ---- VERSION (bump this when Lumen updates lists) ----
+const APP_VERSION = '2026-02-28-v3';
+
 // ---- DATA ----
 const TODAY_ITEMS = [
   { id: 1, emoji: '💪', label: 'Workout / movement' },
@@ -710,7 +713,16 @@ const HOUSE_ITEMS = [
   { id: 5, text: '🧱 Garage — Joel to work on', done: false },
 ];
 
-// ---- STATE ----
+// ---- STATE (version-aware: auto-sync lists when app updates) ----
+const storedVersion = localStorage.getItem('steph-app-version');
+if (storedVersion !== APP_VERSION) {
+  // New version — reset lists to latest defaults, keep today's checkmarks
+  localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
+  localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
+  localStorage.setItem('steph-house', JSON.stringify(HOUSE_ITEMS));
+  localStorage.setItem('steph-app-version', APP_VERSION);
+}
+
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
