@@ -93,23 +93,32 @@
     padding: 0 16px 20px;
   }
   .tile {
-    background: var(--card);
     border-radius: var(--radius);
-    padding: 24px 16px 20px;
+    padding: 26px 16px 22px;
     cursor: pointer;
-    transition: transform 0.15s, background 0.15s;
+    transition: transform 0.15s, filter 0.15s;
     box-shadow: var(--shadow);
     text-align: center;
     user-select: none;
   }
-  .tile:active { transform: scale(0.97); background: var(--card2); }
-  .tile .tile-emoji { font-size: 32px; display: block; margin-bottom: 10px; }
+  .tile:active { transform: scale(0.96); filter: brightness(0.95); }
+  .tile .tile-emoji { font-size: 34px; display: block; margin-bottom: 10px; }
   .tile .tile-label {
-    font-size: 15px;
+    font-size: 14px;
     font-family: -apple-system, sans-serif;
     color: var(--text);
-    font-weight: 500;
+    font-weight: 600;
   }
+  .tile:nth-child(1)  { background: #c8d8c0; } /* sage green */
+  .tile:nth-child(2)  { background: #dfc5b8; } /* dusty rose */
+  .tile:nth-child(3)  { background: #e2d4b0; } /* warm wheat */
+  .tile:nth-child(4)  { background: #c4bfb0; } /* warm grey */
+  .tile:nth-child(5)  { background: #d4b8a8; } /* terracotta */
+  .tile:nth-child(6)  { background: #bfcdbf; } /* muted olive */
+  .tile:nth-child(7)  { background: #d8c8b0; } /* caramel */
+  .tile:nth-child(8)  { background: #ccc0b8; } /* dusty mauve */
+  .tile:nth-child(9)  { background: #b8ccb8; } /* moss */
+  .tile:nth-child(10) { background: #d4c0a8; } /* sand */
 
   /* PROGRESS RING */
   .ring-wrap {
@@ -618,7 +627,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v9';
+const APP_VERSION = '2026-02-28-v10';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
