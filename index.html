@@ -652,17 +652,21 @@
     <span class="back" onclick="showScreen('home')">← HQ</span>
     <h1>Wellness</h1>
   </div>
-  <div class="list-section">
-    <h2>Current Goals</h2>
-    <div class="list-item"><span class="li-text">🎯 Lose baby weight (postpartum — Hayes 5 months)</span></div>
-    <div class="list-item"><span class="li-text">💪 Build strength back progressively</span></div>
-    <div class="list-item"><span class="li-text">🥗 Hit protein + fibre goals daily</span></div>
-    <div class="list-item"><span class="li-text">💧 3L water minimum</span></div>
-    <div class="list-item"><span class="li-text">😴 Prioritize sleep when possible</span></div>
-    <h2>Self Care</h2>
-    <div class="list-item"><span class="li-text">💆 Book massage (overdue!)</span></div>
-    <div class="list-item"><span class="li-text">✂️ Book hair appointment — before March 3rd</span></div>
-    <div class="list-item"><span class="li-text">🧖 Sauna / spa day when possible</span></div>
+  <div id="wellness-goals-section" class="list-section">
+    <h2>🎯 Current Goals</h2>
+    <div id="wellness-goals-list"></div>
+  </div>
+  <div class="add-row">
+    <input class="add-input" id="wellness-goals-input" placeholder="Add a goal...">
+    <button class="add-btn" onclick="addWellness('goals')">Add</button>
+  </div>
+  <div id="wellness-selfcare-section" class="list-section">
+    <h2>🧖 Self Care</h2>
+    <div id="wellness-selfcare-list"></div>
+  </div>
+  <div class="add-row">
+    <input class="add-input" id="wellness-selfcare-input" placeholder="Add self care item...">
+    <button class="add-btn" onclick="addWellness('selfcare')">Add</button>
   </div>
 </div>
 
@@ -676,7 +680,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v21';
+const APP_VERSION = '2026-02-28-v22';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -773,14 +777,29 @@ function categorizeGroceryItem(text) {
 
 const HOUSE_ITEMS = [];
 
+const WELLNESS_GOALS_DEFAULT = [
+  { id: 2001, text: '🎯 Lose baby weight (postpartum — Hayes 5 months)' },
+  { id: 2002, text: '💪 Build strength back progressively' },
+  { id: 2003, text: '🥗 Hit protein + fibre goals daily' },
+  { id: 2004, text: '💧 3L water minimum' },
+  { id: 2005, text: '😴 Prioritize sleep when possible' },
+];
+
+const WELLNESS_SELFCARE_DEFAULT = [
+  { id: 3001, text: '💆 Book massage (overdue!)' },
+  { id: 3002, text: '✂️ Book hair appointment — before March 3rd' },
+  { id: 3003, text: '🧖 Sauna / spa day when possible' },
+];
+
 // ---- STATE ----
-// Full hard reset to clean categorized data
 const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
   localStorage.clear();
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
   localStorage.setItem('steph-house', JSON.stringify(HOUSE_ITEMS));
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
+  localStorage.setItem('steph-wellness-goals', JSON.stringify(WELLNESS_GOALS_DEFAULT));
+  localStorage.setItem('steph-wellness-selfcare', JSON.stringify(WELLNESS_SELFCARE_DEFAULT));
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
@@ -788,6 +807,8 @@ let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
 let houseItems = JSON.parse(localStorage.getItem('steph-house') || 'null') || HOUSE_ITEMS;
+let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
+let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
 
 // ---- NAVIGATION ----
 function showScreen(name) {
@@ -800,6 +821,7 @@ function showScreen(name) {
   if (name === 'grocery') renderGrocery();
   if (name === 'house') renderHouse();
   if (name === 'recipes') renderRecipes();
+  if (name === 'wellness') renderWellness();
 }
 
 // ---- TODAY ----
@@ -1000,6 +1022,55 @@ function addHouse() {
   localStorage.setItem('steph-house', JSON.stringify(houseItems));
   inp.value = '';
   renderHouse();
+}
+
+// ---- WELLNESS ----
+function renderWellness() {
+  renderWellnessList('wellness-goals-list', wellnessGoals, 'steph-wellness-goals');
+  renderWellnessList('wellness-selfcare-list', wellnessSelfcare, 'steph-wellness-selfcare');
+}
+function renderWellnessList(containerId, items, storageKey) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <span class="li-text" contenteditable="true" onblur="saveWellness('${storageKey}',${item.id},this.textContent)">${item.text}</span>
+      <span class="li-delete" onclick="deleteWellness('${storageKey}',${item.id})">×</span>`;
+    container.appendChild(div);
+  });
+}
+function saveWellness(storageKey, id, text) {
+  const arr = storageKey === 'steph-wellness-goals' ? wellnessGoals : wellnessSelfcare;
+  const item = arr.find(x => x.id === id);
+  if (item) item.text = text.trim();
+  localStorage.setItem(storageKey, JSON.stringify(arr));
+}
+function deleteWellness(storageKey, id) {
+  if (storageKey === 'steph-wellness-goals') {
+    wellnessGoals = wellnessGoals.filter(x => x.id !== id);
+    localStorage.setItem(storageKey, JSON.stringify(wellnessGoals));
+  } else {
+    wellnessSelfcare = wellnessSelfcare.filter(x => x.id !== id);
+    localStorage.setItem(storageKey, JSON.stringify(wellnessSelfcare));
+  }
+  renderWellness();
+}
+function addWellness(type) {
+  const inp = document.getElementById(`wellness-${type}-input`);
+  if (!inp.value.trim()) return;
+  const item = { id: Date.now(), text: inp.value.trim() };
+  if (type === 'goals') {
+    wellnessGoals.push(item);
+    localStorage.setItem('steph-wellness-goals', JSON.stringify(wellnessGoals));
+  } else {
+    wellnessSelfcare.push(item);
+    localStorage.setItem('steph-wellness-selfcare', JSON.stringify(wellnessSelfcare));
+  }
+  inp.value = '';
+  renderWellness();
 }
 
 // ---- RECIPES ----
