@@ -453,6 +453,10 @@
       <span class="tile-emoji">🎉</span>
       <span class="tile-label">Events</span>
     </div>
+    <div class="tile" onclick="showScreen('packages')">
+      <span class="tile-emoji">📦</span>
+      <span class="tile-label">Packages</span>
+    </div>
     <div class="tile" onclick="showScreen('wellness')">
       <span class="tile-emoji">🌿</span>
       <span class="tile-label">Wellness</span>
@@ -685,6 +689,29 @@
   </div>
 </div>
 
+<!-- PACKAGES -->
+<div class="screen" id="screen-packages">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Packages 📦</h1>
+  </div>
+  <div class="list-section">
+    <h2>🚚 On The Way</h2>
+    <div id="packages-active-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="packages-input" placeholder="Add package (e.g. Amazon - white sneakers)..." onkeydown="if(event.key==='Enter')addPackage()">
+      <button class="add-btn" onclick="addPackage()">Add</button>
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>✅ Arrived</h2>
+    <div id="packages-arrived-list"></div>
+    <div style="padding:0 16px 8px;">
+      <button onclick="clearArrivedPackages()" style="background:none;border:1px solid var(--brown);color:var(--brown);border-radius:12px;padding:8px 18px;font-size:13px;cursor:pointer;font-family:-apple-system,sans-serif;">Clear arrived</button>
+    </div>
+  </div>
+</div>
+
 <!-- WELLNESS -->
 <div class="screen" id="screen-wellness">
   <div class="header">
@@ -719,7 +746,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v37';
+const APP_VERSION = '2026-02-28-v38';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1151,6 +1178,8 @@ const EVENTS_DEFAULT = {
   ],
 };
 
+const PACKAGES_DEFAULT = { active: [], arrived: [] };
+
 const WELLNESS_GOALS_DEFAULT = [
   { id: 2001, text: '🎯 Lose baby weight (postpartum — Hayes 5 months)' },
   { id: 2002, text: '💪 Build strength back progressively' },
@@ -1172,6 +1201,7 @@ if (storedVersion !== APP_VERSION) {
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
+  localStorage.setItem('steph-packages', JSON.stringify(PACKAGES_DEFAULT));
   localStorage.setItem('steph-wellness-goals', JSON.stringify(WELLNESS_GOALS_DEFAULT));
   localStorage.setItem('steph-wellness-selfcare', JSON.stringify(WELLNESS_SELFCARE_DEFAULT));
   localStorage.setItem('steph-app-version', APP_VERSION);
@@ -1180,6 +1210,7 @@ if (storedVersion !== APP_VERSION) {
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
+let packagesData = JSON.parse(localStorage.getItem('steph-packages') || 'null') || JSON.parse(JSON.stringify(PACKAGES_DEFAULT));
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
 let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
 let eventsData = JSON.parse(localStorage.getItem('steph-events') || 'null') || JSON.parse(JSON.stringify(EVENTS_DEFAULT));
@@ -1194,6 +1225,7 @@ function showScreen(name) {
   if (name === 'todo-cat') renderTodoCatList();
   if (name === 'grocery') renderGrocery();
   if (name === 'recipes') renderRecipes();
+  if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
   if (name === 'kids') renderKids();
@@ -1430,6 +1462,60 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-title').textContent = w.day;
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
+}
+
+// ---- PACKAGES ----
+function renderPackages() {
+  renderPackageList('packages-active-list', packagesData.active, false);
+  renderPackageList('packages-arrived-list', packagesData.arrived, true);
+}
+function renderPackageList(listId, items, arrived) {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">${arrived ? 'Nothing yet' : 'No packages on the way 🎉'}</span></div>`;
+    return;
+  }
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    if (!arrived) {
+      div.innerHTML = `
+        <div class="li-check" onclick="markPackageArrived(${item.id})" title="Mark arrived"></div>
+        <span class="li-text" style="flex:1">${item.text}</span>
+        <button onclick="deletePackage(${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
+    } else {
+      div.innerHTML = `<span class="li-text" style="flex:1;color:var(--text-light);text-decoration:line-through;">${item.text}</span>`;
+    }
+    list.appendChild(div);
+  });
+}
+function addPackage() {
+  const inp = document.getElementById('packages-input');
+  if (!inp || !inp.value.trim()) return;
+  packagesData.active.push({ id: Date.now(), text: inp.value.trim() });
+  localStorage.setItem('steph-packages', JSON.stringify(packagesData));
+  inp.value = '';
+  renderPackages();
+}
+function markPackageArrived(id) {
+  const idx = packagesData.active.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  const item = packagesData.active.splice(idx, 1)[0];
+  packagesData.arrived.unshift(item);
+  localStorage.setItem('steph-packages', JSON.stringify(packagesData));
+  renderPackages();
+}
+function deletePackage(id) {
+  packagesData.active = packagesData.active.filter(x => x.id !== id);
+  localStorage.setItem('steph-packages', JSON.stringify(packagesData));
+  renderPackages();
+}
+function clearArrivedPackages() {
+  packagesData.arrived = [];
+  localStorage.setItem('steph-packages', JSON.stringify(packagesData));
+  renderPackages();
 }
 
 // ---- EVENTS ----
