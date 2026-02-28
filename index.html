@@ -719,7 +719,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v32';
+const APP_VERSION = '2026-02-28-v33';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -831,28 +831,25 @@ const WORKOUT_DAYS = [
   {
     day: 'Tuesday',
     emoji: '⚡',
-    label: 'Quick & Easy',
+    label: 'Move If You Can',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Limited time, no stress. 20 min is enough. ✨</p>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Pick One (20 min)</h3>
-      <div class="list-item"><span class="li-text">🚶 Stroller walk outside</span></div>
-      <div class="list-item"><span class="li-text">🧘 10 min stretch + 10 min walk</span></div>
-      <div class="list-item"><span class="li-text">💃 Dance with the boys in the kitchen</span></div>
-      <div class="list-item"><span class="li-text">🪑 10 min desk stretch (hips, back, neck)</span></div>
-      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Anything counts. Moving is winning.</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Busy day — no pressure. If you get 15–20 min, great. If not, that's fine too. 🤍</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">If you have a few minutes</h3>
+      <div class="list-item"><span class="li-text">🚶 Stroller walk with the boys</span></div>
+      <div class="list-item"><span class="li-text">🧘 10 min stretch while Hayes naps</span></div>
+      <div class="list-item"><span class="li-text">💃 Dance in the kitchen — counts!</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Movement is movement. No guilt either way.</span></div>`
   },
   {
     day: 'Wednesday',
-    emoji: '⚡',
-    label: 'Quick & Easy',
+    emoji: '😴',
+    label: 'Rest Day',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Same as Tuesday — low key, limited time. Keep it simple.</p>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Pick One (20 min)</h3>
-      <div class="list-item"><span class="li-text">🚶 Stroller walk outside</span></div>
-      <div class="list-item"><span class="li-text">🧘 10 min stretch + 10 min walk</span></div>
-      <div class="list-item"><span class="li-text">💃 Dance with the boys in the kitchen</span></div>
-      <div class="list-item"><span class="li-text">🪑 10 min desk stretch (hips, back, neck)</span></div>
-      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Anything counts. Moving is winning.</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Full rest today. You have a workout tomorrow — protect your energy. 🌿</p>
+      <div class="list-item"><span class="li-text">💧 Hydrate well</span></div>
+      <div class="list-item"><span class="li-text">🥩 Still hit protein — recovery needs it</span></div>
+      <div class="list-item"><span class="li-text">😴 Prioritize sleep if you can</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Rest is part of the plan, not a break from it.</span></div>`
   },
   {
     day: 'Thursday',
@@ -866,7 +863,7 @@ const WORKOUT_DAYS = [
       <div class="list-item"><span class="li-text">Arm swings × 10 forward, × 10 back</span></div>
       <div class="list-item"><span class="li-text">Bodyweight squats × 10 slow</span></div>
       <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Circuit — 3 Rounds</h3>
-      <div class="list-item"><span class="li-text">Goblet squat × 12 (use a dumbbell or water jug)</span></div>
+      <div class="list-item"><span class="li-text">Goblet squat × 12 (dumbbell or water jug)</span></div>
       <div class="list-item"><span class="li-text">Glute bridge × 15 (pause 1s at top)</span></div>
       <div class="list-item"><span class="li-text">Push-ups × 10 (knees totally fine)</span></div>
       <div class="list-item"><span class="li-text">Dumbbell row × 12 each side</span></div>
@@ -880,16 +877,17 @@ const WORKOUT_DAYS = [
   },
   {
     day: 'Friday',
-    emoji: '⚡',
-    label: 'Quick & Easy',
+    emoji: '🧘',
+    label: 'Stretch & Reset',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Barre tomorrow — today is light. 20 min max.</p>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Pick One (20 min)</h3>
-      <div class="list-item"><span class="li-text">🚶 Walk with the boys</span></div>
-      <div class="list-item"><span class="li-text">🧘 Full body stretch — 15 min YouTube yoga</span></div>
-      <div class="list-item"><span class="li-text">💆 Foam roll if you have one</span></div>
-      <div class="list-item"><span class="li-text">🌿 Legs up the wall for 10 min (seriously underrated)</span></div>
-      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Save your energy for Barre. You got this tomorrow.</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Barre tomorrow — today is about feeling good, not training. 🩰</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">10–15 min stretch</h3>
+      <div class="list-item"><span class="li-text">🌿 Legs up the wall — 5 min (so good)</span></div>
+      <div class="list-item"><span class="li-text">🦵 Hip flexor stretch 30s each side</span></div>
+      <div class="list-item"><span class="li-text">🪑 Seated figure-4 glute stretch</span></div>
+      <div class="list-item"><span class="li-text">🐱 Cat-cow 10 slow reps</span></div>
+      <div class="list-item"><span class="li-text">🧘 Child's pose 1 min</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Loose and ready for Barre tomorrow. 🔥</span></div>`
   },
   {
     day: 'Saturday',
@@ -906,15 +904,15 @@ const WORKOUT_DAYS = [
   {
     day: 'Sunday',
     emoji: '🌿',
-    label: 'Active Recovery',
+    label: 'Rest or Easy Walk',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Easy Sunday. Move gently, recharge for the week. 🌿</p>
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Full rest or something gentle. Recharge for Monday. 🌿</p>
       <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Choose Your Vibe</h3>
       <div class="list-item"><span class="li-text">🚶 Family walk or stroller stroll</span></div>
-      <div class="list-item"><span class="li-text">🧘 15 min gentle yoga or stretching</span></div>
-      <div class="list-item"><span class="li-text">🏊 Swim if you feel like it</span></div>
-      <div class="list-item"><span class="li-text">🛁 Epsom salt bath counts as recovery</span></div>
-      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Rest is part of the plan. You earned it.</span></div>`
+      <div class="list-item"><span class="li-text">🛁 Epsom salt bath (recovery counts)</span></div>
+      <div class="list-item"><span class="li-text">🧘 15 min gentle yoga if you feel like it</span></div>
+      <div class="list-item"><span class="li-text">📖 Read, rest, do nothing — also valid</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">You earned this. See you Monday. 💪</span></div>`
   },
 ];
 
