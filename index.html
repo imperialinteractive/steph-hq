@@ -633,17 +633,17 @@
   </div>
   <div class="list-section">
     <h2>This Week</h2>
-    <div class="list-item"><span class="li-text">Monday — Full body strength 💪</span></div>
-    <div class="list-item"><span class="li-text">Tuesday — Cardio / walk 🚶</span></div>
-    <div class="list-item"><span class="li-text">Wednesday — Upper body + core 🏋️</span></div>
-    <div class="list-item"><span class="li-text">Thursday — Rest or light walk</span></div>
-    <div class="list-item"><span class="li-text">Friday — Full body strength 💪</span></div>
-    <div class="list-item"><span class="li-text">Saturday — Barre + Weights class 🩰</span></div>
-    <div class="list-item"><span class="li-text">Sunday — Rest ✨</span></div>
-    <h2>Notes</h2>
-    <div class="list-item"><span class="li-text">5 months postpartum — focus on form, not weight</span></div>
-    <div class="list-item"><span class="li-text">Protein within 60–90 min after workout</span></div>
+    <div id="workout-day-list"></div>
   </div>
+</div>
+
+<!-- WORKOUT DAY DETAIL -->
+<div class="screen" id="screen-workout-day">
+  <div class="header">
+    <span class="back" onclick="showScreen('workouts')">← Workouts</span>
+    <h1 id="workout-day-title">Monday</h1>
+  </div>
+  <div id="workout-day-content" style="padding:0 16px;"></div>
 </div>
 
 <!-- EVENTS -->
@@ -695,7 +695,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v24';
+const APP_VERSION = '2026-02-28-v25';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -792,6 +792,107 @@ function categorizeGroceryItem(text) {
 
 const HOUSE_ITEMS = [];
 
+// ---- WORKOUT DATA ----
+const WORKOUT_DAYS = [
+  {
+    day: 'Monday',
+    emoji: '💪',
+    label: 'Full Body Strength',
+    detail: `
+      <div style="margin-bottom:16px;"><p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:12px;">Full body strength — focus on form, not weight. 5 months postpartum.</p></div>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Warm Up (5 min)</h3>
+      <div class="list-item"><span class="li-text">Arm circles + leg swings</span></div>
+      <div class="list-item"><span class="li-text">Bodyweight squats × 10</span></div>
+      <div class="list-item"><span class="li-text">Hip circles × 10 each side</span></div>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Main (3 rounds)</h3>
+      <div class="list-item"><span class="li-text">Goblet squat × 12</span></div>
+      <div class="list-item"><span class="li-text">Dumbbell Romanian deadlift × 10</span></div>
+      <div class="list-item"><span class="li-text">Push-ups (knees ok) × 10</span></div>
+      <div class="list-item"><span class="li-text">Dumbbell row × 12 each side</span></div>
+      <div class="list-item"><span class="li-text">Glute bridge × 15</span></div>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Cool Down</h3>
+      <div class="list-item"><span class="li-text">Hip flexor stretch 30s each</span></div>
+      <div class="list-item"><span class="li-text">Child's pose 1 min</span></div>
+      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+  },
+  {
+    day: 'Tuesday',
+    emoji: '🚶',
+    label: 'Cardio / Walk',
+    detail: `
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Active recovery day — get moving without overdoing it.</p>
+      <div class="list-item"><span class="li-text">30 min walk outside (aim for 7,500 steps)</span></div>
+      <div class="list-item"><span class="li-text">Or 20 min incline walk if treadmill</span></div>
+      <div class="list-item"><span class="li-text">Stroller walk counts! 👶</span></div>
+      <div class="list-item"><span class="li-text">Finish with 10 min stretch</span></div>`
+  },
+  {
+    day: 'Wednesday',
+    emoji: '🏋️',
+    label: 'Upper Body + Core',
+    detail: `
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Upper body focus + core. Modify anything that feels unstable.</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Upper Body (3 rounds)</h3>
+      <div class="list-item"><span class="li-text">Dumbbell shoulder press × 12</span></div>
+      <div class="list-item"><span class="li-text">Lateral raises × 15</span></div>
+      <div class="list-item"><span class="li-text">Bicep curls × 12</span></div>
+      <div class="list-item"><span class="li-text">Tricep overhead extension × 12</span></div>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Core</h3>
+      <div class="list-item"><span class="li-text">Dead bugs × 10 each side</span></div>
+      <div class="list-item"><span class="li-text">Plank hold 20–30s × 3</span></div>
+      <div class="list-item"><span class="li-text">Bird dogs × 10 each side</span></div>
+      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+  },
+  {
+    day: 'Thursday',
+    emoji: '🧘',
+    label: 'Rest or Light Walk',
+    detail: `
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Recovery day. Listen to your body.</p>
+      <div class="list-item"><span class="li-text">Optional: 15–20 min gentle walk</span></div>
+      <div class="list-item"><span class="li-text">10 min stretch or yoga</span></div>
+      <div class="list-item"><span class="li-text">Hydrate well 💧</span></div>
+      <div class="list-item"><span class="li-text">Sleep is a workout too 😴</span></div>`
+  },
+  {
+    day: 'Friday',
+    emoji: '💪',
+    label: 'Full Body Strength',
+    detail: `
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Same as Monday. Push a little harder — rest is coming!</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Main (3 rounds)</h3>
+      <div class="list-item"><span class="li-text">Goblet squat × 12</span></div>
+      <div class="list-item"><span class="li-text">Dumbbell Romanian deadlift × 10</span></div>
+      <div class="list-item"><span class="li-text">Push-ups × 10</span></div>
+      <div class="list-item"><span class="li-text">Dumbbell row × 12 each side</span></div>
+      <div class="list-item"><span class="li-text">Glute bridge × 15</span></div>
+      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+  },
+  {
+    day: 'Saturday',
+    emoji: '🩰',
+    label: 'Barre + Weights Class',
+    detail: `
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Class day! Barre + Weights. Small movements, big burn.</p>
+      <div class="list-item"><span class="li-text">Light snack 45–60 min before (banana + nut butter)</span></div>
+      <div class="list-item"><span class="li-text">Hydrate well before and after</span></div>
+      <div class="list-item"><span class="li-text">Don't chase heaviest weight — time under tension wins</span></div>
+      <div class="list-item"><span class="li-text">Modify anything that feels unstable</span></div>
+      <div class="list-item"><span class="li-text">The pulses are supposed to burn 🔥</span></div>
+      <div class="list-item"><span class="li-text">🥩 30–40g protein within 60–90 min after</span></div>`
+  },
+  {
+    day: 'Sunday',
+    emoji: '✨',
+    label: 'Rest Day',
+    detail: `
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Full rest. You earned it. 🌿</p>
+      <div class="list-item"><span class="li-text">No workout today</span></div>
+      <div class="list-item"><span class="li-text">Gentle stretch or walk if you feel like it</span></div>
+      <div class="list-item"><span class="li-text">Focus on recovery — sleep, food, water</span></div>`
+  },
+];
+
 // ---- CALENDAR DATA (updated by Lumen 3x daily) ----
 const CALENDAR_DATA = {
   lastUpdated: 'Sat Feb 28, 2026 — 12:30 PM',
@@ -866,6 +967,7 @@ function showScreen(name) {
   if (name === 'wellness') renderWellness();
   if (name === 'kids') renderKids();
   if (name === 'calendar') renderCalendar();
+  if (name === 'workouts') renderWorkouts();
 }
 
 // ---- TODAY ----
@@ -1066,6 +1168,38 @@ function addHouse() {
   localStorage.setItem('steph-house', JSON.stringify(houseItems));
   inp.value = '';
   renderHouse();
+}
+
+// ---- WORKOUTS ----
+function renderWorkouts() {
+  const list = document.getElementById('workout-day-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const today = new Date().getDay(); // 0=Sun,1=Mon...
+  const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun
+  WORKOUT_DAYS.forEach((w, i) => {
+    const jsDay = dayOrder[i];
+    const isToday = jsDay === today;
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.style.cursor = 'pointer';
+    div.innerHTML = `
+      <span style="font-size:20px;margin-right:4px;">${w.emoji}</span>
+      <span class="li-text" style="flex:1;">
+        <strong>${w.day}</strong>${isToday ? ' <span style="font-size:11px;background:var(--green);color:white;border-radius:8px;padding:1px 7px;font-family:-apple-system,sans-serif;">Today</span>' : ''}
+        <br><span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">${w.label}</span>
+      </span>
+      <span style="color:var(--text-light);font-size:18px;">›</span>`;
+    div.onclick = () => openWorkoutDay(i);
+    list.appendChild(div);
+  });
+}
+
+function openWorkoutDay(index) {
+  const w = WORKOUT_DAYS[index];
+  document.getElementById('workout-day-title').textContent = w.day;
+  document.getElementById('workout-day-content').innerHTML = w.detail;
+  showScreen('workout-day');
 }
 
 // ---- CALENDAR ----
