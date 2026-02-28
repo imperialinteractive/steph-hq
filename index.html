@@ -486,8 +486,9 @@
 
 <!-- TO-DO HOME (category grid) -->
 <div class="screen" id="screen-todo">
-  <div class="home-header">
-    <h1>To-Do 📋</h1>
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>To-Do</h1>
   </div>
   <div class="grid" id="todo-cat-grid">
     <!-- rendered by JS -->
@@ -680,7 +681,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v22';
+const APP_VERSION = '2026-02-28-v23';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
