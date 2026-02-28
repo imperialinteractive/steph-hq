@@ -633,8 +633,15 @@
   </div>
   <div class="list-section">
     <h2>This Week</h2>
-    <div id="workout-day-list"></div>
+    <div class="list-item"><span class="li-text">Mon — Full Body Strength 💪</span></div>
+    <div class="list-item"><span class="li-text">Tue — Cardio / Walk 🚶</span></div>
+    <div class="list-item"><span class="li-text">Wed — Upper Body + Core 🏋️</span></div>
+    <div class="list-item"><span class="li-text">Thu — Rest or Light Walk 🧘</span></div>
+    <div class="list-item"><span class="li-text">Fri — Full Body Strength 💪</span></div>
+    <div class="list-item"><span class="li-text">Sat — Barre + Weights 🩰</span></div>
+    <div class="list-item"><span class="li-text">Sun — Rest ✨</span></div>
   </div>
+  <div class="grid" id="workout-day-grid"></div>
 </div>
 
 <!-- WORKOUT DAY DETAIL -->
@@ -695,7 +702,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v25';
+const APP_VERSION = '2026-02-28-v26';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1172,26 +1179,23 @@ function addHouse() {
 
 // ---- WORKOUTS ----
 function renderWorkouts() {
-  const list = document.getElementById('workout-day-list');
-  if (!list) return;
-  list.innerHTML = '';
-  const today = new Date().getDay(); // 0=Sun,1=Mon...
+  const grid = document.getElementById('workout-day-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const today = new Date().getDay();
   const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun
   WORKOUT_DAYS.forEach((w, i) => {
     const jsDay = dayOrder[i];
     const isToday = jsDay === today;
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    div.style.cursor = 'pointer';
-    div.innerHTML = `
-      <span style="font-size:20px;margin-right:4px;">${w.emoji}</span>
-      <span class="li-text" style="flex:1;">
-        <strong>${w.day}</strong>${isToday ? ' <span style="font-size:11px;background:var(--green);color:white;border-radius:8px;padding:1px 7px;font-family:-apple-system,sans-serif;">Today</span>' : ''}
-        <br><span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">${w.label}</span>
-      </span>
-      <span style="color:var(--text-light);font-size:18px;">›</span>`;
-    div.onclick = () => openWorkoutDay(i);
-    list.appendChild(div);
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    if (isToday) tile.style.outline = '2px solid var(--green)';
+    tile.innerHTML = `
+      <span class="tile-emoji">${w.emoji}</span>
+      <span class="tile-label">${w.day}</span>
+      <span style="display:block;font-size:11px;color:#4a3728;font-family:-apple-system,sans-serif;margin-top:4px;opacity:0.7;">${isToday ? '⬤ Today' : w.label.split(' ').slice(0,2).join(' ')}</span>`;
+    tile.onclick = () => openWorkoutDay(i);
+    grid.appendChild(tile);
   });
 }
 
