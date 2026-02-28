@@ -461,6 +461,10 @@
       <span class="tile-emoji">🌿</span>
       <span class="tile-label">Wellness</span>
     </div>
+    <div class="tile" onclick="showScreen('thrive')">
+      <span class="tile-emoji">✨</span>
+      <span class="tile-label">Thrive</span>
+    </div>
   </div>
 </div>
 
@@ -747,6 +751,45 @@
   </div>
 </div>
 
+<!-- THRIVE -->
+<div class="screen" id="screen-thrive">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Thrive ✨</h1>
+    <p>RMT · Pilates</p>
+  </div>
+  <div class="list-section">
+    <h2>💰 Income</h2>
+    <div id="thrive-income-list"></div>
+    <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
+      <input class="add-input" id="thrive-income-desc" placeholder="Description (e.g. RMT session — Sarah M.)..." style="width:100%;">
+      <div style="display:flex;gap:8px;">
+        <input class="add-input" id="thrive-income-amount" placeholder="Amount (e.g. $120)..." style="flex:1;" onkeydown="if(event.key==='Enter')addThriveItem('income')">
+        <button class="add-btn" onclick="addThriveItem('income')">Add</button>
+      </div>
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>🧾 Expenses</h2>
+    <div id="thrive-expenses-list"></div>
+    <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
+      <input class="add-input" id="thrive-expenses-desc" placeholder="Description (e.g. Massage table oil, supplies...)..." style="width:100%;">
+      <div style="display:flex;gap:8px;">
+        <input class="add-input" id="thrive-expenses-amount" placeholder="Amount (e.g. $45)..." style="flex:1;" onkeydown="if(event.key==='Enter')addThriveItem('expenses')">
+        <button class="add-btn" onclick="addThriveItem('expenses')">Add</button>
+      </div>
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>📋 Tax Notes</h2>
+    <div id="thrive-tax-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="thrive-tax-input" placeholder="Add tax note or reminder..." onkeydown="if(event.key==='Enter')addThriveTaxNote()">
+      <button class="add-btn" onclick="addThriveTaxNote()">Add</button>
+    </div>
+  </div>
+</div>
+
 <!-- CATEGORY PICKER MODAL -->
 <div class="modal-overlay" id="cat-modal" onclick="closeCatModal()">
   <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -757,7 +800,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v40';
+const APP_VERSION = '2026-02-28-v41';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1169,6 +1212,8 @@ const CALENDAR_DATA = {
   ]
 };
 
+const THRIVE_DEFAULT = { income: [], expenses: [], tax: [] };
+
 const EVENTS_DEFAULT = {
   birthdays: [
     { id: 4001, text: '💛 Mom\'s Birthday — March 2nd' },
@@ -1212,6 +1257,7 @@ if (storedVersion !== APP_VERSION) {
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
+  localStorage.setItem('steph-thrive', JSON.stringify(THRIVE_DEFAULT));
   localStorage.setItem('steph-playdates', JSON.stringify([]));
   localStorage.setItem('steph-packages', JSON.stringify(PACKAGES_DEFAULT));
   localStorage.setItem('steph-wellness-goals', JSON.stringify(WELLNESS_GOALS_DEFAULT));
@@ -1223,6 +1269,7 @@ let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
 let packagesData = JSON.parse(localStorage.getItem('steph-packages') || 'null') || JSON.parse(JSON.stringify(PACKAGES_DEFAULT));
+let thriveData = JSON.parse(localStorage.getItem('steph-thrive') || 'null') || JSON.parse(JSON.stringify(THRIVE_DEFAULT));
 let playdates = JSON.parse(localStorage.getItem('steph-playdates') || '[]');
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
 let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
@@ -1238,6 +1285,7 @@ function showScreen(name) {
   if (name === 'todo-cat') renderTodoCatList();
   if (name === 'grocery') renderGrocery();
   if (name === 'recipes') renderRecipes();
+  if (name === 'thrive') renderThrive();
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
@@ -1475,6 +1523,80 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-title').textContent = w.day;
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
+}
+
+// ---- THRIVE ----
+function renderThrive() {
+  renderThriveList('thrive-income-list', thriveData.income, '💰');
+  renderThriveList('thrive-expenses-list', thriveData.expenses, '🧾');
+  renderThriveTaxList();
+  renderThriveSummary();
+}
+function renderThriveList(listId, items, type) {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">Nothing logged yet</span></div>`;
+    return;
+  }
+  let total = 0;
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    const amt = item.amount ? `<span style="font-weight:600;color:var(--brown);font-family:-apple-system,sans-serif;min-width:60px;text-align:right;">${item.amount}</span>` : '';
+    div.innerHTML = `<span class="li-text" style="flex:1">${item.text}${item.date ? ' <span style=\"font-size:11px;color:var(--text-light)\">' + item.date + '</span>' : ''}</span>${amt}<button onclick="deleteThriveItem('${type==='💰'?'income':'expenses'}',${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
+    list.appendChild(div);
+    const n = parseFloat((item.amount||'').replace(/[^0-9.]/g,''));
+    if (!isNaN(n)) total += n;
+  });
+  if (total > 0) {
+    const tot = document.createElement('div');
+    tot.style.cssText = 'padding:8px 0 4px;font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;color:var(--brown);text-align:right;';
+    tot.textContent = 'Total: $' + total.toFixed(2);
+    list.appendChild(tot);
+  }
+}
+function renderThriveTaxList() {
+  const list = document.getElementById('thrive-tax-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!thriveData.tax.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">No notes yet</span></div>`;
+    return;
+  }
+  thriveData.tax.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `<span class="li-text" style="flex:1">${item.text}</span><button onclick="deleteThriveItem('tax',${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
+    list.appendChild(div);
+  });
+}
+function renderThriveSummary() {}
+function addThriveItem(cat) {
+  const desc = document.getElementById('thrive-' + cat + '-desc');
+  const amt = document.getElementById('thrive-' + cat + '-amount');
+  if (!desc || !desc.value.trim()) return;
+  const today = new Date();
+  const dateStr = (today.getMonth()+1) + '/' + today.getDate() + '/' + today.getFullYear();
+  thriveData[cat].push({ id: Date.now(), text: desc.value.trim(), amount: amt ? amt.value.trim() : '', date: dateStr });
+  localStorage.setItem('steph-thrive', JSON.stringify(thriveData));
+  desc.value = '';
+  if (amt) amt.value = '';
+  renderThrive();
+}
+function addThriveTaxNote() {
+  const inp = document.getElementById('thrive-tax-input');
+  if (!inp || !inp.value.trim()) return;
+  thriveData.tax.push({ id: Date.now(), text: inp.value.trim() });
+  localStorage.setItem('steph-thrive', JSON.stringify(thriveData));
+  inp.value = '';
+  renderThriveTaxList();
+}
+function deleteThriveItem(cat, id) {
+  thriveData[cat] = thriveData[cat].filter(x => x.id !== id);
+  localStorage.setItem('steph-thrive', JSON.stringify(thriveData));
+  renderThrive();
 }
 
 // ---- PACKAGES ----
