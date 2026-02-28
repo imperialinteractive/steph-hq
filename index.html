@@ -615,7 +615,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v15';
+const APP_VERSION = '2026-02-28-v16';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -635,8 +635,8 @@ const RECIPES = [
   {
     id: 1,
     name: 'One Pan Lemon Pepper Yogurt Chicken & Rice',
-    desc: 'Half Baked Harvest · One pan · Family dinner',
-    tag: 'Dinner',
+    desc: 'Half Baked Harvest · Family dinner',
+    cat: '🥘 One Pan / One Pot',
     source: 'https://www.halfbakedharvest.com/lemon-pepper-yogurt-chicken/',
     body: `<h3>What you need</h3><p>Chicken thighs or breasts, Greek yogurt, lemon, garlic, pepper, oregano, thyme, paprika, basmati rice, broccoli, olive oil</p><h3>How to make it</h3><ol><li>Marinate chicken in Greek yogurt, lemon juice, garlic, pepper, oregano, thyme, paprika</li><li>Add dry basmati rice and broccoli to baking dish</li><li>Place chicken on top, pour any extra marinade over</li><li>Bake covered at 375°F for 45 min, then uncovered 15 min</li></ol><h3>Notes</h3><p>Rush-approved ✅ · No melted cheese ✅ · No seafood ✅</p>`
   },
@@ -644,7 +644,7 @@ const RECIPES = [
     id: 2,
     name: 'Jack Astor\'s Asiago Chicken Bow Ties',
     desc: 'Copycat · Reddit-verified · 4 cheese cream sauce',
-    tag: 'Dinner',
+    cat: '🍝 Pasta',
     source: null,
     body: `<h3>The Chicken</h3><ul><li>Boneless chicken breast</li><li>Egg wash (egg + splash of cream)</li><li>2:1 mix shredded Asiago + seasoned flour</li><li>Pan fry until golden</li></ul><h3>Four Cheese Cream Sauce</h3><ul><li>Butter + heavy cream (low heat)</li><li>Asiago, Parmesan, Romano, Mozzarella — add gradually</li><li>Pinch smoked paprika + 1 tbsp chicken bouillon</li><li>Salt + dried parsley</li><li>Thin with pasta water as needed</li></ul><h3>Assembly</h3><ul><li>Bowtie pasta, al dente</li><li>Sun-dried tomatoes (sliced thin)</li><li>Toss pasta in sauce, top with sliced chicken</li><li>Garnish with parsley</li></ul><h3>Notes</h3><p>Rush: serve his pasta plain on the side. Make extra breading — it clumps.</p>`
   },
@@ -652,7 +652,7 @@ const RECIPES = [
     id: 3,
     name: 'Penne alla Vodka',
     desc: 'The Pasta Renaissance · p.218 · Family staple',
-    tag: 'Dinner',
+    cat: '🍝 Pasta',
     source: null,
     body: `<h3>Ingredients (Serves 4)</h3><ul><li>1 shallot, diced · 1 garlic clove, minced</li><li>3 tbsp extra-virgin olive oil</li><li>¼ cup tomato paste</li><li>1 cup vodka</li><li>1 can (14.5oz) whole peeled tomatoes, crushed</li><li>1 cup heavy cream</li><li>1 tsp chili flakes</li><li>¾ lb medium shrimp, peeled & deveined</li><li>1 lb penne · Fresh parsley</li></ul><h3>Method</h3><ol><li>Cook shallot + garlic in olive oil 1–2 min</li><li>Add tomato paste, fry until brick-coloured, ~2 min</li><li>Add vodka, reduce by half ~1.5 min</li><li>Add tomatoes + cream, simmer 5 min</li><li>Add chili + shrimp, cook ~2.5 min</li><li>Cook penne al dente, toss with sauce</li></ol>`
   },
@@ -899,15 +899,30 @@ function addHouse() {
 }
 
 // ---- RECIPES ----
+const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Baking & Desserts','🌮 Tacos & Wraps'];
+
 function renderRecipes() {
   const grid = document.getElementById('recipe-grid');
   grid.innerHTML = '';
+  const cats = {};
   RECIPES.forEach(r => {
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    card.innerHTML = `<h3>${r.name}</h3><p>${r.desc}</p><span class="recipe-tag">${r.tag}</span>`;
-    card.onclick = () => showRecipe(r.id);
-    grid.appendChild(card);
+    const cat = r.cat || '🍽️ Other';
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push(r);
+  });
+  const order = [...RECIPE_CAT_ORDER, ...Object.keys(cats).filter(c => !RECIPE_CAT_ORDER.includes(c))];
+  order.forEach(cat => {
+    if (!cats[cat]) return;
+    const section = document.createElement('div');
+    section.innerHTML = `<div style="padding: 20px 16px 8px;"><span style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;font-weight:600;">${cat}</span></div>`;
+    cats[cat].forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'recipe-card';
+      card.innerHTML = `<h3>${r.name}</h3><p>${r.desc}</p>`;
+      card.onclick = () => showRecipe(r.id);
+      section.appendChild(card);
+    });
+    grid.appendChild(section);
   });
 }
 
