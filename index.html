@@ -641,14 +641,39 @@
 <div class="screen" id="screen-events">
   <div class="header">
     <span class="back" onclick="showScreen('home')">← HQ</span>
-    <h1>Events</h1>
+    <h1>Events 🎉</h1>
   </div>
   <div class="list-section">
-    <h2>Coming Up</h2>
-    <div class="list-item"><span class="li-text">📸 Hayes 5-month photo — today!</span></div>
-    <div class="list-item"><span class="li-text">💛 Mom's Birthday — March 2nd</span></div>
-    <div class="list-item"><span class="li-text">📚 Cookbook Club restart — March 8th (TBC)</span></div>
-    <div class="list-item"><span class="li-text">👶 Hayes 6-month — end of March</span></div>
+    <h2>🎂 Birthdays</h2>
+    <div id="events-birthdays-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="events-birthdays-input" placeholder="Add birthday..." onkeydown="if(event.key==='Enter')addEvent('birthdays')">
+      <button class="add-btn" onclick="addEvent('birthdays')">Add</button>
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>🎊 Holidays</h2>
+    <div id="events-holidays-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="events-holidays-input" placeholder="Add holiday..." onkeydown="if(event.key==='Enter')addEvent('holidays')">
+      <button class="add-btn" onclick="addEvent('holidays')">Add</button>
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>🥂 Hangouts</h2>
+    <div id="events-hangouts-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="events-hangouts-input" placeholder="Add hangout..." onkeydown="if(event.key==='Enter')addEvent('hangouts')">
+      <button class="add-btn" onclick="addEvent('hangouts')">Add</button>
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>📅 Coming Up</h2>
+    <div id="events-comingup-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="events-comingup-input" placeholder="Add something coming up..." onkeydown="if(event.key==='Enter')addEvent('comingup')">
+      <button class="add-btn" onclick="addEvent('comingup')">Add</button>
+    </div>
   </div>
 </div>
 
@@ -686,7 +711,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v27';
+const APP_VERSION = '2026-02-28-v28';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -910,6 +935,26 @@ const CALENDAR_DATA = {
   ]
 };
 
+const EVENTS_DEFAULT = {
+  birthdays: [
+    { id: 4001, text: '💛 Mom's Birthday — March 2nd' },
+    { id: 4002, text: '🎂 Rush — August 27th' },
+    { id: 4003, text: '🎂 Hayes — September 28th' },
+  ],
+  holidays: [
+    { id: 4101, text: '🐣 Easter — April 20th, 2025' },
+    { id: 4102, text: '🇨🇦 Canada Day — July 1st' },
+    { id: 4103, text: '🦃 Thanksgiving — October 13th' },
+    { id: 4104, text: '🎄 Christmas — December 25th' },
+  ],
+  hangouts: [
+    { id: 4201, text: '📚 Cookbook Club restart — March 8th (TBC)' },
+  ],
+  comingup: [
+    { id: 4301, text: '👶 Hayes 6-month — end of March' },
+  ],
+};
+
 const WELLNESS_GOALS_DEFAULT = [
   { id: 2001, text: '🎯 Lose baby weight (postpartum — Hayes 5 months)' },
   { id: 2002, text: '💪 Build strength back progressively' },
@@ -930,6 +975,7 @@ if (storedVersion !== APP_VERSION) {
   localStorage.clear();
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
+  localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
   localStorage.setItem('steph-wellness-goals', JSON.stringify(WELLNESS_GOALS_DEFAULT));
   localStorage.setItem('steph-wellness-selfcare', JSON.stringify(WELLNESS_SELFCARE_DEFAULT));
   localStorage.setItem('steph-app-version', APP_VERSION);
@@ -940,6 +986,7 @@ let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
 let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
+let eventsData = JSON.parse(localStorage.getItem('steph-events') || 'null') || JSON.parse(JSON.stringify(EVENTS_DEFAULT));
 
 // ---- NAVIGATION ----
 function showScreen(name) {
@@ -951,6 +998,7 @@ function showScreen(name) {
   if (name === 'todo-cat') renderTodoCatList();
   if (name === 'grocery') renderGrocery();
   if (name === 'recipes') renderRecipes();
+  if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
   if (name === 'kids') renderKids();
   if (name === 'calendar') renderCalendar();
@@ -1172,6 +1220,40 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-title').textContent = w.day;
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
+}
+
+// ---- EVENTS ----
+const EVENT_CATS = ['birthdays','holidays','hangouts','comingup'];
+function renderEvents() {
+  EVENT_CATS.forEach(cat => {
+    const list = document.getElementById('events-' + cat + '-list');
+    if (!list) return;
+    list.innerHTML = '';
+    const items = eventsData[cat] || [];
+    if (!items.length) {
+      list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">Nothing yet ✨</span></div>`;
+      return;
+    }
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `<span class="li-text" style="flex:1">${item.text}</span><button onclick="deleteEvent('${cat}',${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
+      list.appendChild(div);
+    });
+  });
+}
+function addEvent(cat) {
+  const inp = document.getElementById('events-' + cat + '-input');
+  if (!inp || !inp.value.trim()) return;
+  eventsData[cat].push({ id: Date.now(), text: inp.value.trim() });
+  localStorage.setItem('steph-events', JSON.stringify(eventsData));
+  inp.value = '';
+  renderEvents();
+}
+function deleteEvent(cat, id) {
+  eventsData[cat] = eventsData[cat].filter(x => x.id !== id);
+  localStorage.setItem('steph-events', JSON.stringify(eventsData));
+  renderEvents();
 }
 
 // ---- CALENDAR ----
