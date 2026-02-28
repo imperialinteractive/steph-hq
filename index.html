@@ -576,6 +576,10 @@
   <div class="list-section" id="kids-todo-section">
     <h2>📋 Kids To-Dos</h2>
     <div id="kids-todo-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="kids-todo-input" placeholder="Add kids to-do..." onkeydown="if(event.key==='Enter')addKidsTodo()">
+      <button class="add-btn" onclick="addKidsTodo()">Add</button>
+    </div>
   </div>
 </div>
 
@@ -715,7 +719,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v31';
+const APP_VERSION = '2026-02-28-v32';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1036,6 +1040,21 @@ function toggleToday(id) {
   localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
   renderToday();
 }
+function checkTodayItems(ids) {
+  ids.forEach(id => { todayChecked[id] = true; });
+  localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+  renderToday();
+}
+// Auto-check items from URL param: ?check=1,2,3
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const checkParam = params.get('check');
+  if (checkParam) {
+    checkParam.split(',').map(Number).filter(Boolean).forEach(id => { todayChecked[id] = true; });
+    localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+    history.replaceState(null, '', window.location.pathname);
+  }
+})();
 
 function updateRing() {
   const total = TODAY_ITEMS.length;
@@ -1304,6 +1323,15 @@ function renderKids() {
       <span class="li-text">${item.text}</span>`;
     list.appendChild(div);
   });
+}
+function addKidsTodo() {
+  const inp = document.getElementById('kids-todo-input');
+  if (!inp || !inp.value.trim()) return;
+  const newItem = { id: Date.now(), text: inp.value.trim(), done: false, cat: '👶 Kids & Health' };
+  todoItems.push(newItem);
+  localStorage.setItem('steph-todo', JSON.stringify(todoItems));
+  inp.value = '';
+  renderKids();
 }
 
 // ---- WELLNESS ----
