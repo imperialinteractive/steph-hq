@@ -70,27 +70,29 @@
 
   /* HOME GRID */
   .home-header {
-    padding: 60px 20px 20px;
+    padding: 56px 20px 4px;
     text-align: center;
-    position: relative;
   }
   .home-widget {
-    position: absolute;
-    top: 54px;
-    left: 18px;
-    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family: -apple-system, sans-serif;
-    line-height: 1.3;
+    padding: 0 20px 8px;
+    justify-content: flex-start;
   }
   .home-widget .hw-date {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text);
   }
-  .home-widget .hw-weather {
-    font-size: 12px;
+  .home-widget .hw-sep {
     color: var(--text-light);
-    margin-top: 1px;
+    font-size: 12px;
+  }
+  .home-widget .hw-weather {
+    font-size: 13px;
+    color: var(--text-light);
   }
   .home-header h1 {
     font-size: 34px;
@@ -432,11 +434,12 @@
 <!-- HOME -->
 <div class="screen active" id="screen-home">
   <div class="home-header">
-    <div class="home-widget">
-      <div class="hw-date" id="home-date">—</div>
-      <div class="hw-weather" id="home-weather">—</div>
-    </div>
     <h1>Home Base 🌿</h1>
+  </div>
+  <div class="home-widget">
+    <div class="hw-date" id="home-date">—</div>
+    <div class="hw-sep">·</div>
+    <div class="hw-weather" id="home-weather">—</div>
   </div>
   <button onclick="checkForUpdates()" style="position:fixed;top:14px;right:16px;background:var(--card);border:none;border-radius:50%;width:38px;height:38px;font-size:18px;cursor:pointer;box-shadow:var(--shadow);z-index:100;display:flex;align-items:center;justify-content:center;">🔄</button>
   <div class="grid">
@@ -845,7 +848,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v43';
+const APP_VERSION = '2026-02-28-v44';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
