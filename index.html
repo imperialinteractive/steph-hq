@@ -484,13 +484,23 @@
   </div>
 </div>
 
-<!-- TO-DO -->
+<!-- TO-DO HOME (category grid) -->
 <div class="screen" id="screen-todo">
-  <div class="header">
-    <span class="back" onclick="showScreen('home')">← HQ</span>
-    <h1>To-Do</h1>
+  <div class="home-header">
+    <h1>To-Do 📋</h1>
   </div>
-  <div id="todo-list"></div>
+  <div class="grid" id="todo-cat-grid">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- TO-DO CATEGORY DETAIL -->
+<div class="screen" id="screen-todo-cat">
+  <div class="header">
+    <span class="back" onclick="showScreen('todo')">← To-Do</span>
+    <h1 id="todo-cat-title">Tasks</h1>
+  </div>
+  <div id="todo-cat-list"></div>
   <div class="add-row">
     <input class="add-input" id="todo-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()">
     <button class="add-btn" onclick="addTodo()">Add</button>
@@ -666,7 +676,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v20';
+const APP_VERSION = '2026-02-28-v21';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -786,6 +796,7 @@ function showScreen(name) {
   window.scrollTo(0, 0);
   if (name === 'today') renderToday();
   if (name === 'todo') renderTodo();
+  if (name === 'todo-cat') renderTodoCatList();
   if (name === 'grocery') renderGrocery();
   if (name === 'house') renderHouse();
   if (name === 'recipes') renderRecipes();
@@ -844,50 +855,88 @@ function renderList(containerId, items, toggleFn, deleteFn) {
 }
 
 function saveEdit(listId, id, text) {
-  if (listId === 'todo-list') { const i = todoItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-todo', JSON.stringify(todoItems)); }
+  if (listId === 'todo-list' || listId === 'todo-cat-list') { const i = todoItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-todo', JSON.stringify(todoItems)); }
   if (listId === 'grocery-list') { const i = groceryItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); }
   if (listId === 'house-list') { const i = houseItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-house', JSON.stringify(houseItems)); }
 }
 
 // ---- TODO ----
+const TODO_CATS = [
+  { cat: '🏠 House & Organizing', emoji: '🏠' },
+  { cat: '💅 Personal', emoji: '💅' },
+  { cat: '👶 Kids & Health', emoji: '👶' },
+  { cat: '📸 Photos', emoji: '📸' },
+  { cat: '🛒 Shopping', emoji: '🛒' },
+  { cat: '💰 Joel To-Do', emoji: '💰' },
+  { cat: '💬 Discuss with Joel', emoji: '💬' },
+  { cat: '📋 Other', emoji: '📋' },
+];
+
+let currentTodoCat = null;
+
 function renderTodo() {
-  const container = document.getElementById('todo-list');
-  container.innerHTML = '';
-  // Group by category
-  const cats = {};
-  todoItems.forEach(item => {
-    const cat = item.cat || '📋 Other';
-    if (!cats[cat]) cats[cat] = [];
-    cats[cat].push(item);
-  });
-  Object.entries(cats).forEach(([cat, items]) => {
-    const section = document.createElement('div');
-    section.className = 'list-section';
-    section.innerHTML = `<h2>${cat}</h2>`;
-    items.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'list-item' + (item.done ? ' done' : '');
-      div.innerHTML = `
-        <div class="li-check" onclick="toggleTodo(${item.id})"></div>
-        <span class="li-text" contenteditable="true" onblur="saveEdit('todo-list',${item.id},this.textContent)">${item.text}</span>
-        <span class="li-delete" onclick="deleteTodo(${item.id})">×</span>`;
-      section.appendChild(div);
-    });
-    container.appendChild(section);
+  const grid = document.getElementById('todo-cat-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  TODO_CATS.forEach(({ cat, emoji }) => {
+    const count = todoItems.filter(x => (x.cat || '📋 Other') === cat && !x.done).length;
+    if (count === 0 && cat === '📋 Other') return; // hide empty Other
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.innerHTML = `<span class="tile-emoji">${emoji}</span><span class="tile-label">${cat.replace(/^\S+\s/,'')}</span>${count > 0 ? `<span style="display:block;font-size:12px;color:var(--brown);font-family:-apple-system,sans-serif;margin-top:4px;">${count} left</span>` : ''}`;
+    tile.onclick = () => openTodoCat(cat);
+    grid.appendChild(tile);
   });
 }
-function toggleTodo(id) { const i = todoItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-todo',JSON.stringify(todoItems)); renderTodo(); }
-function deleteTodo(id) { todoItems = todoItems.filter(x=>x.id!==id); localStorage.setItem('steph-todo',JSON.stringify(todoItems)); renderTodo(); }
+
+function openTodoCat(cat) {
+  currentTodoCat = cat;
+  document.getElementById('todo-cat-title').textContent = cat.replace(/^\S+\s/,'');
+  renderTodoCatList();
+  showScreen('todo-cat');
+}
+
+function renderTodoCatList() {
+  const container = document.getElementById('todo-cat-list');
+  container.innerHTML = '';
+  const items = todoItems.filter(x => (x.cat || '📋 Other') === currentTodoCat);
+  const section = document.createElement('div');
+  section.className = 'list-section';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item' + (item.done ? ' done' : '');
+    div.innerHTML = `
+      <div class="li-check" onclick="toggleTodo(${item.id})"></div>
+      <span class="li-text" contenteditable="true" onblur="saveEdit('todo-cat-list',${item.id},this.textContent)">${item.text}</span>
+      <span class="li-delete" onclick="deleteTodo(${item.id})">×</span>`;
+    section.appendChild(div);
+  });
+  container.appendChild(section);
+}
+
+function toggleTodo(id) {
+  const i = todoItems.find(x=>x.id===id);
+  if(i) i.done=!i.done;
+  localStorage.setItem('steph-todo',JSON.stringify(todoItems));
+  renderTodoCatList();
+  renderTodo();
+}
+function deleteTodo(id) {
+  todoItems = todoItems.filter(x=>x.id!==id);
+  localStorage.setItem('steph-todo',JSON.stringify(todoItems));
+  renderTodoCatList();
+  renderTodo();
+}
 function addTodo() {
   const inp = document.getElementById('todo-input');
   if (!inp.value.trim()) return;
   const text = inp.value.trim();
-  showCatModal(text, ['🏠 House & Organizing','💅 Personal','👶 Kids & Health','📸 Photos','🛒 Shopping','💰 Joel To-Do','💬 Discuss with Joel','📋 Other'], (chosenCat) => {
-    todoItems.push({ id: Date.now(), text, done: false, cat: chosenCat });
-    localStorage.setItem('steph-todo', JSON.stringify(todoItems));
-    inp.value = '';
-    renderTodo();
-  });
+  const cat = currentTodoCat || '📋 Other';
+  todoItems.push({ id: Date.now(), text, done: false, cat });
+  localStorage.setItem('steph-todo', JSON.stringify(todoItems));
+  inp.value = '';
+  renderTodoCatList();
+  renderTodo();
 }
 
 // ---- GROCERY ----
