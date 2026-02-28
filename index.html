@@ -585,6 +585,14 @@
       <button class="add-btn" onclick="addKidsTodo()">Add</button>
     </div>
   </div>
+  <div class="list-section">
+    <h2>🤝 Playdate Potentials</h2>
+    <div id="kids-playdates-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="kids-playdates-input" placeholder="Add name (e.g. Liam — from gym)..." onkeydown="if(event.key==='Enter')addPlaydate()">
+      <button class="add-btn" onclick="addPlaydate()">Add</button>
+    </div>
+  </div>
 </div>
 
 <!-- NUTRITION / MEAL LOG -->
@@ -746,7 +754,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v38';
+const APP_VERSION = '2026-02-28-v39';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1201,6 +1209,7 @@ if (storedVersion !== APP_VERSION) {
   localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
+  localStorage.setItem('steph-playdates', JSON.stringify([]));
   localStorage.setItem('steph-packages', JSON.stringify(PACKAGES_DEFAULT));
   localStorage.setItem('steph-wellness-goals', JSON.stringify(WELLNESS_GOALS_DEFAULT));
   localStorage.setItem('steph-wellness-selfcare', JSON.stringify(WELLNESS_SELFCARE_DEFAULT));
@@ -1211,6 +1220,7 @@ let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
 let packagesData = JSON.parse(localStorage.getItem('steph-packages') || 'null') || JSON.parse(JSON.stringify(PACKAGES_DEFAULT));
+let playdates = JSON.parse(localStorage.getItem('steph-playdates') || '[]');
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
 let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
 let eventsData = JSON.parse(localStorage.getItem('steph-events') || 'null') || JSON.parse(JSON.stringify(EVENTS_DEFAULT));
@@ -1578,6 +1588,7 @@ function renderCalendar() {
 
 // ---- KIDS ----
 function renderKids() {
+  renderPlaydates();
   const list = document.getElementById('kids-todo-list');
   if (!list) return;
   list.innerHTML = '';
@@ -1603,6 +1614,34 @@ function addKidsTodo() {
   localStorage.setItem('steph-todo', JSON.stringify(todoItems));
   inp.value = '';
   renderKids();
+}
+function renderPlaydates() {
+  const list = document.getElementById('kids-playdates-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!playdates.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">No potentials yet — add some! 🤝</span></div>`;
+    return;
+  }
+  playdates.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `<span class="li-text" style="flex:1">${item.text}</span><button onclick="deletePlaydate(${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
+    list.appendChild(div);
+  });
+}
+function addPlaydate() {
+  const inp = document.getElementById('kids-playdates-input');
+  if (!inp || !inp.value.trim()) return;
+  playdates.push({ id: Date.now(), text: inp.value.trim() });
+  localStorage.setItem('steph-playdates', JSON.stringify(playdates));
+  inp.value = '';
+  renderPlaydates();
+}
+function deletePlaydate(id) {
+  playdates = playdates.filter(x => x.id !== id);
+  localStorage.setItem('steph-playdates', JSON.stringify(playdates));
+  renderPlaydates();
 }
 
 // ---- WELLNESS ----
