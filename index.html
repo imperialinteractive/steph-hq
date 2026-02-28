@@ -615,7 +615,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v14';
+const APP_VERSION = '2026-02-28-v15';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -687,8 +687,28 @@ const TODO_ITEMS = [
 ];
 
 const GROCERY_ITEMS = [
-  { id: 1001, text: 'Rush milk 🥛', done: false },
+  { id: 1001, text: 'Rush milk 🥛', done: false, cat: '🥛 Dairy & Fridge' },
 ];
+
+// ---- GROCERY CATEGORIZER ----
+function categorizeGroceryItem(text) {
+  const t = text.toLowerCase();
+  if (/milk|yogurt|cheese|butter|cream|sour cream|cottage|kefir|oat milk|almond milk/.test(t)) return '🥛 Dairy & Fridge';
+  if (/chicken|turkey|beef|pork|steak|ground|sausage|hot dog|wiener|bacon|ham|lamb|bison/.test(t)) return '🥩 Meat & Protein';
+  if (/salmon|tuna|shrimp|fish|cod|halibut|scallop|seafood/.test(t)) return '🐟 Seafood';
+  if (/apple|banana|berry|berries|lemon|lime|orange|mango|grape|peach|pear|avocado|tomato|strawberry|blueberry|raspberry/.test(t)) return '🍎 Fruit';
+  if (/broccoli|spinach|kale|lettuce|romaine|arugula|carrot|celery|onion|garlic|pepper|zucchini|cucumber|potato|sweet potato|mushroom|asparagus|cabbage|cauliflower|veggie|vegetable|herb|parsley|cilantro|basil/.test(t)) return '🥦 Produce';
+  if (/bread|bagel|tortilla|wrap|pita|bun|roll|sourdough/.test(t)) return '🍞 Bread & Bakery';
+  if (/pasta|rice|quinoa|oat|granola|cereal|flour|noodle|fettuccine|penne|spaghetti/.test(t)) return '🌾 Grains & Pantry';
+  if (/bean|lentil|chickpea|tofu|tempeh|hummus/.test(t)) return '🫘 Beans & Legumes';
+  if (/olive oil|avocado oil|coconut oil|vinegar|soy sauce|hot sauce|ketchup|mustard|mayo|dressing|seasoning|spice|salt|pepper|bouillon|broth|stock|sauce|salsa|jam|honey|maple/.test(t)) return '🫙 Condiments & Oils';
+  if (/almond|cashew|walnut|peanut|nut|seed|hemp|chia|flax|almond butter|peanut butter/.test(t)) return '🥜 Nuts & Seeds';
+  if (/frozen|ice cream/.test(t)) return '🧊 Frozen';
+  if (/juice|water|sparkling|soda|coffee|tea|kombucha|drink/.test(t)) return '🥤 Drinks';
+  if (/chip|cracker|cookie|chocolate|candy|snack|protein bar|granola bar/.test(t)) return '🍫 Snacks';
+  if (/soap|shampoo|conditioner|toothpaste|deodorant|lotion|cleaning|detergent|paper towel|toilet paper|diaper|wipe/.test(t)) return '🧴 Household & Personal';
+  return '🛒 Other';
+}
 
 const HOUSE_ITEMS = [];
 
@@ -826,13 +846,40 @@ function addTodo() {
 }
 
 // ---- GROCERY ----
-function renderGrocery() { renderList('grocery-list', groceryItems, 'toggleGrocery', 'deleteGrocery'); }
+function renderGrocery() {
+  const container = document.getElementById('grocery-list');
+  container.innerHTML = '';
+  const cats = {};
+  const catOrder = ['🥦 Produce','🍎 Fruit','🥩 Meat & Protein','🐟 Seafood','🥛 Dairy & Fridge','🌾 Grains & Pantry','🫘 Beans & Legumes','🥜 Nuts & Seeds','🫙 Condiments & Oils','🍞 Bread & Bakery','🍫 Snacks','🥤 Drinks','🧊 Frozen','🧴 Household & Personal','🛒 Other'];
+  groceryItems.forEach(item => {
+    const cat = item.cat || '🛒 Other';
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push(item);
+  });
+  catOrder.forEach(cat => {
+    if (!cats[cat]) return;
+    const section = document.createElement('div');
+    section.className = 'list-section';
+    section.innerHTML = `<h2>${cat}</h2>`;
+    cats[cat].forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'list-item' + (item.done ? ' done' : '');
+      div.innerHTML = `
+        <div class="li-check" onclick="toggleGrocery(${item.id})"></div>
+        <span class="li-text" contenteditable="true" onblur="saveEdit('grocery-list',${item.id},this.textContent)">${item.text}</span>
+        <span class="li-delete" onclick="deleteGrocery(${item.id})">×</span>`;
+      section.appendChild(div);
+    });
+    container.appendChild(section);
+  });
+}
 function toggleGrocery(id) { const i = groceryItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-grocery',JSON.stringify(groceryItems)); renderGrocery(); }
 function deleteGrocery(id) { groceryItems = groceryItems.filter(x=>x.id!==id); localStorage.setItem('steph-grocery',JSON.stringify(groceryItems)); renderGrocery(); }
 function addGrocery() {
   const inp = document.getElementById('grocery-input');
   if (!inp.value.trim()) return;
-  groceryItems.push({ id: Date.now(), text: inp.value.trim(), done: false });
+  const text = inp.value.trim();
+  groceryItems.push({ id: Date.now(), text, done: false, cat: categorizeGroceryItem(text) });
   localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
   inp.value = '';
   renderGrocery();
