@@ -527,6 +527,12 @@
   <div class="grid" id="todo-cat-grid">
     <!-- rendered by JS -->
   </div>
+  <div style="padding:0 16px 16px;">
+    <div class="tile" onclick="showScreen('longterm')" style="display:flex;flex-direction:row;align-items:center;gap:12px;padding:18px 20px;border-radius:20px;">
+      <span style="font-size:28px;">🌟</span>
+      <span style="font-family:-apple-system,sans-serif;font-size:15px;font-weight:600;color:var(--text);">Long Term Goals</span>
+    </div>
+  </div>
 </div>
 
 <!-- TO-DO CATEGORY DETAIL -->
@@ -539,6 +545,21 @@
   <div class="add-row">
     <input class="add-input" id="todo-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()">
     <button class="add-btn" onclick="addTodo()">Add</button>
+  </div>
+</div>
+
+<!-- LONG TERM GOALS -->
+<div class="screen" id="screen-longterm">
+  <div class="header">
+    <span class="back" onclick="showScreen('todo')">← To-Do</span>
+    <h1>Long Term Goals 🌟</h1>
+  </div>
+  <div class="list-section">
+    <div id="longterm-goals-list"></div>
+    <div class="add-row">
+      <input class="add-input" id="longterm-input" placeholder="Add a goal..." onkeydown="if(event.key==='Enter')addLongtermGoal()">
+      <button class="add-btn" onclick="addLongtermGoal()">Add</button>
+    </div>
   </div>
 </div>
 
@@ -967,7 +988,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v52';
+const APP_VERSION = '2026-02-28-v53';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1381,6 +1402,8 @@ const CALENDAR_DATA = {
 
 const MEMORIES_DEFAULT = { rush: [], hayes: [] };
 
+const LONGTERM_GOALS_DEFAULT = [];
+
 const WAITLIST_DEFAULT = [];
 
 const THRIVE_DEFAULT = { income: [], expenses: [], tax: [] };
@@ -1429,6 +1452,7 @@ if (storedVersion !== APP_VERSION) {
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
   localStorage.setItem('steph-memories', JSON.stringify(MEMORIES_DEFAULT));
+  localStorage.setItem('steph-longterm', JSON.stringify(LONGTERM_GOALS_DEFAULT));
   localStorage.setItem('steph-waitlist', JSON.stringify(WAITLIST_DEFAULT));
   localStorage.setItem('steph-thrive', JSON.stringify(THRIVE_DEFAULT));
   localStorage.setItem('steph-playdates', JSON.stringify([]));
@@ -1444,6 +1468,7 @@ let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') |
 let packagesData = JSON.parse(localStorage.getItem('steph-packages') || 'null') || JSON.parse(JSON.stringify(PACKAGES_DEFAULT));
 let thriveData = JSON.parse(localStorage.getItem('steph-thrive') || 'null') || JSON.parse(JSON.stringify(THRIVE_DEFAULT));
 let waitlistData = JSON.parse(localStorage.getItem('steph-waitlist') || '[]');
+let longtermGoals = JSON.parse(localStorage.getItem('steph-longterm') || '[]');
 let memoriesData = JSON.parse(localStorage.getItem('steph-memories') || 'null') || JSON.parse(JSON.stringify(MEMORIES_DEFAULT));
 let playdates = JSON.parse(localStorage.getItem('steph-playdates') || '[]');
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
@@ -1491,6 +1516,7 @@ function showScreen(name) {
   if (name === 'thrive-expenses') { renderThriveList('thrive-expenses-list', thriveData.expenses, '🧾'); }
   if (name === 'thrive-tax') renderThriveTaxList();
   if (name === 'thrive-waitlist') renderWaitlist();
+  if (name === 'longterm') renderLongtermGoals();
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
@@ -1732,6 +1758,39 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-title').textContent = w.day;
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
+}
+
+// ---- LONG TERM GOALS ----
+function renderLongtermGoals() {
+  const list = document.getElementById('longterm-goals-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!longtermGoals.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">Dream big — add your first goal 🌟</span></div>`;
+    return;
+  }
+  longtermGoals.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <span style="font-size:18px;margin-right:8px;">🌟</span>
+      <span class="li-text" style="flex:1">${item.text}</span>
+      <button onclick="deleteLongtermGoal(${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
+    list.appendChild(div);
+  });
+}
+function addLongtermGoal() {
+  const inp = document.getElementById('longterm-input');
+  if (!inp || !inp.value.trim()) return;
+  longtermGoals.push({ id: Date.now(), text: inp.value.trim() });
+  localStorage.setItem('steph-longterm', JSON.stringify(longtermGoals));
+  inp.value = '';
+  renderLongtermGoals();
+}
+function deleteLongtermGoal(id) {
+  longtermGoals = longtermGoals.filter(x => x.id !== id);
+  localStorage.setItem('steph-longterm', JSON.stringify(longtermGoals));
+  renderLongtermGoals();
 }
 
 // ---- WAITLIST ----
