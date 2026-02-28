@@ -868,6 +868,10 @@
       <span class="tile-emoji">📋</span>
       <span class="tile-label">Tax Notes</span>
     </div>
+    <div class="tile" onclick="showScreen('thrive-waitlist')">
+      <span class="tile-emoji">📝</span>
+      <span class="tile-label">Waitlist</span>
+    </div>
   </div>
 </div>
 
@@ -922,6 +926,23 @@
   </div>
 </div>
 
+<!-- THRIVE: WAITLIST -->
+<div class="screen" id="screen-thrive-waitlist">
+  <div class="header">
+    <span class="back" onclick="showScreen('thrive')">← Thrive</span>
+    <h1>Waitlist 📝</h1>
+  </div>
+  <div class="list-section">
+    <div id="thrive-waitlist-list"></div>
+    <div class="add-row" style="flex-direction:column;gap:8px;align-items:stretch;">
+      <input class="add-input" id="waitlist-name" placeholder="Patient name..." style="width:100%;">
+      <input class="add-input" id="waitlist-phone" placeholder="Phone number..." style="width:100%;">
+      <input class="add-input" id="waitlist-email" placeholder="Email (optional)..." style="width:100%;" onkeydown="if(event.key==='Enter')addWaitlistPatient()">
+      <button class="add-btn" style="width:100%;margin-top:2px;" onclick="addWaitlistPatient()">Add to Waitlist</button>
+    </div>
+  </div>
+</div>
+
 <!-- PACKAGE EDIT MODAL -->
 <div class="modal-overlay" id="pkg-edit-modal" onclick="closePkgEdit()">
   <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -946,7 +967,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v51';
+const APP_VERSION = '2026-02-28-v52';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1360,6 +1381,8 @@ const CALENDAR_DATA = {
 
 const MEMORIES_DEFAULT = { rush: [], hayes: [] };
 
+const WAITLIST_DEFAULT = [];
+
 const THRIVE_DEFAULT = { income: [], expenses: [], tax: [] };
 
 const EVENTS_DEFAULT = {
@@ -1406,6 +1429,7 @@ if (storedVersion !== APP_VERSION) {
   localStorage.setItem('steph-grocery', JSON.stringify(GROCERY_ITEMS));
   localStorage.setItem('steph-events', JSON.stringify(EVENTS_DEFAULT));
   localStorage.setItem('steph-memories', JSON.stringify(MEMORIES_DEFAULT));
+  localStorage.setItem('steph-waitlist', JSON.stringify(WAITLIST_DEFAULT));
   localStorage.setItem('steph-thrive', JSON.stringify(THRIVE_DEFAULT));
   localStorage.setItem('steph-playdates', JSON.stringify([]));
   localStorage.setItem('steph-packages', JSON.stringify(PACKAGES_DEFAULT));
@@ -1419,6 +1443,7 @@ let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO
 let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
 let packagesData = JSON.parse(localStorage.getItem('steph-packages') || 'null') || JSON.parse(JSON.stringify(PACKAGES_DEFAULT));
 let thriveData = JSON.parse(localStorage.getItem('steph-thrive') || 'null') || JSON.parse(JSON.stringify(THRIVE_DEFAULT));
+let waitlistData = JSON.parse(localStorage.getItem('steph-waitlist') || '[]');
 let memoriesData = JSON.parse(localStorage.getItem('steph-memories') || 'null') || JSON.parse(JSON.stringify(MEMORIES_DEFAULT));
 let playdates = JSON.parse(localStorage.getItem('steph-playdates') || '[]');
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
@@ -1465,6 +1490,7 @@ function showScreen(name) {
   if (name === 'thrive-income') { renderThriveList('thrive-income-list', thriveData.income, '💰'); }
   if (name === 'thrive-expenses') { renderThriveList('thrive-expenses-list', thriveData.expenses, '🧾'); }
   if (name === 'thrive-tax') renderThriveTaxList();
+  if (name === 'thrive-waitlist') renderWaitlist();
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
   if (name === 'wellness') renderWellness();
@@ -1706,6 +1732,51 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-title').textContent = w.day;
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
+}
+
+// ---- WAITLIST ----
+function renderWaitlist() {
+  const list = document.getElementById('thrive-waitlist-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!waitlistData.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">No one on the waitlist yet 🎉</span></div>`;
+    return;
+  }
+  waitlistData.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.style.cssText = 'flex-direction:column;align-items:flex-start;gap:4px;padding:12px 16px;';
+    div.innerHTML = `
+      <div style="display:flex;width:100%;align-items:center;">
+        <span style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-right:8px;font-weight:600;">#${i+1}</span>
+        <span class="li-text" style="flex:1;font-weight:600;">${p.name}</span>
+        <button onclick="deleteWaitlistPatient(${p.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>
+      </div>
+      ${p.phone ? `<span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding-left:28px;">📞 <a href="tel:${p.phone}" style="color:var(--brown);text-decoration:none;">${p.phone}</a></span>` : ''}
+      ${p.email ? `<span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding-left:28px;">✉️ <a href="mailto:${p.email}" style="color:var(--brown);text-decoration:none;">${p.email}</a></span>` : ''}`;
+    list.appendChild(div);
+  });
+}
+function addWaitlistPatient() {
+  const name = document.getElementById('waitlist-name');
+  const phone = document.getElementById('waitlist-phone');
+  const email = document.getElementById('waitlist-email');
+  if (!name || !name.value.trim()) return;
+  waitlistData.push({
+    id: Date.now(),
+    name: name.value.trim(),
+    phone: phone ? phone.value.trim() : '',
+    email: email ? email.value.trim() : ''
+  });
+  localStorage.setItem('steph-waitlist', JSON.stringify(waitlistData));
+  name.value = ''; if (phone) phone.value = ''; if (email) email.value = '';
+  renderWaitlist();
+}
+function deleteWaitlistPatient(id) {
+  waitlistData = waitlistData.filter(x => x.id !== id);
+  localStorage.setItem('steph-waitlist', JSON.stringify(waitlistData));
+  renderWaitlist();
 }
 
 // ---- THRIVE ----
