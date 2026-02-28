@@ -887,6 +887,20 @@
   </div>
 </div>
 
+<!-- PACKAGE EDIT MODAL -->
+<div class="modal-overlay" id="pkg-edit-modal" onclick="closePkgEdit()">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <h3 style="margin-bottom:14px;">Edit Package</h3>
+    <input type="hidden" id="pkg-edit-id">
+    <input class="add-input" id="pkg-edit-desc" placeholder="Description..." style="width:100%;margin-bottom:10px;">
+    <input class="add-input" id="pkg-edit-url" placeholder="Tracking link (optional)..." style="width:100%;margin-bottom:16px;">
+    <div style="display:flex;gap:10px;">
+      <button onclick="savePackageEdit()" style="flex:1;background:var(--brown);color:#fff;border:none;border-radius:14px;padding:12px;font-size:15px;font-family:-apple-system,sans-serif;cursor:pointer;">Save</button>
+      <button onclick="closePkgEdit()" style="flex:1;background:var(--card);color:var(--text);border:none;border-radius:14px;padding:12px;font-size:15px;font-family:-apple-system,sans-serif;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- CATEGORY PICKER MODAL -->
 <div class="modal-overlay" id="cat-modal" onclick="closeCatModal()">
   <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -897,7 +911,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v46';
+const APP_VERSION = '2026-02-28-v47';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1747,11 +1761,12 @@ function renderPackageList(listId, items, arrived) {
     const div = document.createElement('div');
     div.className = 'list-item';
     if (!arrived) {
-      const trackBtn = item.url ? `<a href="${item.url}" target="_blank" style="text-decoration:none;background:var(--brown);color:#fff;border:none;border-radius:10px;padding:4px 10px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;white-space:nowrap;">Track 📦</a>` : '';
+      const trackBtn = item.url ? `<a href="${item.url}" target="_blank" style="text-decoration:none;background:var(--brown);color:#fff;border:none;border-radius:10px;padding:4px 10px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;white-space:nowrap;">Track 📦</a>` : `<button onclick="editPackage(${item.id})" style="background:none;border:1px solid var(--brown);color:var(--brown);border-radius:10px;padding:4px 10px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;white-space:nowrap;">+ Link</button>`;
       div.innerHTML = `
         <div class="li-check" onclick="markPackageArrived(${item.id})" title="Mark arrived"></div>
-        <span class="li-text" style="flex:1">${item.text}</span>
+        <span class="li-text" style="flex:1" onclick="editPackage(${item.id})">${item.text}</span>
         ${trackBtn}
+        <button onclick="editPackage(${item.id})" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-light);padding:0 2px;" title="Edit">✏️</button>
         <button onclick="deletePackage(${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>`;
     } else {
       div.innerHTML = `<span class="li-text" style="flex:1;color:var(--text-light);text-decoration:line-through;">${item.text}</span>`;
@@ -1783,6 +1798,31 @@ function deletePackage(id) {
   packagesData.active = packagesData.active.filter(x => x.id !== id);
   localStorage.setItem('steph-packages', JSON.stringify(packagesData));
   renderPackages();
+}
+function editPackage(id) {
+  const item = packagesData.active.find(x => x.id === id);
+  if (!item) return;
+  // Populate and show the edit modal
+  document.getElementById('pkg-edit-id').value = id;
+  document.getElementById('pkg-edit-desc').value = item.text;
+  document.getElementById('pkg-edit-url').value = item.url || '';
+  document.getElementById('pkg-edit-modal').classList.add('open');
+}
+function savePackageEdit() {
+  const id = parseInt(document.getElementById('pkg-edit-id').value);
+  const item = packagesData.active.find(x => x.id === id);
+  if (!item) return;
+  const desc = document.getElementById('pkg-edit-desc').value.trim();
+  let url = document.getElementById('pkg-edit-url').value.trim();
+  if (url && !url.startsWith('http')) url = 'https://' + url;
+  if (desc) item.text = desc;
+  item.url = url || null;
+  localStorage.setItem('steph-packages', JSON.stringify(packagesData));
+  document.getElementById('pkg-edit-modal').classList.remove('open');
+  renderPackages();
+}
+function closePkgEdit() {
+  document.getElementById('pkg-edit-modal').classList.remove('open');
 }
 function clearArrivedPackages() {
   packagesData.arrived = [];
