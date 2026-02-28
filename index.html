@@ -618,7 +618,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v8';
+const APP_VERSION = '2026-02-28-v9';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -663,12 +663,31 @@ const RECIPES = [
 
 const TODO_ITEMS = [];
 
-const GROCERY_ITEMS = [];
+const GROCERY_ITEMS = [
+  { id: 1001, text: 'Rush milk 🥛', done: false },
+];
 
 const HOUSE_ITEMS = [];
 
-// ---- STATE ----
-// No default items — Steph and Lumen add everything manually
+// ---- STATE (add only brand-new Lumen items, never restore deleted ones) ----
+const storedVersion = localStorage.getItem('steph-app-version');
+if (storedVersion !== APP_VERSION) {
+  const seenGrocery = new Set(JSON.parse(localStorage.getItem('steph-seen-grocery') || '[]'));
+  function injectNewItems(storageKey, defaults, seenSet, seenStorageKey) {
+    const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    const currentIds = new Set(current.map(x => x.id));
+    const brandNew = defaults.filter(x => !seenSet.has(x.id) && !currentIds.has(x.id));
+    defaults.forEach(x => seenSet.add(x.id));
+    localStorage.setItem(seenStorageKey, JSON.stringify([...seenSet]));
+    if (brandNew.length) localStorage.setItem(storageKey, JSON.stringify([...current, ...brandNew]));
+  }
+  injectNewItems('steph-grocery', GROCERY_ITEMS, seenGrocery, 'steph-seen-grocery');
+  const seenTodo = new Set(JSON.parse(localStorage.getItem('steph-seen-todo') || '[]'));
+  injectNewItems('steph-todo', TODO_ITEMS, seenTodo, 'steph-seen-todo');
+  const seenHouse = new Set(JSON.parse(localStorage.getItem('steph-seen-house') || '[]'));
+  injectNewItems('steph-house', HOUSE_ITEMS, seenHouse, 'steph-seen-house');
+  localStorage.setItem('steph-app-version', APP_VERSION);
+}
 
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
