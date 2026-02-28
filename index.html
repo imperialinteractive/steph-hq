@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Home Base 🌿</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f0ebe3;
+    --card: #e8e0d5;
+    --card2: #ddd4c6;
+    --brown: #8b6f5e;
+    --brown-dark: #6b4f3f;
+    --green: #7a9e7e;
+    --green-light: #a8c5a0;
+    --text: #3d2e26;
+    --text-light: #7a6a5e;
+    --white: #faf7f3;
+    --check: #7a9e7e;
+    --radius: 16px;
+    --shadow: 0 2px 12px rgba(61,46,38,0.10);
+  }
+
+  body {
+    font-family: -apple-system, 'Georgia', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* SCREENS */
+  .screen { display: none; padding: 0 0 80px 0; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* HEADER */
+  .header {
+    background: var(--bg);
+    padding: 52px 20px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header .back {
+    position: absolute;
+    left: 20px;
+    top: 54px;
+    font-size: 14px;
+    color: var(--brown);
+    cursor: pointer;
+    font-family: -apple-system, sans-serif;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--text-light);
+    font-family: -apple-system, sans-serif;
+    margin-top: 2px;
+  }
+
+  /* HOME GRID */
+  .home-header {
+    padding: 60px 20px 20px;
+    text-align: center;
+  }
+  .home-header h1 {
+    font-size: 34px;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .home-header p {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-top: 4px;
+    font-family: -apple-system, sans-serif;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 16px 20px;
+  }
+  .tile {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px 16px 20px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    box-shadow: var(--shadow);
+    text-align: center;
+    user-select: none;
+  }
+  .tile:active { transform: scale(0.97); background: var(--card2); }
+  .tile .tile-emoji { font-size: 32px; display: block; margin-bottom: 10px; }
+  .tile .tile-label {
+    font-size: 15px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* PROGRESS RING */
+  .ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0 10px;
+  }
+  .ring-container { position: relative; width: 120px; height: 120px; }
+  .ring-container svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--card2); stroke-width: 8; }
+  .ring-fill { fill: none; stroke: var(--green); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+  .ring-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .ring-text .ring-count { font-size: 22px; font-weight: 700; color: var(--text); font-style: italic; }
+  .ring-text .ring-pct { font-size: 11px; color: var(--text-light); font-family: -apple-system, sans-serif; }
+  .ring-date {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-top: 8px;
+    font-family: -apple-system, sans-serif;
+  }
+
+  /* CHECKLIST */
+  .checklist { padding: 8px 16px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    box-shadow: var(--shadow);
+    gap: 12px;
+    user-select: none;
+  }
+  .check-item.done { opacity: 0.5; }
+  .check-item .ci-radio {
+    width: 24px; height: 24px; min-width: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--brown);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .check-item.done .ci-radio {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .check-item.done .ci-radio::after {
+    content: '✓';
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .check-item .ci-emoji { font-size: 20px; }
+  .check-item .ci-label {
+    font-size: 15px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    flex: 1;
+  }
+  .check-item.done .ci-label { text-decoration: line-through; color: var(--text-light); }
+
+  /* LISTS */
+  .list-section { padding: 0 16px; }
+  .list-section h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-light);
+    font-family: -apple-system, sans-serif;
+    margin: 20px 0 10px;
+  }
+  .list-item {
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    gap: 12px;
+    box-shadow: var(--shadow);
+  }
+  .list-item .li-check {
+    width: 22px; height: 22px; min-width: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--brown);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .list-item.done .li-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .list-item.done .li-check::after { content: '✓'; color: white; font-size: 12px; font-weight: 700; }
+  .list-item .li-text {
+    font-size: 15px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    flex: 1;
+    outline: none;
+    background: transparent;
+    border: none;
+    caret-color: var(--brown);
+  }
+  .list-item.done .li-text { text-decoration: line-through; color: var(--text-light); }
+  .list-item .li-delete {
+    color: var(--text-light);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0.4;
+  }
+  .list-item .li-delete:hover { opacity: 1; }
+
+  .add-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+  .add-input {
+    flex: 1;
+    background: var(--white);
+    border: 1.5px solid var(--card2);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    outline: none;
+  }
+  .add-input:focus { border-color: var(--green); }
+  .add-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+
+  /* RECIPE CARDS */
+  .recipe-grid { padding: 0 16px; }
+  .recipe-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .recipe-card:active { background: var(--card2); }
+  .recipe-card h3 {
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .recipe-card p {
+    font-size: 13px;
+    color: var(--text-light);
+    font-family: -apple-system, sans-serif;
+  }
+  .recipe-card .recipe-tag {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--brown-dark);
+    font-size: 11px;
+    font-family: -apple-system, sans-serif;
+    border-radius: 20px;
+    padding: 3px 10px;
+    margin-top: 8px;
+  }
+
+  /* RECIPE DETAIL */
+  .recipe-detail { padding: 0 16px; }
+  .recipe-detail h2 { font-size: 22px; font-style: italic; margin-bottom: 8px; }
+  .recipe-detail .rd-source {
+    font-size: 13px; color: var(--green); font-family: -apple-system, sans-serif; margin-bottom: 16px;
+  }
+  .recipe-detail .rd-source a { color: var(--green); }
+  .recipe-detail h3 {
+    font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-light); font-family: -apple-system, sans-serif; margin: 16px 0 8px;
+  }
+  .recipe-detail p, .recipe-detail li {
+    font-size: 15px; font-family: -apple-system, sans-serif;
+    color: var(--text); line-height: 1.6; margin-bottom: 6px;
+  }
+  .recipe-detail ul, .recipe-detail ol { padding-left: 20px; }
+
+  /* NAV BAR */
+  .nav { display: none; }
+
+  /* MEAL LOG */
+  .meal-log { padding: 0 16px; }
+  .macro-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .macro-card h3 {
+    font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-light); font-family: -apple-system, sans-serif; margin-bottom: 14px;
+  }
+  .macro-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .macro-label { font-size: 14px; font-family: -apple-system, sans-serif; color: var(--text); }
+  .macro-val { font-size: 14px; font-family: -apple-system, sans-serif; color: var(--brown); font-weight: 600; }
+  .macro-bar-wrap { background: var(--card2); border-radius: 6px; height: 6px; margin-bottom: 14px; }
+  .macro-bar { height: 6px; border-radius: 6px; background: var(--green); transition: width 0.4s; }
+  .meal-entry {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+  }
+  .meal-entry h4 { font-size: 15px; font-style: italic; color: var(--text); margin-bottom: 4px; }
+  .meal-entry p { font-size: 13px; color: var(--text-light); font-family: -apple-system, sans-serif; }
+
+  /* SECTION HEADERS */
+  .section-pill {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--brown-dark);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+    margin: 16px 16px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active" id="screen-home">
+  <div class="home-header">
+    <h1>Home Base 🌿</h1>
+    <p>Your headquarters</p>
+  </div>
+  <div class="grid">
+    <div class="tile" onclick="showScreen('today')">
+      <span class="tile-emoji">✅</span>
+      <span class="tile-label">Today</span>
+    </div>
+    <div class="tile" onclick="showScreen('todo')">
+      <span class="tile-emoji">📋</span>
+      <span class="tile-label">To-Do</span>
+    </div>
+    <div class="tile" onclick="showScreen('grocery')">
+      <span class="tile-emoji">🛒</span>
+      <span class="tile-label">Grocery</span>
+    </div>
+    <div class="tile" onclick="showScreen('recipes')">
+      <span class="tile-emoji">🍽️</span>
+      <span class="tile-label">Recipes</span>
+    </div>
+    <div class="tile" onclick="showScreen('house')">
+      <span class="tile-emoji">🏠</span>
+      <span class="tile-label">House Projects</span>
+    </div>
+    <div class="tile" onclick="showScreen('kids')">
+      <span class="tile-emoji">👶</span>
+      <span class="tile-label">Kids</span>
+    </div>
+    <div class="tile" onclick="showScreen('nutrition')">
+      <span class="tile-emoji">📊</span>
+      <span class="tile-label">Meal Log</span>
+    </div>
+    <div class="tile" onclick="showScreen('workouts')">
+      <span class="tile-emoji">💪</span>
+      <span class="tile-label">Workouts</span>
+    </div>
+    <div class="tile" onclick="showScreen('events')">
+      <span class="tile-emoji">📅</span>
+      <span class="tile-label">Events</span>
+    </div>
+    <div class="tile" onclick="showScreen('wellness')">
+      <span class="tile-emoji">🌿</span>
+      <span class="tile-label">Wellness</span>
+    </div>
+  </div>
+</div>
+
+<!-- TODAY -->
+<div class="screen" id="screen-today">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Today</h1>
+    <p id="today-date"></p>
+  </div>
+  <div class="ring-wrap">
+    <div class="ring-container">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="ring-bg" cx="60" cy="60" r="52"/>
+        <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+      </svg>
+      <div class="ring-text">
+        <div class="ring-count" id="ring-count">0/10</div>
+        <div class="ring-pct" id="ring-pct">0%</div>
+      </div>
+    </div>
+  </div>
+  <div class="checklist" id="today-checklist">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- TO-DO -->
+<div class="screen" id="screen-todo">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>To-Do</h1>
+  </div>
+  <div class="list-section" id="todo-list">
+    <h2>🏠 House & Organizing</h2>
+  </div>
+  <div class="add-row">
+    <input class="add-input" id="todo-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()">
+    <button class="add-btn" onclick="addTodo()">Add</button>
+  </div>
+</div>
+
+<!-- GROCERY -->
+<div class="screen" id="screen-grocery">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Grocery</h1>
+  </div>
+  <div class="list-section" id="grocery-list"></div>
+  <div class="add-row">
+    <input class="add-input" id="grocery-input" placeholder="Add an item..." onkeydown="if(event.key==='Enter')addGrocery()">
+    <button class="add-btn" onclick="addGrocery()">Add</button>
+  </div>
+</div>
+
+<!-- RECIPES -->
+<div class="screen" id="screen-recipes">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Recipes</h1>
+  </div>
+  <div class="recipe-grid" id="recipe-grid">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- RECIPE DETAIL -->
+<div class="screen" id="screen-recipe-detail">
+  <div class="header">
+    <span class="back" onclick="showScreen('recipes')">← Recipes</span>
+    <h1>Recipe</h1>
+  </div>
+  <div class="recipe-detail" id="recipe-detail-content"></div>
+</div>
+
+<!-- HOUSE -->
+<div class="screen" id="screen-house">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>House Projects</h1>
+  </div>
+  <div class="list-section" id="house-list"></div>
+  <div class="add-row">
+    <input class="add-input" id="house-input" placeholder="Add a project..." onkeydown="if(event.key==='Enter')addHouse()">
+    <button class="add-btn" onclick="addHouse()">Add</button>
+  </div>
+</div>
+
+<!-- KIDS -->
+<div class="screen" id="screen-kids">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Kids</h1>
+  </div>
+  <div class="list-section">
+    <h2>👦 Rush — Age 3.5</h2>
+    <div class="list-item"><span class="li-text">Born Aug 27, 2022 — strong-willed, big personality 🦁</span></div>
+    <div class="list-item"><span class="li-text">No melted cheese 🧀</span></div>
+    <h2>👶 Hayes — 5 months</h2>
+    <div class="list-item"><span class="li-text">Take monthly photo! 📸</span></div>
+    <div class="list-item"><span class="li-text">Book 6-month appointment with Celine Quinn</span></div>
+    <div class="list-item"><span class="li-text">Book 9-month appointment with Dr. Wong</span></div>
+    <h2>📅 Upcoming</h2>
+    <div class="list-item"><span class="li-text">Hayes 6-month — ~end of March</span></div>
+  </div>
+</div>
+
+<!-- NUTRITION / MEAL LOG -->
+<div class="screen" id="screen-nutrition">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Meal Log</h1>
+  </div>
+  <div class="meal-log">
+    <div class="macro-card">
+      <h3>Today's Targets</h3>
+      <div class="macro-row"><span class="macro-label">🔥 Calories</span><span class="macro-val">1,800–2,000</span></div>
+      <div class="macro-row"><span class="macro-label">💪 Protein</span><span class="macro-val">110–130g</span></div>
+      <div class="macro-row"><span class="macro-label">🌾 Carbs</span><span class="macro-val">~45g / meal · ~20g / snack</span></div>
+      <div class="macro-row"><span class="macro-label">🌿 Fibre</span><span class="macro-val">25g+</span></div>
+      <div class="macro-row"><span class="macro-label">🍬 Sugar</span><span class="macro-val">&lt;50g</span></div>
+    </div>
+    <div class="macro-card">
+      <h3>Today — Feb 28</h3>
+      <div class="macro-row"><span class="macro-label">🔥 Calories</span><span class="macro-val">922 / 1,800–2,000 ✅</span></div>
+      <div class="macro-row"><span class="macro-label">💪 Protein</span><span class="macro-val">30g / 110–130g ⚠️</span></div>
+      <div class="macro-row"><span class="macro-label">🌾 Carbs</span><span class="macro-val">86g</span></div>
+      <div class="macro-row"><span class="macro-label">🌿 Fibre</span><span class="macro-val">5g / 25g+ ⚠️</span></div>
+      <div class="macro-row"><span class="macro-label">🍬 Sugar</span><span class="macro-val">7g / &lt;50g ✅</span></div>
+    </div>
+    <div class="meal-entry">
+      <h4>☀️ Breakfast — Tim's Simply Bacon Sandwich</h4>
+      <p>472 cal · 10g protein · 37g carbs · 1g fibre · 3g sugar</p>
+    </div>
+    <div class="meal-entry">
+      <h4>🍝 Lunch — Knorr Alfredo, 2 Cheddar Wieners, Broccoli</h4>
+      <p>450 cal · 20g protein · 43g carbs · 4g fibre · 4g sugar</p>
+    </div>
+  </div>
+</div>
+
+<!-- WORKOUTS -->
+<div class="screen" id="screen-workouts">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Workouts</h1>
+  </div>
+  <div class="list-section">
+    <h2>This Week</h2>
+    <div class="list-item"><span class="li-text">Monday — Full body strength 💪</span></div>
+    <div class="list-item"><span class="li-text">Tuesday — Cardio / walk 🚶</span></div>
+    <div class="list-item"><span class="li-text">Wednesday — Upper body + core 🏋️</span></div>
+    <div class="list-item"><span class="li-text">Thursday — Rest or light walk</span></div>
+    <div class="list-item"><span class="li-text">Friday — Full body strength 💪</span></div>
+    <div class="list-item"><span class="li-text">Saturday — Barre + Weights class 🩰</span></div>
+    <div class="list-item"><span class="li-text">Sunday — Rest ✨</span></div>
+    <h2>Notes</h2>
+    <div class="list-item"><span class="li-text">5 months postpartum — focus on form, not weight</span></div>
+    <div class="list-item"><span class="li-text">Protein within 60–90 min after workout</span></div>
+  </div>
+</div>
+
+<!-- EVENTS -->
+<div class="screen" id="screen-events">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Events</h1>
+  </div>
+  <div class="list-section">
+    <h2>Coming Up</h2>
+    <div class="list-item"><span class="li-text">📸 Hayes 5-month photo — today!</span></div>
+    <div class="list-item"><span class="li-text">💛 Mom's Birthday — March 2nd</span></div>
+    <div class="list-item"><span class="li-text">📚 Cookbook Club restart — March 8th (TBC)</span></div>
+    <div class="list-item"><span class="li-text">👶 Hayes 6-month — end of March</span></div>
+  </div>
+</div>
+
+<!-- WELLNESS -->
+<div class="screen" id="screen-wellness">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Wellness</h1>
+  </div>
+  <div class="list-section">
+    <h2>Current Goals</h2>
+    <div class="list-item"><span class="li-text">🎯 Lose baby weight (postpartum — Hayes 5 months)</span></div>
+    <div class="list-item"><span class="li-text">💪 Build strength back progressively</span></div>
+    <div class="list-item"><span class="li-text">🥗 Hit protein + fibre goals daily</span></div>
+    <div class="list-item"><span class="li-text">💧 3L water minimum</span></div>
+    <div class="list-item"><span class="li-text">😴 Prioritize sleep when possible</span></div>
+    <h2>Self Care</h2>
+    <div class="list-item"><span class="li-text">💆 Book massage (overdue!)</span></div>
+    <div class="list-item"><span class="li-text">✂️ Book hair appointment — before March 3rd</span></div>
+    <div class="list-item"><span class="li-text">🧖 Sauna / spa day when possible</span></div>
+  </div>
+</div>
+
+<script>
+// ---- DATA ----
+const TODAY_ITEMS = [
+  { id: 1, emoji: '💪', label: 'Workout / movement' },
+  { id: 2, emoji: '🥩', label: 'Protein goal (110–130g)' },
+  { id: 3, emoji: '🥦', label: 'Fibre goal (25g+)' },
+  { id: 4, emoji: '💧', label: 'Water 1L' },
+  { id: 5, emoji: '💧', label: 'Water 2L' },
+  { id: 6, emoji: '💧', label: 'Water 3L' },
+  { id: 7, emoji: '🧘', label: '10 min stretch' },
+  { id: 8, emoji: '💊', label: 'Vitamins' },
+  { id: 9, emoji: '🚶', label: '7,500 steps' },
+  { id: 10, emoji: '😌', label: 'Calm mom moment' },
+];
+
+const RECIPES = [
+  {
+    id: 1,
+    name: 'One Pan Lemon Pepper Yogurt Chicken & Rice',
+    desc: 'Half Baked Harvest · One pan · Family dinner',
+    tag: 'Dinner',
+    source: 'https://www.halfbakedharvest.com/lemon-pepper-yogurt-chicken/',
+    body: `<h3>What you need</h3><p>Chicken thighs or breasts, Greek yogurt, lemon, garlic, pepper, oregano, thyme, paprika, basmati rice, broccoli, olive oil</p><h3>How to make it</h3><ol><li>Marinate chicken in Greek yogurt, lemon juice, garlic, pepper, oregano, thyme, paprika</li><li>Add dry basmati rice and broccoli to baking dish</li><li>Place chicken on top, pour any extra marinade over</li><li>Bake covered at 375°F for 45 min, then uncovered 15 min</li></ol><h3>Notes</h3><p>Rush-approved ✅ · No melted cheese ✅ · No seafood ✅</p>`
+  },
+  {
+    id: 2,
+    name: 'Jack Astor\'s Asiago Chicken Bow Ties',
+    desc: 'Copycat · Reddit-verified · 4 cheese cream sauce',
+    tag: 'Dinner',
+    source: null,
+    body: `<h3>The Chicken</h3><ul><li>Boneless chicken breast</li><li>Egg wash (egg + splash of cream)</li><li>2:1 mix shredded Asiago + seasoned flour</li><li>Pan fry until golden</li></ul><h3>Four Cheese Cream Sauce</h3><ul><li>Butter + heavy cream (low heat)</li><li>Asiago, Parmesan, Romano, Mozzarella — add gradually</li><li>Pinch smoked paprika + 1 tbsp chicken bouillon</li><li>Salt + dried parsley</li><li>Thin with pasta water as needed</li></ul><h3>Assembly</h3><ul><li>Bowtie pasta, al dente</li><li>Sun-dried tomatoes (sliced thin)</li><li>Toss pasta in sauce, top with sliced chicken</li><li>Garnish with parsley</li></ul><h3>Notes</h3><p>Rush: serve his pasta plain on the side. Make extra breading — it clumps.</p>`
+  },
+  {
+    id: 3,
+    name: 'Penne alla Vodka',
+    desc: 'The Pasta Renaissance · p.218 · Family staple',
+    tag: 'Dinner',
+    source: null,
+    body: `<h3>Ingredients (Serves 4)</h3><ul><li>1 shallot, diced · 1 garlic clove, minced</li><li>3 tbsp extra-virgin olive oil</li><li>¼ cup tomato paste</li><li>1 cup vodka</li><li>1 can (14.5oz) whole peeled tomatoes, crushed</li><li>1 cup heavy cream</li><li>1 tsp chili flakes</li><li>¾ lb medium shrimp, peeled & deveined</li><li>1 lb penne · Fresh parsley</li></ul><h3>Method</h3><ol><li>Cook shallot + garlic in olive oil 1–2 min</li><li>Add tomato paste, fry until brick-coloured, ~2 min</li><li>Add vodka, reduce by half ~1.5 min</li><li>Add tomatoes + cream, simmer 5 min</li><li>Add chili + shrimp, cook ~2.5 min</li><li>Cook penne al dente, toss with sauce</li></ol>`
+  },
+];
+
+const TODO_ITEMS = [
+  { id: 1, text: 'Organize top of vanity room dresser', done: false, cat: '🏠 House & Organizing' },
+  { id: 2, text: 'Put polka dots up in kid corner and playroom', done: false, cat: '🏠 House & Organizing' },
+  { id: 3, text: 'Order stickers for Hayes room wall', done: false, cat: '🏠 House & Organizing' },
+  { id: 4, text: 'Tidy laundry room', done: false, cat: '🏠 House & Organizing' },
+  { id: 5, text: 'Finish storage room', done: false, cat: '🏠 House & Organizing' },
+  { id: 6, text: 'Organize front entrance closet', done: false, cat: '🏠 House & Organizing' },
+  { id: 7, text: 'Hot glue gun baby gate', done: false, cat: '🏠 House & Organizing' },
+  { id: 8, text: 'Book hair appointment — before March 3rd', done: false, cat: '💅 Personal' },
+  { id: 9, text: 'Book Hayes 6-month appointment (Celine Quinn)', done: false, cat: '👶 Kids' },
+  { id: 10, text: 'Book Hayes 9-month appointment (Dr. Wong)', done: false, cat: '👶 Kids' },
+];
+
+const GROCERY_ITEMS = [
+  { id: 1, text: 'Plain Greek yogurt (large tub)', done: false },
+  { id: 2, text: 'Boneless chicken thighs (2 packs)', done: false },
+  { id: 3, text: 'Ground turkey (2 packs)', done: false },
+  { id: 4, text: 'Mixed berries', done: false },
+  { id: 5, text: 'Bell peppers', done: false },
+  { id: 6, text: 'Romaine lettuce', done: false },
+  { id: 7, text: 'Avocado (2–3)', done: false },
+  { id: 8, text: 'Unsweetened granola', done: false },
+  { id: 9, text: 'Hemp hearts', done: false },
+  { id: 10, text: 'Black beans (1 can)', done: false },
+  { id: 11, text: 'Chicken broth (2 cartons)', done: false },
+  { id: 12, text: 'Fajita seasoning', done: false },
+];
+
+const HOUSE_ITEMS = [
+  { id: 1, text: '🏡 Barn — Pilates studio planning', done: false },
+  { id: 2, text: '🔑 Organize door keys', done: false },
+  { id: 3, text: '🖼️ Put up last few lights', done: false },
+  { id: 4, text: '🛋️ Finish organizing clinic and spare room', done: false },
+  { id: 5, text: '🧱 Garage — Joel to work on', done: false },
+];
+
+// ---- STATE ----
+let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
+let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
+let groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
+let houseItems = JSON.parse(localStorage.getItem('steph-house') || 'null') || HOUSE_ITEMS;
+
+// ---- NAVIGATION ----
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+  if (name === 'today') renderToday();
+  if (name === 'todo') renderTodo();
+  if (name === 'grocery') renderGrocery();
+  if (name === 'house') renderHouse();
+  if (name === 'recipes') renderRecipes();
+}
+
+// ---- TODAY ----
+function renderToday() {
+  const d = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('today-date').textContent = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+
+  const container = document.getElementById('today-checklist');
+  container.innerHTML = '';
+  TODAY_ITEMS.forEach(item => {
+    const done = !!todayChecked[item.id];
+    const div = document.createElement('div');
+    div.className = 'check-item' + (done ? ' done' : '');
+    div.innerHTML = `<div class="ci-radio"></div><span class="ci-emoji">${item.emoji}</span><span class="ci-label">${item.label}</span>`;
+    div.onclick = () => toggleToday(item.id);
+    container.appendChild(div);
+  });
+  updateRing();
+}
+
+function toggleToday(id) {
+  todayChecked[id] = !todayChecked[id];
+  localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+  renderToday();
+}
+
+function updateRing() {
+  const total = TODAY_ITEMS.length;
+  const done = Object.values(todayChecked).filter(Boolean).length;
+  const pct = Math.round((done / total) * 100);
+  const circumference = 326.7;
+  const offset = circumference - (circumference * done / total);
+  document.getElementById('ring-fill').style.strokeDashoffset = offset;
+  document.getElementById('ring-count').textContent = `${done}/${total}`;
+  document.getElementById('ring-pct').textContent = `${pct}%`;
+}
+
+// ---- GENERIC LIST RENDERER ----
+function renderList(containerId, items, toggleFn, deleteFn) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'list-item' + (item.done ? ' done' : '');
+    div.innerHTML = `
+      <div class="li-check" onclick="event.stopPropagation();${toggleFn}(${item.id})"></div>
+      <span class="li-text" contenteditable="true" onblur="saveEdit('${containerId}',${item.id},this.textContent)">${item.text}</span>
+      <span class="li-delete" onclick="${deleteFn}(${item.id})">×</span>`;
+    container.appendChild(div);
+  });
+}
+
+function saveEdit(listId, id, text) {
+  if (listId === 'todo-list') { const i = todoItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-todo', JSON.stringify(todoItems)); }
+  if (listId === 'grocery-list') { const i = groceryItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); }
+  if (listId === 'house-list') { const i = houseItems.find(x=>x.id===id); if(i) i.text=text.trim(); localStorage.setItem('steph-house', JSON.stringify(houseItems)); }
+}
+
+// ---- TODO ----
+function renderTodo() { renderList('todo-list', todoItems, 'toggleTodo', 'deleteTodo'); }
+function toggleTodo(id) { const i = todoItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-todo',JSON.stringify(todoItems)); renderTodo(); }
+function deleteTodo(id) { todoItems = todoItems.filter(x=>x.id!==id); localStorage.setItem('steph-todo',JSON.stringify(todoItems)); renderTodo(); }
+function addTodo() {
+  const inp = document.getElementById('todo-input');
+  if (!inp.value.trim()) return;
+  todoItems.push({ id: Date.now(), text: inp.value.trim(), done: false });
+  localStorage.setItem('steph-todo', JSON.stringify(todoItems));
+  inp.value = '';
+  renderTodo();
+}
+
+// ---- GROCERY ----
+function renderGrocery() { renderList('grocery-list', groceryItems, 'toggleGrocery', 'deleteGrocery'); }
+function toggleGrocery(id) { const i = groceryItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-grocery',JSON.stringify(groceryItems)); renderGrocery(); }
+function deleteGrocery(id) { groceryItems = groceryItems.filter(x=>x.id!==id); localStorage.setItem('steph-grocery',JSON.stringify(groceryItems)); renderGrocery(); }
+function addGrocery() {
+  const inp = document.getElementById('grocery-input');
+  if (!inp.value.trim()) return;
+  groceryItems.push({ id: Date.now(), text: inp.value.trim(), done: false });
+  localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+  inp.value = '';
+  renderGrocery();
+}
+
+// ---- HOUSE ----
+function renderHouse() { renderList('house-list', houseItems, 'toggleHouse', 'deleteHouse'); }
+function toggleHouse(id) { const i = houseItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-house',JSON.stringify(houseItems)); renderHouse(); }
+function deleteHouse(id) { houseItems = houseItems.filter(x=>x.id!==id); localStorage.setItem('steph-house',JSON.stringify(houseItems)); renderHouse(); }
+function addHouse() {
+  const inp = document.getElementById('house-input');
+  if (!inp.value.trim()) return;
+  houseItems.push({ id: Date.now(), text: inp.value.trim(), done: false });
+  localStorage.setItem('steph-house', JSON.stringify(houseItems));
+  inp.value = '';
+  renderHouse();
+}
+
+// ---- RECIPES ----
+function renderRecipes() {
+  const grid = document.getElementById('recipe-grid');
+  grid.innerHTML = '';
+  RECIPES.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.innerHTML = `<h3>${r.name}</h3><p>${r.desc}</p><span class="recipe-tag">${r.tag}</span>`;
+    card.onclick = () => showRecipe(r.id);
+    grid.appendChild(card);
+  });
+}
+
+function showRecipe(id) {
+  const r = RECIPES.find(x => x.id === id);
+  if (!r) return;
+  const content = document.getElementById('recipe-detail-content');
+  content.innerHTML = `
+    <h2>${r.name}</h2>
+    ${r.source ? `<p class="rd-source"><a href="${r.source}" target="_blank">View original recipe ↗</a></p>` : ''}
+    ${r.body}
+  `;
+  showScreen('recipe-detail');
+}
+
+// ---- INIT ----
+renderToday();
+</script>
+</body>
+</html>
