@@ -615,7 +615,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v17';
+const APP_VERSION = '2026-02-28-v18';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -712,33 +712,21 @@ function categorizeGroceryItem(text) {
 
 const HOUSE_ITEMS = [];
 
-// ---- STATE (add only brand-new Lumen items, never restore deleted ones) ----
+// ---- STATE ----
 const storedVersion = localStorage.getItem('steph-app-version');
 if (storedVersion !== APP_VERSION) {
-  // Fix any items missing categories (old data from before categories were added)
-  function fixCategories(items, categorizeFn) {
-    return items.map(item => {
-      if (!item.cat) item.cat = categorizeFn(item.text);
-      return item;
-    });
-  }
-
-  function injectNewItems(storageKey, defaults, seenStorageKey, categorizeFn) {
-    const seenSet = new Set(JSON.parse(localStorage.getItem(seenStorageKey) || '[]'));
-    let current = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    // Fix missing categories on existing items
-    if (categorizeFn) current = fixCategories(current, categorizeFn);
-    const currentIds = new Set(current.map(x => x.id));
-    const brandNew = defaults.filter(x => !seenSet.has(x.id) && !currentIds.has(x.id));
-    defaults.forEach(x => seenSet.add(x.id));
-    localStorage.setItem(seenStorageKey, JSON.stringify([...seenSet]));
-    const merged = [...current, ...brandNew];
-    localStorage.setItem(storageKey, JSON.stringify(merged));
-  }
-
-  injectNewItems('steph-grocery', GROCERY_ITEMS, 'steph-seen-grocery', categorizeGroceryItem);
-  injectNewItems('steph-todo', TODO_ITEMS, 'steph-seen-todo', null);
-  injectNewItems('steph-house', HOUSE_ITEMS, 'steph-seen-house', null);
+  // One-time clean migration: remove all old items with ids < 100 (pre-category era)
+  // and reset todo/house to the clean categorized defaults
+  localStorage.removeItem('steph-seen-todo');
+  localStorage.removeItem('steph-seen-house');
+  localStorage.removeItem('steph-seen-grocery');
+  localStorage.setItem('steph-todo', JSON.stringify(TODO_ITEMS));
+  localStorage.setItem('steph-house', JSON.stringify(HOUSE_ITEMS));
+  // For grocery: keep any user-added items (id > 9000) but clear defaults
+  const savedGrocery = JSON.parse(localStorage.getItem('steph-grocery') || '[]');
+  const userGrocery = savedGrocery.filter(x => x.id > 9000);
+  const newGrocery = [...GROCERY_ITEMS, ...userGrocery];
+  localStorage.setItem('steph-grocery', JSON.stringify(newGrocery));
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
