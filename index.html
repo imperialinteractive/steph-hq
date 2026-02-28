@@ -618,7 +618,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v7';
+const APP_VERSION = '2026-02-28-v8';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -661,92 +661,14 @@ const RECIPES = [
   },
 ];
 
-const TODO_ITEMS = [
-  { id: 1, text: 'Organize top of vanity room dresser and side area', done: false },
-  { id: 2, text: 'Put polka dots up in kid corner and playroom sprinkles', done: false },
-  { id: 3, text: 'Order stickers for Hayes\' room wall', done: false },
-  { id: 4, text: 'Finish sticker wall in Hayes\' room', done: false },
-  { id: 5, text: 'Tidy laundry room', done: false },
-  { id: 6, text: 'Finish storage room', done: false },
-  { id: 7, text: 'Organize front entrance closet', done: false },
-  { id: 8, text: 'Put up pictures in Rush\'s get ready station', done: false },
-  { id: 9, text: 'Finish organizing clinic and spare room', done: false },
-  { id: 10, text: 'Go through clothes and organize them', done: false },
-  { id: 11, text: 'Put pads on kitchen table chairs', done: false },
-  { id: 12, text: 'Put up last few lights', done: false },
-  { id: 13, text: 'Organize door keys', done: false },
-  { id: 14, text: 'Add Rush\'s fingerprint to door + left thumb', done: false },
-  { id: 15, text: 'Hot glue gun baby gate', done: false },
-  { id: 16, text: '💅 Book hair appointment — deadline March 3rd', done: false },
-  { id: 17, text: '👶 Book Hayes 6-month appointment (Celine Quinn)', done: false },
-  { id: 18, text: '👶 Book Hayes 9-month appointment (Dr. Wong)', done: false },
-  { id: 19, text: '📸 Send Rush and Hayes birth photos to Lumen for Chatbooks', done: false },
-  { id: 20, text: '🛒 Shop for cookware — Staub 11" skillet, Le Creuset options, 7" pan + small pot', done: false },
-  { id: 21, text: '💰 Joel to transfer RESP money for Rush and Hayes', done: false },
-  { id: 22, text: '💬 Discuss outdoor and indoor play gyms with Joel', done: false },
-  { id: 23, text: '💬 Joel to work on garage', done: false },
-  { id: 24, text: '💬 Joel to update barn project progress', done: false },
-];
+const TODO_ITEMS = [];
 
-const GROCERY_ITEMS = [
-  { id: 1, text: 'Plain Greek yogurt (large tub)', done: false },
-  { id: 2, text: 'Boneless chicken thighs (2 packs)', done: false },
-  { id: 3, text: 'Ground turkey (2 packs)', done: false },
-  { id: 4, text: 'Mixed berries', done: false },
-  { id: 5, text: 'Bell peppers', done: false },
-  { id: 6, text: 'Romaine lettuce', done: false },
-  { id: 7, text: 'Avocado (2–3)', done: false },
-  { id: 8, text: 'Unsweetened granola', done: false },
-  { id: 9, text: 'Hemp hearts', done: false },
-  { id: 10, text: 'Black beans (1 can)', done: false },
-  { id: 11, text: 'Chicken broth (2 cartons)', done: false },
-  { id: 12, text: 'Fajita seasoning', done: false },
-  { id: 13, text: 'Almond butter', done: false },
-  { id: 14, text: 'Rush milk 🥛', done: false },
-];
+const GROCERY_ITEMS = [];
 
-const HOUSE_ITEMS = [
-  { id: 1, text: '🏡 Barn — Pilates studio planning', done: false },
-  { id: 2, text: '🔑 Organize door keys', done: false },
-  { id: 3, text: '🖼️ Put up last few lights', done: false },
-  { id: 4, text: '🛋️ Finish organizing clinic and spare room', done: false },
-  { id: 5, text: '🧱 Garage — Joel to work on', done: false },
-];
+const HOUSE_ITEMS = [];
 
-// ---- STATE (version-aware: only add truly NEW items by tracking seen ids) ----
-const storedVersion = localStorage.getItem('steph-app-version');
-if (storedVersion !== APP_VERSION) {
-  function mergeNewItems(saved, defaults) {
-    // Track all ids Steph has ever seen (so deletes are respected)
-    const seenKey = 'steph-seen-ids-grocery';
-    // Use a separate "seen ids" store per list
-    return { saved, defaults };
-  }
-  // Simpler: track which default ids have been seen before
-  const seenGrocery = new Set(JSON.parse(localStorage.getItem('steph-seen-grocery') || '[]'));
-  const seenTodo = new Set(JSON.parse(localStorage.getItem('steph-seen-todo') || '[]'));
-  const seenHouse = new Set(JSON.parse(localStorage.getItem('steph-seen-house') || '[]'));
-
-  function addOnlyNewItems(savedRaw, defaults, seenSet, seenKey) {
-    const saved = JSON.parse(savedRaw || 'null') || [];
-    const savedIds = new Set(saved.map(x => x.id));
-    // Only add items that have never been seen before (truly new from Lumen)
-    const brandNewItems = defaults.filter(x => !seenSet.has(x.id));
-    // Update seen set to include all current defaults
-    defaults.forEach(x => seenSet.add(x.id));
-    localStorage.setItem(seenKey, JSON.stringify([...seenSet]));
-    return [...saved, ...brandNewItems];
-  }
-
-  const newGrocery = addOnlyNewItems(localStorage.getItem('steph-grocery'), GROCERY_ITEMS, seenGrocery, 'steph-seen-grocery');
-  const newTodo = addOnlyNewItems(localStorage.getItem('steph-todo'), TODO_ITEMS, seenTodo, 'steph-seen-todo');
-  const newHouse = addOnlyNewItems(localStorage.getItem('steph-house'), HOUSE_ITEMS, seenHouse, 'steph-seen-house');
-
-  localStorage.setItem('steph-grocery', JSON.stringify(newGrocery));
-  localStorage.setItem('steph-todo', JSON.stringify(newTodo));
-  localStorage.setItem('steph-house', JSON.stringify(newHouse));
-  localStorage.setItem('steph-app-version', APP_VERSION);
-}
+// ---- STATE ----
+// No default items — Steph and Lumen add everything manually
 
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
 let todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || TODO_ITEMS;
