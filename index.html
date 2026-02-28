@@ -318,6 +318,49 @@
   /* NAV BAR */
   .nav { display: none; }
 
+  /* CATEGORY PICKER MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--white);
+    border-radius: 24px 24px 0 0;
+    padding: 20px 16px 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+  }
+  .modal-sheet h3 {
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .cat-btn {
+    display: block;
+    width: 100%;
+    background: var(--card);
+    border: none;
+    border-radius: 14px;
+    padding: 13px 16px;
+    font-size: 15px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    text-align: left;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .cat-btn:active { background: var(--card2); }
+
   /* MEAL LOG */
   .meal-log { padding: 0 16px; }
   .macro-card {
@@ -613,9 +656,17 @@
   </div>
 </div>
 
+<!-- CATEGORY PICKER MODAL -->
+<div class="modal-overlay" id="cat-modal" onclick="closeCatModal()">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <h3 id="cat-modal-title">Which section?</h3>
+    <div id="cat-modal-buttons"></div>
+  </div>
+</div>
+
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v19';
+const APP_VERSION = '2026-02-28-v20';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -830,10 +881,13 @@ function deleteTodo(id) { todoItems = todoItems.filter(x=>x.id!==id); localStora
 function addTodo() {
   const inp = document.getElementById('todo-input');
   if (!inp.value.trim()) return;
-  todoItems.push({ id: Date.now(), text: inp.value.trim(), done: false, cat: '📋 Other' });
-  localStorage.setItem('steph-todo', JSON.stringify(todoItems));
-  inp.value = '';
-  renderTodo();
+  const text = inp.value.trim();
+  showCatModal(text, ['🏠 House & Organizing','💅 Personal','👶 Kids & Health','📸 Photos','🛒 Shopping','💰 Joel To-Do','💬 Discuss with Joel','📋 Other'], (chosenCat) => {
+    todoItems.push({ id: Date.now(), text, done: false, cat: chosenCat });
+    localStorage.setItem('steph-todo', JSON.stringify(todoItems));
+    inp.value = '';
+    renderTodo();
+  });
 }
 
 // ---- GROCERY ----
@@ -870,10 +924,20 @@ function addGrocery() {
   const inp = document.getElementById('grocery-input');
   if (!inp.value.trim()) return;
   const text = inp.value.trim();
-  groceryItems.push({ id: Date.now(), text, done: false, cat: categorizeGroceryItem(text) });
-  localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
-  inp.value = '';
-  renderGrocery();
+  const cat = categorizeGroceryItem(text);
+  if (cat === '🛒 Other') {
+    showCatModal(text, ['🥦 Produce','🍎 Fruit','🥩 Meat & Protein','🥛 Dairy & Fridge','🌾 Grains & Pantry','🥜 Nuts & Seeds','🫙 Condiments & Oils','🍞 Bread & Bakery','🍫 Snacks','🥤 Drinks','🧊 Frozen','🧴 Household & Personal','🛒 Other'], (chosenCat) => {
+      groceryItems.push({ id: Date.now(), text, done: false, cat: chosenCat });
+      localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+      inp.value = '';
+      renderGrocery();
+    });
+  } else {
+    groceryItems.push({ id: Date.now(), text, done: false, cat });
+    localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+    inp.value = '';
+    renderGrocery();
+  }
 }
 
 // ---- HOUSE ----
@@ -927,6 +991,27 @@ function showRecipe(id) {
     ${r.body}
   `;
   showScreen('recipe-detail');
+}
+
+// ---- CATEGORY MODAL ----
+let _catModalCallback = null;
+function showCatModal(itemText, cats, callback) {
+  _catModalCallback = callback;
+  document.getElementById('cat-modal-title').textContent = `Where does "${itemText}" go?`;
+  const btns = document.getElementById('cat-modal-buttons');
+  btns.innerHTML = '';
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.textContent = cat;
+    btn.onclick = () => { closeCatModal(); callback(cat); };
+    btns.appendChild(btn);
+  });
+  document.getElementById('cat-modal').classList.add('open');
+}
+function closeCatModal() {
+  document.getElementById('cat-modal').classList.remove('open');
+  _catModalCallback = null;
 }
 
 // ---- GROCERY CLEAR / RESET ----
