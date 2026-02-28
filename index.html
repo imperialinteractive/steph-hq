@@ -470,7 +470,7 @@
   </div>
   <div style="padding: 0 16px 8px; display:flex; gap:10px;">
     <button class="add-btn" style="background:var(--brown);flex:1;" onclick="clearDoneGrocery()">Clear checked ✓</button>
-    <button class="add-btn" style="background:var(--card2);color:var(--brown);flex:1;" onclick="resetGrocery()">Reset to default</button>
+    <button class="add-btn" style="background:#c0392b;flex:1;" onclick="clearAllGrocery()">Clear all 🗑️</button>
   </div>
 </div>
 
@@ -841,9 +841,9 @@ function clearDoneGrocery() {
   localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
   renderGrocery();
 }
-function resetGrocery() {
-  if (confirm('Reset grocery list to default? Your custom items will be lost.')) {
-    groceryItems = JSON.parse(JSON.stringify(GROCERY_ITEMS));
+function clearAllGrocery() {
+  if (confirm('Clear the entire grocery list?')) {
+    groceryItems = [];
     localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
     renderGrocery();
   }
