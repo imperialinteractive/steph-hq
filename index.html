@@ -715,7 +715,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v30';
+const APP_VERSION = '2026-02-28-v31';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -815,100 +815,102 @@ function categorizeGroceryItem(text) {
 const WORKOUT_DAYS = [
   {
     day: 'Monday',
-    emoji: '💪',
-    label: 'Full Body Strength',
+    emoji: '🔥',
+    label: 'HIIT Class',
     detail: `
-      <div style="margin-bottom:16px;"><p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:12px;">Full body strength — focus on form, not weight. 5 months postpartum.</p></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Warm Up (5 min)</h3>
-      <div class="list-item"><span class="li-text">Arm circles + leg swings</span></div>
-      <div class="list-item"><span class="li-text">Bodyweight squats × 10</span></div>
-      <div class="list-item"><span class="li-text">Hip circles × 10 each side</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Main (3 rounds)</h3>
-      <div class="list-item"><span class="li-text">Goblet squat × 12</span></div>
-      <div class="list-item"><span class="li-text">Dumbbell Romanian deadlift × 10</span></div>
-      <div class="list-item"><span class="li-text">Push-ups (knees ok) × 10</span></div>
-      <div class="list-item"><span class="li-text">Dumbbell row × 12 each side</span></div>
-      <div class="list-item"><span class="li-text">Glute bridge × 15</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Cool Down</h3>
-      <div class="list-item"><span class="li-text">Hip flexor stretch 30s each</span></div>
-      <div class="list-item"><span class="li-text">Child's pose 1 min</span></div>
-      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Class day! Go hard and enjoy it. 🔥</p>
+      <div class="list-item"><span class="li-text">Light snack 45 min before if needed</span></div>
+      <div class="list-item"><span class="li-text">Hydrate well before, during, and after</span></div>
+      <div class="list-item"><span class="li-text">Push at your own pace — you know your body</span></div>
+      <div class="list-item"><span class="li-text">🥩 30–40g protein within 60–90 min after</span></div>`
   },
   {
     day: 'Tuesday',
-    emoji: '🚶',
-    label: 'Cardio / Walk',
+    emoji: '⚡',
+    label: 'Quick & Easy',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Active recovery day — get moving without overdoing it.</p>
-      <div class="list-item"><span class="li-text">30 min walk outside (aim for 7,500 steps)</span></div>
-      <div class="list-item"><span class="li-text">Or 20 min incline walk if treadmill</span></div>
-      <div class="list-item"><span class="li-text">Stroller walk counts! 👶</span></div>
-      <div class="list-item"><span class="li-text">Finish with 10 min stretch</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Limited time, no stress. 20 min is enough. ✨</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Pick One (20 min)</h3>
+      <div class="list-item"><span class="li-text">🚶 Stroller walk outside</span></div>
+      <div class="list-item"><span class="li-text">🧘 10 min stretch + 10 min walk</span></div>
+      <div class="list-item"><span class="li-text">💃 Dance with the boys in the kitchen</span></div>
+      <div class="list-item"><span class="li-text">🪑 10 min desk stretch (hips, back, neck)</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Anything counts. Moving is winning.</span></div>`
   },
   {
     day: 'Wednesday',
-    emoji: '🏋️',
-    label: 'Upper Body + Core',
+    emoji: '⚡',
+    label: 'Quick & Easy',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Upper body focus + core. Modify anything that feels unstable.</p>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Upper Body (3 rounds)</h3>
-      <div class="list-item"><span class="li-text">Dumbbell shoulder press × 12</span></div>
-      <div class="list-item"><span class="li-text">Lateral raises × 15</span></div>
-      <div class="list-item"><span class="li-text">Bicep curls × 12</span></div>
-      <div class="list-item"><span class="li-text">Tricep overhead extension × 12</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Core</h3>
-      <div class="list-item"><span class="li-text">Dead bugs × 10 each side</span></div>
-      <div class="list-item"><span class="li-text">Plank hold 20–30s × 3</span></div>
-      <div class="list-item"><span class="li-text">Bird dogs × 10 each side</span></div>
-      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Same as Tuesday — low key, limited time. Keep it simple.</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Pick One (20 min)</h3>
+      <div class="list-item"><span class="li-text">🚶 Stroller walk outside</span></div>
+      <div class="list-item"><span class="li-text">🧘 10 min stretch + 10 min walk</span></div>
+      <div class="list-item"><span class="li-text">💃 Dance with the boys in the kitchen</span></div>
+      <div class="list-item"><span class="li-text">🪑 10 min desk stretch (hips, back, neck)</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Anything counts. Moving is winning.</span></div>`
   },
   {
     day: 'Thursday',
-    emoji: '🧘',
-    label: 'Rest or Light Walk',
+    emoji: '💪',
+    label: "Lumen's Workout",
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Recovery day. Listen to your body.</p>
-      <div class="list-item"><span class="li-text">Optional: 15–20 min gentle walk</span></div>
-      <div class="list-item"><span class="li-text">10 min stretch or yoga</span></div>
-      <div class="list-item"><span class="li-text">Hydrate well 💧</span></div>
-      <div class="list-item"><span class="li-text">Sleep is a workout too 😴</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Full body strength — postpartum-friendly, no equipment needed. ~30 min.</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Warm Up (5 min)</h3>
+      <div class="list-item"><span class="li-text">March in place 1 min</span></div>
+      <div class="list-item"><span class="li-text">Hip circles × 10 each side</span></div>
+      <div class="list-item"><span class="li-text">Arm swings × 10 forward, × 10 back</span></div>
+      <div class="list-item"><span class="li-text">Bodyweight squats × 10 slow</span></div>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Circuit — 3 Rounds</h3>
+      <div class="list-item"><span class="li-text">Goblet squat × 12 (use a dumbbell or water jug)</span></div>
+      <div class="list-item"><span class="li-text">Glute bridge × 15 (pause 1s at top)</span></div>
+      <div class="list-item"><span class="li-text">Push-ups × 10 (knees totally fine)</span></div>
+      <div class="list-item"><span class="li-text">Dumbbell row × 12 each side</span></div>
+      <div class="list-item"><span class="li-text">Reverse lunges × 10 each leg</span></div>
+      <div class="list-item"><span class="li-text">Dead bug × 8 each side (core)</span></div>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Cool Down (5 min)</h3>
+      <div class="list-item"><span class="li-text">Child's pose 1 min</span></div>
+      <div class="list-item"><span class="li-text">Hip flexor stretch 30s each side</span></div>
+      <div class="list-item"><span class="li-text">Lying figure-4 stretch 30s each side</span></div>
+      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
   },
   {
     day: 'Friday',
-    emoji: '💪',
-    label: 'Full Body Strength',
+    emoji: '⚡',
+    label: 'Quick & Easy',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Same as Monday. Push a little harder — rest is coming!</p>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Main (3 rounds)</h3>
-      <div class="list-item"><span class="li-text">Goblet squat × 12</span></div>
-      <div class="list-item"><span class="li-text">Dumbbell Romanian deadlift × 10</span></div>
-      <div class="list-item"><span class="li-text">Push-ups × 10</span></div>
-      <div class="list-item"><span class="li-text">Dumbbell row × 12 each side</span></div>
-      <div class="list-item"><span class="li-text">Glute bridge × 15</span></div>
-      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Barre tomorrow — today is light. 20 min max.</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Pick One (20 min)</h3>
+      <div class="list-item"><span class="li-text">🚶 Walk with the boys</span></div>
+      <div class="list-item"><span class="li-text">🧘 Full body stretch — 15 min YouTube yoga</span></div>
+      <div class="list-item"><span class="li-text">💆 Foam roll if you have one</span></div>
+      <div class="list-item"><span class="li-text">🌿 Legs up the wall for 10 min (seriously underrated)</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Save your energy for Barre. You got this tomorrow.</span></div>`
   },
   {
     day: 'Saturday',
     emoji: '🩰',
-    label: 'Barre + Weights Class',
+    label: 'Barre Class',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Class day! Barre + Weights. Small movements, big burn.</p>
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Barre day! Small movements, big burn. You love this one. 🩰</p>
       <div class="list-item"><span class="li-text">Light snack 45–60 min before (banana + nut butter)</span></div>
       <div class="list-item"><span class="li-text">Hydrate well before and after</span></div>
-      <div class="list-item"><span class="li-text">Don't chase heaviest weight — time under tension wins</span></div>
-      <div class="list-item"><span class="li-text">Modify anything that feels unstable</span></div>
-      <div class="list-item"><span class="li-text">The pulses are supposed to burn 🔥</span></div>
+      <div class="list-item"><span class="li-text">The pulses are supposed to burn 🔥 — lean in</span></div>
+      <div class="list-item"><span class="li-text">Modify anything that doesn't feel right</span></div>
       <div class="list-item"><span class="li-text">🥩 30–40g protein within 60–90 min after</span></div>`
   },
   {
     day: 'Sunday',
-    emoji: '✨',
-    label: 'Rest Day',
+    emoji: '🌿',
+    label: 'Active Recovery',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Full rest. You earned it. 🌿</p>
-      <div class="list-item"><span class="li-text">No workout today</span></div>
-      <div class="list-item"><span class="li-text">Gentle stretch or walk if you feel like it</span></div>
-      <div class="list-item"><span class="li-text">Focus on recovery — sleep, food, water</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Easy Sunday. Move gently, recharge for the week. 🌿</p>
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Choose Your Vibe</h3>
+      <div class="list-item"><span class="li-text">🚶 Family walk or stroller stroll</span></div>
+      <div class="list-item"><span class="li-text">🧘 15 min gentle yoga or stretching</span></div>
+      <div class="list-item"><span class="li-text">🏊 Swim if you feel like it</span></div>
+      <div class="list-item"><span class="li-text">🛁 Epsom salt bath counts as recovery</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Rest is part of the plan. You earned it.</span></div>`
   },
 ];
 
