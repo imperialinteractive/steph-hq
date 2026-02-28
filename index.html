@@ -491,6 +491,10 @@
       <span class="tile-emoji">🏡</span>
       <span class="tile-label">Household Admin</span>
     </div>
+    <div class="tile" onclick="showScreen('appliances')">
+      <span class="tile-emoji">🏠</span>
+      <span class="tile-label">Appliances</span>
+    </div>
   </div>
 </div>
 
@@ -922,27 +926,120 @@
   </div>
 </div>
 
-<!-- WELLNESS -->
+<!-- APPLIANCES -->
+<div class="screen" id="screen-appliances">
+  <div class="header">
+    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <h1>Appliances 🏠</h1>
+  </div>
+  <div class="list-section">
+    <h2>Open App</h2>
+    <p style="font-family:-apple-system,sans-serif;font-size:13px;color:var(--text-light);margin-bottom:16px;">Tap to open the app on your phone.</p>
+    <a href="smartthings://" class="list-item" style="text-decoration:none;display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+      <span style="font-size:28px;">💡</span>
+      <span class="li-text" style="font-weight:600;">SmartThings</span>
+      <span style="color:var(--brown);font-family:-apple-system,sans-serif;font-size:13px;margin-left:auto;">Open →</span>
+    </a>
+    <a href="smartlife://" class="list-item" style="text-decoration:none;display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+      <span style="font-size:28px;">🔌</span>
+      <span class="li-text" style="font-weight:600;">Smart Life</span>
+      <span style="color:var(--brown);font-family:-apple-system,sans-serif;font-size:13px;margin-left:auto;">Open →</span>
+    </a>
+    <a href="googlegoogle-home://" class="list-item" style="text-decoration:none;display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+      <span style="font-size:28px;">🏡</span>
+      <span class="li-text" style="font-weight:600;">Google Home</span>
+      <span style="color:var(--brown);font-family:-apple-system,sans-serif;font-size:13px;margin-left:auto;">Open →</span>
+    </a>
+    <a href="tcc://" class="list-item" style="text-decoration:none;display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+      <span style="font-size:28px;">🌡️</span>
+      <span class="li-text" style="font-weight:600;">TCC (Honeywell)</span>
+      <span style="color:var(--brown);font-family:-apple-system,sans-serif;font-size:13px;margin-left:auto;">Open →</span>
+    </a>
+    <a href="lgsmarthome://" class="list-item" style="text-decoration:none;display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+      <span style="font-size:28px;">❄️</span>
+      <span class="li-text" style="font-weight:600;">LG ThinQ</span>
+      <span style="color:var(--brown);font-family:-apple-system,sans-serif;font-size:13px;margin-left:auto;">Open →</span>
+    </a>
+  </div>
+</div>
+
+<!-- WELLNESS HOME -->
 <div class="screen" id="screen-wellness">
   <div class="header">
     <span class="back" onclick="showScreen('todo')">← To-Do</span>
-    <h1>Wellness</h1>
+    <h1>Wellness 🌿</h1>
+  </div>
+  <div class="grid">
+    <div class="tile" onclick="showScreen('wellness-goals')">
+      <span class="tile-emoji">🎯</span>
+      <span class="tile-label">Goals</span>
+    </div>
+    <div class="tile" onclick="showScreen('wellness-selfcare')">
+      <span class="tile-emoji">🧖</span>
+      <span class="tile-label">Self Care</span>
+    </div>
+    <div class="tile" onclick="showScreen('wellness-mood')">
+      <span class="tile-emoji">💭</span>
+      <span class="tile-label">Mood Tracker</span>
+    </div>
+  </div>
+</div>
+
+<!-- WELLNESS: GOALS -->
+<div class="screen" id="screen-wellness-goals">
+  <div class="header">
+    <span class="back" onclick="showScreen('wellness')">← Wellness</span>
+    <h1>Goals 🎯</h1>
   </div>
   <div id="wellness-goals-section" class="list-section">
-    <h2>🎯 Current Goals</h2>
     <div id="wellness-goals-list"></div>
   </div>
   <div class="add-row">
     <input class="add-input" id="wellness-goals-input" placeholder="Add a goal...">
     <button class="add-btn" onclick="addWellness('goals')">Add</button>
   </div>
+</div>
+
+<!-- WELLNESS: SELF CARE -->
+<div class="screen" id="screen-wellness-selfcare">
+  <div class="header">
+    <span class="back" onclick="showScreen('wellness')">← Wellness</span>
+    <h1>Self Care 🧖</h1>
+  </div>
   <div id="wellness-selfcare-section" class="list-section">
-    <h2>🧖 Self Care</h2>
     <div id="wellness-selfcare-list"></div>
   </div>
   <div class="add-row">
     <input class="add-input" id="wellness-selfcare-input" placeholder="Add self care item...">
     <button class="add-btn" onclick="addWellness('selfcare')">Add</button>
+  </div>
+</div>
+
+<!-- WELLNESS: MOOD TRACKER -->
+<div class="screen" id="screen-wellness-mood">
+  <div class="header">
+    <span class="back" onclick="showScreen('wellness')">← Wellness</span>
+    <h1>Mood Tracker 💭</h1>
+  </div>
+  <div class="list-section">
+    <h2>How are you feeling today?</h2>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding:8px 0 16px;">
+      <button onclick="logMood('😊','Great')" style="flex:1;min-width:80px;background:var(--card);border:none;border-radius:16px;padding:14px 8px;font-size:22px;cursor:pointer;font-family:-apple-system,sans-serif;">😊<br><span style="font-size:11px;color:var(--text-light);">Great</span></button>
+      <button onclick="logMood('🙂','Good')" style="flex:1;min-width:80px;background:var(--card);border:none;border-radius:16px;padding:14px 8px;font-size:22px;cursor:pointer;font-family:-apple-system,sans-serif;">🙂<br><span style="font-size:11px;color:var(--text-light);">Good</span></button>
+      <button onclick="logMood('😐','Okay')" style="flex:1;min-width:80px;background:var(--card);border:none;border-radius:16px;padding:14px 8px;font-size:22px;cursor:pointer;font-family:-apple-system,sans-serif;">😐<br><span style="font-size:11px;color:var(--text-light);">Okay</span></button>
+      <button onclick="logMood('😔','Low')" style="flex:1;min-width:80px;background:var(--card);border:none;border-radius:16px;padding:14px 8px;font-size:22px;cursor:pointer;font-family:-apple-system,sans-serif;">😔<br><span style="font-size:11px;color:var(--text-light);">Low</span></button>
+      <button onclick="logMood('😩','Rough')" style="flex:1;min-width:80px;background:var(--card);border:none;border-radius:16px;padding:14px 8px;font-size:22px;cursor:pointer;font-family:-apple-system,sans-serif;">😩<br><span style="font-size:11px;color:var(--text-light);">Rough</span></button>
+    </div>
+    <div class="add-row" style="margin-bottom:8px;">
+      <input class="add-input" id="mood-note-input" placeholder="Add a note (optional)..." style="flex:1;">
+    </div>
+  </div>
+  <div class="list-section">
+    <h2>Recent Entries</h2>
+    <div id="mood-log-list"></div>
+    <div style="padding:0 0 8px;">
+      <button onclick="clearMoodLog()" style="background:none;border:1px solid var(--brown);color:var(--brown);border-radius:12px;padding:7px 16px;font-size:13px;cursor:pointer;font-family:-apple-system,sans-serif;">Clear all</button>
+    </div>
   </div>
 </div>
 
@@ -1064,7 +1161,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-02-28-v54';
+const APP_VERSION = '2026-02-28-v55';
 
 // ---- DATA ----
 const TODAY_ITEMS = [
@@ -1558,6 +1655,7 @@ let householdMaintenance = JSON.parse(localStorage.getItem('steph-household-main
 let memoriesData = JSON.parse(localStorage.getItem('steph-memories') || 'null') || JSON.parse(JSON.stringify(MEMORIES_DEFAULT));
 let playdates = JSON.parse(localStorage.getItem('steph-playdates') || '[]');
 let wellnessGoals = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null') || WELLNESS_GOALS_DEFAULT;
+let moodLog = JSON.parse(localStorage.getItem('steph-mood') || '[]');
 let wellnessSelfcare = JSON.parse(localStorage.getItem('steph-wellness-selfcare') || 'null') || WELLNESS_SELFCARE_DEFAULT;
 let eventsData = JSON.parse(localStorage.getItem('steph-events') || 'null') || JSON.parse(JSON.stringify(EVENTS_DEFAULT));
 
@@ -1609,7 +1707,10 @@ function showScreen(name) {
   if (name === 'household-maintenance') renderHouseholdMaintenance();
   if (name === 'packages') renderPackages();
   if (name === 'events') renderEvents();
-  if (name === 'wellness') renderWellness();
+  if (name === 'wellness') {}
+  if (name === 'wellness-goals') renderWellness();
+  if (name === 'wellness-selfcare') renderWellness();
+  if (name === 'wellness-mood') renderMoodLog();
   if (name === 'kids') {}
   if (name === 'kids-rush') renderMemories();
   if (name === 'kids-hayes') renderMemories();
@@ -1848,6 +1949,56 @@ function openWorkoutDay(index) {
   document.getElementById('workout-day-title').textContent = w.day;
   document.getElementById('workout-day-content').innerHTML = w.detail;
   showScreen('workout-day');
+}
+
+// ---- MOOD TRACKER ----
+function logMood(emoji, label) {
+  const note = document.getElementById('mood-note-input');
+  const d = new Date();
+  const dateStr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  const timeStr = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  moodLog.unshift({ id: Date.now(), emoji, label, note: note ? note.value.trim() : '', date: dateStr, time: timeStr });
+  if (moodLog.length > 60) moodLog = moodLog.slice(0, 60); // keep last 60
+  localStorage.setItem('steph-mood', JSON.stringify(moodLog));
+  if (note) note.value = '';
+  renderMoodLog();
+  // Flash confirmation
+  const btn = event.currentTarget;
+  if (btn) { btn.style.background = 'var(--green-light)'; setTimeout(() => btn.style.background = 'var(--card)', 600); }
+}
+function renderMoodLog() {
+  const list = document.getElementById('mood-log-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!moodLog.length) {
+    list.innerHTML = `<div class="list-item"><span class="li-text" style="color:var(--text-light)">No entries yet — how are you feeling? 🌿</span></div>`;
+    return;
+  }
+  moodLog.forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.style.cssText = 'flex-direction:column;align-items:flex-start;gap:2px;padding:10px 16px;';
+    div.innerHTML = `
+      <div style="display:flex;width:100%;align-items:center;gap:8px;">
+        <span style="font-size:20px;">${entry.emoji}</span>
+        <span style="font-weight:600;font-family:-apple-system,sans-serif;font-size:14px;">${entry.label}</span>
+        <span style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-left:auto;">${entry.date} · ${entry.time}</span>
+        <button onclick="deleteMoodEntry(${entry.id})" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-light);padding:0 2px;">×</button>
+      </div>
+      ${entry.note ? `<span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding-left:28px;">${entry.note}</span>` : ''}`;
+    list.appendChild(div);
+  });
+}
+function deleteMoodEntry(id) {
+  moodLog = moodLog.filter(x => x.id !== id);
+  localStorage.setItem('steph-mood', JSON.stringify(moodLog));
+  renderMoodLog();
+}
+function clearMoodLog() {
+  if (!confirm('Clear all mood entries?')) return;
+  moodLog = [];
+  localStorage.setItem('steph-mood', JSON.stringify(moodLog));
+  renderMoodLog();
 }
 
 // ---- HOUSEHOLD ADMIN ----
