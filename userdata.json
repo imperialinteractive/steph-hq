@@ -116,236 +116,242 @@
   ],
   "steph-grocery": [
     {
-      "id": 1772915754470,
-      "text": "\ud83e\udd66 Broccoli",
+      "id": 1772915863637,
+      "text": "Broccoli \u2014 1 large head",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754471,
-      "text": "\ud83c\udf60 Sweet potatoes (x4)",
+      "id": 1772915863638,
+      "text": "Sweet potatoes \u2014 4 medium",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754472,
-      "text": "\ud83e\uded1 Bell peppers (x4, mixed colours)",
+      "id": 1772915863639,
+      "text": "Bell peppers \u2014 4 (mixed colours)",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754473,
-      "text": "\ud83e\uddc5 Red onion (x2)",
+      "id": 1772915863640,
+      "text": "Red onion \u2014 2",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754474,
-      "text": "\ud83e\udd6c Brussels sprouts",
+      "id": 1772915863641,
+      "text": "Brussels sprouts \u2014 1 lb bag",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754475,
-      "text": "\ud83c\udf4b Lemons (x3)",
+      "id": 1772915863642,
+      "text": "Lemons \u2014 3",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754476,
-      "text": "\ud83e\uddc4 Garlic",
+      "id": 1772915863643,
+      "text": "Garlic \u2014 1 head",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754477,
-      "text": "\ud83c\udf4e Apple (x2)",
+      "id": 1772915863644,
+      "text": "Apples \u2014 2",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754478,
-      "text": "\ud83c\udf45 Cherry tomatoes",
+      "id": 1772915863645,
+      "text": "Cherry tomatoes \u2014 1 pint",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754479,
-      "text": "\ud83e\udd52 Cucumber",
+      "id": 1772915863646,
+      "text": "Cucumber \u2014 1 large",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754480,
-      "text": "\ud83e\udd6c Romaine lettuce",
+      "id": 1772915863647,
+      "text": "Romaine lettuce \u2014 1 head",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754481,
-      "text": "\ud83c\udf3f Fresh herbs (rosemary or thyme)",
+      "id": 1772915863648,
+      "text": "Fresh rosemary or thyme \u2014 1 bunch",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754482,
-      "text": "\ud83e\udedb Baby spinach",
+      "id": 1772915863649,
+      "text": "Baby spinach \u2014 1 bag (5 oz)",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754483,
-      "text": "\ud83e\uded0 Raspberries + blackberries",
+      "id": 1772915863650,
+      "text": "Raspberries \u2014 1 pint",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754484,
-      "text": "\ud83e\udd51 Avocado (x2)",
+      "id": 1772915863651,
+      "text": "Blackberries \u2014 1 pint",
       "done": false,
       "cat": "\ud83e\udd66 Produce"
     },
     {
-      "id": 1772915754489,
-      "text": "\ud83c\udf57 Chicken thighs (bone-in, skin-on) \u2014 6 pieces",
+      "id": 1772915863652,
+      "text": "Avocados \u2014 2",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915863656,
+      "text": "Chicken thighs, bone-in skin-on \u2014 6 pieces (~2.5 lb)",
       "done": false,
       "cat": "\ud83e\udd69 Meat & Protein"
     },
     {
-      "id": 1772915754490,
-      "text": "\ud83c\udf57 Chicken breast (x2) \u2014 for salad",
+      "id": 1772915863657,
+      "text": "Chicken breast \u2014 2 large",
       "done": false,
       "cat": "\ud83e\udd69 Meat & Protein"
     },
     {
-      "id": 1772915754491,
-      "text": "\ud83e\udd83 Ground turkey (1 lb)",
+      "id": 1772915863658,
+      "text": "Ground turkey \u2014 1 lb",
       "done": false,
       "cat": "\ud83e\udd69 Meat & Protein"
     },
     {
-      "id": 1772915754492,
-      "text": "\ud83c\udf2d Italian chicken sausage (4 links)",
+      "id": 1772915863659,
+      "text": "Italian chicken sausage \u2014 4 links",
       "done": false,
       "cat": "\ud83e\udd69 Meat & Protein"
     },
     {
-      "id": 1772915754493,
-      "text": "\ud83e\udd69 Pork tenderloin (1\u20131.5 lb)",
+      "id": 1772915863660,
+      "text": "Pork tenderloin \u2014 1\u20131.5 lb",
       "done": false,
       "cat": "\ud83e\udd69 Meat & Protein"
     },
     {
-      "id": 1772915754494,
-      "text": "\ud83e\udd69 Lean ground beef (1 lb)",
+      "id": 1772915863661,
+      "text": "Lean ground beef \u2014 1 lb",
       "done": false,
       "cat": "\ud83e\udd69 Meat & Protein"
     },
     {
-      "id": 1772915754499,
-      "text": "\ud83e\udd5b Libert\u00e9 11% Greek yogurt",
+      "id": 1772915863666,
+      "text": "Libert\u00e9 11% Greek yogurt \u2014 2 cups",
       "done": false,
       "cat": "\ud83e\udd5b Dairy & Eggs"
     },
     {
-      "id": 1772915754500,
-      "text": "\ud83e\uddc0 Feta cheese",
+      "id": 1772915863667,
+      "text": "Feta cheese \u2014 1 block or 4 oz crumbled",
       "done": false,
       "cat": "\ud83e\udd5b Dairy & Eggs"
     },
     {
-      "id": 1772915754501,
-      "text": "\ud83e\uddc0 Mozzarella cheese sticks",
+      "id": 1772915863668,
+      "text": "Mozzarella cheese sticks \u2014 1 pack",
       "done": false,
       "cat": "\ud83e\udd5b Dairy & Eggs"
     },
     {
-      "id": 1772915754502,
-      "text": "\ud83e\udd5a Egg whites (carton)",
+      "id": 1772915863669,
+      "text": "Egg whites \u2014 1 carton (500ml)",
       "done": false,
       "cat": "\ud83e\udd5b Dairy & Eggs"
     },
     {
-      "id": 1772915754509,
-      "text": "\ud83e\uded8 Black beans (can)",
+      "id": 1772915863676,
+      "text": "Black beans \u2014 1 can (540ml)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754510,
-      "text": "\ud83e\uded8 Chickpeas (can)",
+      "id": 1772915863677,
+      "text": "Chickpeas \u2014 1 can (540ml)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754511,
-      "text": "\ud83c\udf3d Corn (can or frozen)",
+      "id": 1772915863678,
+      "text": "Corn \u2014 1 can or 1 cup frozen",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754512,
-      "text": "\ud83c\udf45 Chunky salsa (jar)",
+      "id": 1772915863679,
+      "text": "Chunky salsa \u2014 1 jar",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754513,
-      "text": "\ud83c\udf5a Basmati or white rice",
+      "id": 1772915863680,
+      "text": "Basmati rice \u2014 2 cups dry",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754514,
-      "text": "\ud83c\udf2e Whole wheat tortillas",
+      "id": 1772915863681,
+      "text": "Whole wheat tortillas \u2014 1 pack (small)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754515,
-      "text": "\ud83c\udf6f Dijon mustard",
+      "id": 1772915863682,
+      "text": "Dijon mustard \u2014 3 tbsp (small jar)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754516,
-      "text": "\ud83c\udf41 Maple syrup",
+      "id": 1772915863683,
+      "text": "Maple syrup \u2014 2 tbsp",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754517,
-      "text": "Taco seasoning",
+      "id": 1772915863684,
+      "text": "Taco seasoning \u2014 1 packet or 2 tbsp bulk",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754518,
-      "text": "Olive oil",
+      "id": 1772915863685,
+      "text": "Olive oil \u2014 check if stocked",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754519,
-      "text": "\ud83e\udd5c Almonds (10-pack snack packs or bulk)",
+      "id": 1772915863686,
+      "text": "Almonds \u2014 1 cup (snack portions)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754520,
-      "text": "Carbonaut granola",
+      "id": 1772915863687,
+      "text": "Carbonaut granola \u2014 1 bag",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754521,
-      "text": "Sesame seeds",
+      "id": 1772915863688,
+      "text": "Sesame seeds \u2014 2 tbsp (small bag)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     },
     {
-      "id": 1772915754522,
-      "text": "Tzatziki (store bought)",
+      "id": 1772915863689,
+      "text": "Tzatziki \u2014 1 tub (store bought)",
       "done": false,
       "cat": "\ud83d\uded2 Pantry"
     }
