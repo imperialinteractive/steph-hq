@@ -816,9 +816,9 @@
         "meals": [
           {
             "type": "Breakfast",
-            "name": "Egg White Scramble Wrap",
-            "desc": "Egg whites, spinach, salsa in whole wheat tortilla",
-            "macros": "~320 cal \u00b7 28g protein \u00b7 30g carbs"
+            "name": "Protein Smoothie + Egg Whites on the Side",
+            "desc": "Blend: protein powder, frozen banana, almond milk, PB \u00b7 fry 3 egg whites separately",
+            "macros": "~330 cal \u00b7 30g protein \u00b7 30g carbs"
           },
           {
             "type": "Lunch",
