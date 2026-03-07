@@ -114,7 +114,242 @@
       ]
     }
   ],
-  "steph-grocery": [],
+  "steph-grocery": [
+    {
+      "id": 1772915754470,
+      "text": "\ud83e\udd66 Broccoli",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754471,
+      "text": "\ud83c\udf60 Sweet potatoes (x4)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754472,
+      "text": "\ud83e\uded1 Bell peppers (x4, mixed colours)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754473,
+      "text": "\ud83e\uddc5 Red onion (x2)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754474,
+      "text": "\ud83e\udd6c Brussels sprouts",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754475,
+      "text": "\ud83c\udf4b Lemons (x3)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754476,
+      "text": "\ud83e\uddc4 Garlic",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754477,
+      "text": "\ud83c\udf4e Apple (x2)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754478,
+      "text": "\ud83c\udf45 Cherry tomatoes",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754479,
+      "text": "\ud83e\udd52 Cucumber",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754480,
+      "text": "\ud83e\udd6c Romaine lettuce",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754481,
+      "text": "\ud83c\udf3f Fresh herbs (rosemary or thyme)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754482,
+      "text": "\ud83e\udedb Baby spinach",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754483,
+      "text": "\ud83e\uded0 Raspberries + blackberries",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754484,
+      "text": "\ud83e\udd51 Avocado (x2)",
+      "done": false,
+      "cat": "\ud83e\udd66 Produce"
+    },
+    {
+      "id": 1772915754489,
+      "text": "\ud83c\udf57 Chicken thighs (bone-in, skin-on) \u2014 6 pieces",
+      "done": false,
+      "cat": "\ud83e\udd69 Meat & Protein"
+    },
+    {
+      "id": 1772915754490,
+      "text": "\ud83c\udf57 Chicken breast (x2) \u2014 for salad",
+      "done": false,
+      "cat": "\ud83e\udd69 Meat & Protein"
+    },
+    {
+      "id": 1772915754491,
+      "text": "\ud83e\udd83 Ground turkey (1 lb)",
+      "done": false,
+      "cat": "\ud83e\udd69 Meat & Protein"
+    },
+    {
+      "id": 1772915754492,
+      "text": "\ud83c\udf2d Italian chicken sausage (4 links)",
+      "done": false,
+      "cat": "\ud83e\udd69 Meat & Protein"
+    },
+    {
+      "id": 1772915754493,
+      "text": "\ud83e\udd69 Pork tenderloin (1\u20131.5 lb)",
+      "done": false,
+      "cat": "\ud83e\udd69 Meat & Protein"
+    },
+    {
+      "id": 1772915754494,
+      "text": "\ud83e\udd69 Lean ground beef (1 lb)",
+      "done": false,
+      "cat": "\ud83e\udd69 Meat & Protein"
+    },
+    {
+      "id": 1772915754499,
+      "text": "\ud83e\udd5b Libert\u00e9 11% Greek yogurt",
+      "done": false,
+      "cat": "\ud83e\udd5b Dairy & Eggs"
+    },
+    {
+      "id": 1772915754500,
+      "text": "\ud83e\uddc0 Feta cheese",
+      "done": false,
+      "cat": "\ud83e\udd5b Dairy & Eggs"
+    },
+    {
+      "id": 1772915754501,
+      "text": "\ud83e\uddc0 Mozzarella cheese sticks",
+      "done": false,
+      "cat": "\ud83e\udd5b Dairy & Eggs"
+    },
+    {
+      "id": 1772915754502,
+      "text": "\ud83e\udd5a Egg whites (carton)",
+      "done": false,
+      "cat": "\ud83e\udd5b Dairy & Eggs"
+    },
+    {
+      "id": 1772915754509,
+      "text": "\ud83e\uded8 Black beans (can)",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754510,
+      "text": "\ud83e\uded8 Chickpeas (can)",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754511,
+      "text": "\ud83c\udf3d Corn (can or frozen)",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754512,
+      "text": "\ud83c\udf45 Chunky salsa (jar)",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754513,
+      "text": "\ud83c\udf5a Basmati or white rice",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754514,
+      "text": "\ud83c\udf2e Whole wheat tortillas",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754515,
+      "text": "\ud83c\udf6f Dijon mustard",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754516,
+      "text": "\ud83c\udf41 Maple syrup",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754517,
+      "text": "Taco seasoning",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754518,
+      "text": "Olive oil",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754519,
+      "text": "\ud83e\udd5c Almonds (10-pack snack packs or bulk)",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754520,
+      "text": "Carbonaut granola",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754521,
+      "text": "Sesame seeds",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    },
+    {
+      "id": 1772915754522,
+      "text": "Tzatziki (store bought)",
+      "done": false,
+      "cat": "\ud83d\uded2 Pantry"
+    }
+  ],
   "steph-playdates": [
     {
       "id": 1772550595459,
