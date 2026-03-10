@@ -1,0 +1,23 @@
+{
+  "currentDay": 1,
+  "foodsTried": [
+    "Avocado",
+    "Yogurt (Dairy)",
+    "Broccoli",
+    "Hemp Hearts",
+    "Olive Oil"
+  ],
+  "allergens": [
+    "Dairy"
+  ],
+  "notes": [
+    {
+      "text": "Day 1 ✅ — Broccoli Two Ways with hemp hearts + yogurt",
+      "date": "2026-03-10"
+    },
+    {
+      "text": "Pre-Day 1 ✅ — Smashed avocado + yogurt. Very into it!",
+      "date": "2026-03-09"
+    }
+  ]
+}
