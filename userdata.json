@@ -861,5 +861,20 @@
         "weight": 148
       }
     ]
+  },
+  "steph-weight-tracker": {
+    "start": 153,
+    "entries": [
+      {
+        "id": 1740000000000,
+        "date": "Feb 18, 2026",
+        "weight": 153
+      },
+      {
+        "id": 1741702380000,
+        "date": "Mar 11, 2026",
+        "weight": 148
+      }
+    ]
   }
 }
