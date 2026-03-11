@@ -3,15 +3,15 @@
     {
       "key": "lumen-steph-2026",
       "meal": {
-        "id": 1741718100002,
+        "id": 1741718100003,
         "date": "2026-03-11",
-        "name": "HBH Skillet Mexican Beef & Rice + 15 fiesta chips",
-        "type": "lunch",
-        "cal": 680,
-        "protein": 42,
-        "carbs": 60,
-        "fat": 26,
-        "fibre": 6,
+        "name": "Applesauce Hemp Heart Muffin (homemade)",
+        "type": "snack",
+        "cal": 145,
+        "protein": 5,
+        "carbs": 16,
+        "fat": 7,
+        "fibre": 2,
         "sugar": 5
       }
     },
