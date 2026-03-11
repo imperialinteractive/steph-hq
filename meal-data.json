@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1741718100001,
+      "date": "2026-03-11",
+      "name": "Tim Hortons — Steeped Tea ½ milk 2 sugar + Simply Bacon Sandwich",
+      "type": "breakfast",
+      "cal": 562,
+      "protein": 11,
+      "carbs": 56,
+      "fat": 28,
+      "fibre": 1,
+      "sugar": 18
+    },
+    {
       "key": "lumen-steph-2026",
       "meal": {
         "id": 1741718100003,
