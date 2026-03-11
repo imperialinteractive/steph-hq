@@ -879,5 +879,106 @@
   },
   "steph-pp-progress": {
     "y1_u1": true
-  }
+  },
+  "steph-hayes-growth": [
+    {
+      "id": 1741700000000,
+      "date": "2025-09-09",
+      "displayDate": "Sep 9, 2025",
+      "label": "Birth",
+      "weight": 5.75,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700001000,
+      "date": "2025-09-11",
+      "displayDate": "Sep 11, 2025",
+      "label": "Take home day",
+      "weight": 5.28,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700002000,
+      "date": "2025-09-13",
+      "displayDate": "Sep 13, 2025",
+      "label": "Weight check",
+      "weight": 5.39,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700003000,
+      "date": "2025-09-16",
+      "displayDate": "Sep 16, 2025",
+      "label": "",
+      "weight": 5.56,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700004000,
+      "date": "2025-09-23",
+      "displayDate": "Sep 23, 2025",
+      "label": "",
+      "weight": 6.38,
+      "height": 49.5,
+      "head": 35
+    },
+    {
+      "id": 1741700005000,
+      "date": "2025-10-07",
+      "displayDate": "Oct 7, 2025",
+      "label": "",
+      "weight": 8,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700006000,
+      "date": "2025-10-21",
+      "displayDate": "Oct 21, 2025",
+      "label": "",
+      "weight": 9.18,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700007000,
+      "date": "2025-10-28",
+      "displayDate": "Oct 28, 2025",
+      "label": "",
+      "weight": 9.8,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700008000,
+      "date": "2026-01-14",
+      "displayDate": "Jan 14, 2026",
+      "label": "",
+      "weight": 13.43,
+      "height": 60.8,
+      "head": 42
+    },
+    {
+      "id": 1741700009000,
+      "date": "2026-02-18",
+      "displayDate": "Feb 18, 2026",
+      "label": "",
+      "weight": 14.48,
+      "height": null,
+      "head": null
+    },
+    {
+      "id": 1741700010000,
+      "date": "2026-03-11",
+      "displayDate": "Mar 11, 2026",
+      "label": "6-month appt",
+      "weight": 14.92,
+      "height": 64,
+      "head": 43.1
+    }
+  ]
 }
