@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1773352890831,
+      "date": "2026-03-12",
+      "name": "Saganaki with pita",
+      "type": "lunch",
+      "cal": 400,
+      "protein": 16,
+      "carbs": 20,
+      "fat": 28,
+      "fibre": 1,
+      "sugar": 1
+    },
+    {
       "id": 1773340446855,
       "date": "2026-03-12",
       "name": "Tim Hortons Steeped Tea (1/2 milk, 2 sugar) + Simply Bacon Sandwich",
