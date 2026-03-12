@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1773340446855,
+      "date": "2026-03-12",
+      "name": "Tim Hortons Steeped Tea (1/2 milk, 2 sugar) + Simply Bacon Sandwich",
+      "type": "breakfast",
+      "cal": 390,
+      "protein": 14,
+      "carbs": 38,
+      "fat": 19,
+      "fibre": 1,
+      "sugar": 12
+    },
+    {
       "id": 1741730000003,
       "date": "2026-03-11",
       "name": "Osmow's Chicken Box (¼ box)",
