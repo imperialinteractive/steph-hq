@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1741730000003,
+      "date": "2026-03-11",
+      "name": "Osmow's Chicken Box (¼ box)",
+      "type": "dinner",
+      "cal": 186,
+      "protein": 10,
+      "carbs": 22,
+      "fat": 8,
+      "fibre": 1,
+      "sugar": 1
+    },
+    {
       "id": 1741720000001,
       "date": "2026-03-11",
       "name": "Arrae Clear Protein+ Raspberry Yuzu",
