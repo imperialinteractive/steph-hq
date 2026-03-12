@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1741720000001,
+      "date": "2026-03-11",
+      "name": "Arrae Clear Protein+ Raspberry Yuzu",
+      "type": "snack",
+      "cal": 70,
+      "protein": 15,
+      "carbs": 4,
+      "fat": 0,
+      "fibre": 0,
+      "sugar": 0
+    },
+    {
       "id": "1773266695757Q",
       "date": "2026-03-11",
       "name": "Arrae Clear Protein+ Raspberry Yuzu",
