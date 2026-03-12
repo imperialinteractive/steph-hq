@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1773352890832,
+      "date": "2026-03-12",
+      "name": "Small Caesar salad with grilled chicken",
+      "type": "lunch",
+      "cal": 380,
+      "protein": 32,
+      "carbs": 12,
+      "fat": 22,
+      "fibre": 2,
+      "sugar": 3
+    },
+    {
       "id": 1773352890831,
       "date": "2026-03-12",
       "name": "Saganaki with pita",
