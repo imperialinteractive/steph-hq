@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1773362227587,
+      "date": "2026-03-12",
+      "name": "Brussels Sprouts with Olive Oil & Spices (1 cup roasted)",
+      "type": "dinner",
+      "cal": 100,
+      "protein": 4,
+      "carbs": 10,
+      "fat": 6,
+      "fibre": 4,
+      "sugar": 2
+    },
+    {
       "id": 1773362227586,
       "date": "2026-03-12",
       "name": "1 Chicken Souvlaki Skewer",
