@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v258 2026-03-13 -->
+<!-- v259 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3955,13 +3955,11 @@ function moveTodoPrompt(id) {
 }
 
 function moveTodo(id, newCat) {
-  todoItems = JSON.parse(localStorage.getItem('steph-todo') || '[]');
   const item = todoItems.find(x => x.id === id);
   if (!item) return;
   item.cat = newCat;
   saveUserdata('steph-todo', todoItems);
-  renderTodoCatList();
-  renderTodo();
+  setTimeout(() => { renderTodoCatList(); renderTodoPinnedBar(); renderTodo(); }, 80);
 }
 
 function enableTodoEdit(span, id) {
@@ -3990,7 +3988,7 @@ function toggleTodo(id) {
   const i = todoItems.find(x=>x.id===id);
   if(i) i.done=!i.done;
   saveUserdata('steph-todo', todoItems);
-  setTimeout(() => { renderTodoCatList(); renderTodo(); }, 80);
+  setTimeout(() => { renderTodoCatList(); renderTodoPinnedBar(); }, 80);
 }
 function deleteTodo(id) {
   // Track deleted default IDs (id < 100000 = seeded defaults) so they never come back on version bump
@@ -4001,7 +3999,7 @@ function deleteTodo(id) {
   }
   todoItems = todoItems.filter(x=>x.id!==id);
   saveUserdata('steph-todo', todoItems);
-  setTimeout(() => { renderTodoCatList(); renderTodo(); }, 80);
+  setTimeout(() => { renderTodoCatList(); renderTodoPinnedBar(); }, 80);
 }
 function estimateTodoTime(text) {
   const t = text.toLowerCase();
