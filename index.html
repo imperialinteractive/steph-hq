@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v261 2026-03-13 -->
+<!-- v262 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3912,20 +3912,30 @@ function renderTodoCatList() {
       <span class="todo-pin-btn" data-action="pin" title="${item.pinned ? 'Unpin' : 'Pin to top'}">${item.pinned ? '📌' : '📍'}</span>
       <span data-action="move" title="Move to category" style="cursor:pointer;font-size:15px;padding:0 2px;color:var(--text-light);">⇄</span>
       <span class="li-delete" data-action="delete">×</span>`;
-    // Single delegated click handler — no bubbling conflicts
-    div.addEventListener('click', e => {
-      const action = e.target.dataset.action;
-      if (action === 'pin') { toggleTodoPin(item.id); return; }
-      if (action === 'move') { moveTodoPrompt(item.id); return; }
-      if (action === 'delete') { deleteTodo(item.id); return; }
-      // Tapped drag handle — ignore
-      if (e.target.classList.contains('todo-drag-handle')) return;
+    // Delegated tap handler — works on iOS Safari (touchend avoids 300ms delay & ghost taps)
+    let _tapStartX = 0, _tapStartY = 0;
+    div.addEventListener('touchstart', e => {
+      _tapStartX = e.touches[0].clientX;
+      _tapStartY = e.touches[0].clientY;
+    }, { passive: true });
+    div.addEventListener('touchend', e => {
+      // Ignore if finger moved (scroll or drag)
+      const dx = Math.abs(e.changedTouches[0].clientX - _tapStartX);
+      const dy = Math.abs(e.changedTouches[0].clientY - _tapStartY);
+      if (dx > 10 || dy > 10) return;
+      const target = e.target;
+      const action = target.dataset.action;
+      if (action === 'pin') { e.preventDefault(); toggleTodoPin(item.id); return; }
+      if (action === 'move') { e.preventDefault(); moveTodoPrompt(item.id); return; }
+      if (action === 'delete') { e.preventDefault(); deleteTodo(item.id); return; }
+      if (target.classList.contains('todo-drag-handle')) return;
       // Tapped text — double-tap to edit, single tap to toggle
-      if (e.target.classList.contains('li-text')) {
-        const span = e.target;
+      if (target.classList.contains('li-text')) {
+        const span = target;
         if (span._editPending) {
           clearTimeout(span._editPending);
           span._editPending = null;
+          e.preventDefault();
           span.contentEditable = 'true';
           span.focus();
           const range = document.createRange();
@@ -3939,7 +3949,7 @@ function renderTodoCatList() {
           span._editPending = setTimeout(() => { span._editPending = null; }, 400);
         }
       }
-      // Default: toggle done
+      e.preventDefault();
       toggleTodo(item.id);
     });
     // Drag events
