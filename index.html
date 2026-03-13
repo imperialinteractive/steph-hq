@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v235 2026-03-10 -->
+<!-- v255 2026-03-12 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -732,6 +732,8 @@
     <span class="back" onclick="showScreen('home')">← HQ</span>
     <h1>To-Do</h1>
   </div>
+  <!-- PINNED / IMPORTANT BAR -->
+  <div id="todo-pinned-bar" style="margin:0 16px 14px;"></div>
   <div style="padding:0 16px 12px;display:flex;gap:8px;flex-wrap:wrap;">
     <button onclick="openTodoTimeView('5min')" style="background:var(--card);color:var(--text);border:none;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:-apple-system,sans-serif;font-weight:500;">⚡ 5 min</button>
     <button onclick="openTodoTimeView('10min')" style="background:var(--card);color:var(--text);border:none;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:-apple-system,sans-serif;font-weight:500;">🕐 10 min</button>
@@ -1026,6 +1028,22 @@
       <span class="tile-emoji">🤝</span>
       <span class="tile-label">Playdates</span>
     </div>
+    <div class="tile" onclick="showScreen('kids-activities')" style="grid-column:1/-1;">
+      <span class="tile-emoji">🎨</span>
+      <span class="tile-label">Activity Ideas</span>
+    </div>
+  </div>
+</div>
+
+<!-- KIDS: ACTIVITY IDEAS -->
+<div class="screen" id="screen-kids-activities">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids')">← Kids</span>
+    <h1>🎨 Activity Ideas</h1>
+  </div>
+  <div style="padding:0 16px 80px;">
+    <div id="kids-activities-list"></div>
+    <button onclick="addKidsActivity()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--brown);color:white;font-size:15px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;">+ Add Activity</button>
   </div>
 </div>
 
@@ -1058,7 +1076,51 @@
     <button onclick="showKidStories('rush')" style="aspect-ratio:1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:15px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
       <span style="font-size:28px;">📚</span>Stories
     </button>
+    <button onclick="showScreen('kids-rush-pp')" style="grid-column:1/-1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:15px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;padding:18px;">
+      <span style="font-size:28px;">🎓</span>Playing Preschool
+    </button>
   </div>
+</div>
+
+<!-- PLAYING PRESCHOOL MAIN -->
+<div class="screen" id="screen-kids-rush-pp">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids-rush')">← Rush</span>
+    <h1>🎓 Playing Preschool</h1>
+  </div>
+  <div style="padding:0 16px 24px;">
+    <!-- PDF Links -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+      <a href="https://steph-hq-deploy.vercel.app/playing-preschool-year-1.pdf" onclick="event.preventDefault();window.open('https://steph-hq-deploy.vercel.app/playing-preschool-year-1.pdf')" style="background:var(--card);border-radius:14px;padding:14px;text-align:center;text-decoration:none;display:block;">
+        <div style="font-size:22px;">📄</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;margin-top:4px;">Year 1 PDF</div>
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">Opens in Safari</div>
+      </a>
+      <a href="https://steph-hq-deploy.vercel.app/playing-preschool-year-2.pdf" onclick="event.preventDefault();window.open('https://steph-hq-deploy.vercel.app/playing-preschool-year-2.pdf')" style="background:var(--card);border-radius:14px;padding:14px;text-align:center;text-decoration:none;display:block;">
+        <div style="font-size:22px;">📄</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;margin-top:4px;">Year 2 PDF</div>
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">Opens in Safari</div>
+      </a>
+    </div>
+    <!-- Current Unit Card -->
+    <div id="pp-current-unit" style="margin-bottom:18px;"></div>
+    <!-- Year Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button id="pp-tab-y1" onclick="ppSetYear(1)" style="flex:1;padding:10px;border-radius:12px;border:none;font-size:14px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--brown);color:white;">Year 1</button>
+      <button id="pp-tab-y2" onclick="ppSetYear(2)" style="flex:1;padding:10px;border-radius:12px;border:none;font-size:14px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--card);color:var(--brown);">Year 2</button>
+    </div>
+    <!-- Unit List -->
+    <div id="pp-unit-list"></div>
+  </div>
+</div>
+
+<!-- PLAYING PRESCHOOL UNIT DETAIL -->
+<div class="screen" id="screen-kids-rush-pp-unit">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids-rush-pp')">← Units</span>
+    <h1 id="pp-unit-title">Unit</h1>
+  </div>
+  <div id="pp-unit-detail" style="padding:0 16px 80px;"></div>
 </div>
 
 <!-- KIDS: RUSH MEMORIES -->
@@ -1101,7 +1163,7 @@
       <button class="add-btn" onclick="addKidFocus('hayes')">Add</button>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:0 16px 24px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:0 16px 12px;">
     <button onclick="showScreen('kids-hayes-memories')" style="aspect-ratio:1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
       <span style="font-size:26px;">📖</span>Memories
     </button>
@@ -1111,9 +1173,73 @@
     <button onclick="showKidStories('hayes')" style="aspect-ratio:1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
       <span style="font-size:26px;">📚</span>Stories
     </button>
-    <button onclick="showScreen('kids-hayes-solids')" style="aspect-ratio:1;background:var(--green);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-      <span style="font-size:26px;">🥄</span>Solids
+  </div>
+  <div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:10px;">
+    <button onclick="showScreen('kids-hayes-solids')" style="width:100%;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:16px;">
+      <span style="font-size:22px;">🥄</span>Solid Starts
     </button>
+    <button onclick="showScreen('kids-hayes-growth')" style="width:100%;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:16px;">
+      <span style="font-size:22px;">📏</span>Growth Tracker
+    </button>
+  </div>
+</div>
+
+<!-- HAYES: GROWTH TRACKER -->
+<div class="screen" id="screen-kids-hayes-growth">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids-hayes')">← Hayes</span>
+    <h1>📏 Growth Tracker</h1>
+  </div>
+  <div style="padding:0 16px 80px;">
+    <div id="hayes-growth-summary" style="margin-bottom:16px;"></div>
+    <!-- WHO Chart tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:10px;">
+      <button id="growth-tab-weight" onclick="growthSetTab('weight')" style="flex:1;padding:9px;border-radius:10px;border:none;font-size:12px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--brown);color:white;">⚖️ Weight</button>
+      <button id="growth-tab-height" onclick="growthSetTab('height')" style="flex:1;padding:9px;border-radius:10px;border:none;font-size:12px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--card);color:var(--brown);">📏 Height</button>
+      <button id="growth-tab-head" onclick="growthSetTab('head')" style="flex:1;padding:9px;border-radius:10px;border:none;font-size:12px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--card);color:var(--brown);">🔵 Head</button>
+    </div>
+    <div style="background:var(--card);border-radius:18px;padding:12px;margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:6px;" id="growth-chart-title">WHO GROWTH CHART — WEIGHT (BOYS)</div>
+      <canvas id="growth-chart" style="width:100%;border-radius:10px;" height="260"></canvas>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <div style="display:flex;align-items:center;gap:4px;"><div style="width:20px;height:3px;background:#c8e6c9;border-radius:2px;"></div><span style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">3rd–97th</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><div style="width:20px;height:3px;background:#81c784;border-radius:2px;"></div><span style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">15th–85th</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><div style="width:20px;height:2px;background:#388e3c;border-radius:2px;border-top:2px dashed #388e3c;"></div><span style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">50th</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><div style="width:20px;height:3px;background:#e57373;border-radius:2px;"></div><span style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">Hayes</span></div>
+      </div>
+    </div>
+    <!-- Add Entry -->
+    <div style="background:var(--card);border-radius:18px;padding:16px 20px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:12px;">+ ADD MEASUREMENT</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;">
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Date</div>
+          <input id="growth-date" type="date" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Label (optional)</div>
+          <input id="growth-label" type="text" placeholder="e.g. 6-month appt" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Weight (lbs)</div>
+          <input id="growth-weight" type="number" step="0.1" placeholder="e.g. 8.2" style="width:100%;padding:9px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Height (cm)</div>
+          <input id="growth-height" type="number" step="0.1" placeholder="e.g. 52.5" style="width:100%;padding:9px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Head (cm)</div>
+          <input id="growth-head" type="number" step="0.1" placeholder="e.g. 35.0" style="width:100%;padding:9px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+        </div>
+      </div>
+      <button onclick="addGrowthEntry()" style="width:100%;padding:12px;border-radius:12px;border:none;background:var(--brown);color:white;font-size:14px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;">Save Measurement</button>
+    </div>
+    <!-- History -->
+    <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">HISTORY</div>
+    <div id="hayes-growth-history"></div>
   </div>
 </div>
 
@@ -1158,6 +1284,22 @@
   </div>
 </div>
 
+<!-- KIDS: HAYES SOLID STARTS PDF VIEWER -->
+<div class="screen" id="screen-kids-hayes-solids-pdf" style="padding:0;">
+  <div class="header" style="flex-shrink:0;">
+    <span class="back" onclick="showScreen('kids-hayes-solids')">← Solid Starts</span>
+    <h1 style="font-size:15px;">First 100 Days Guide</h1>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;">
+    <span style="font-size:60px;">📄</span>
+    <div style="font-family:-apple-system,sans-serif;text-align:center;">
+      <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px;">Solid Starts First 100 Days</div>
+      <div style="font-size:13px;color:var(--text-light);margin-bottom:24px;">Opens in Safari — tap back when done</div>
+      <a href="/solid-starts-first-100-days.pdf" target="_blank" style="display:inline-block;background:var(--green);color:#fff;padding:14px 32px;border-radius:16px;font-weight:700;font-size:15px;text-decoration:none;font-family:-apple-system,sans-serif;">Open PDF →</a>
+    </div>
+  </div>
+</div>
+
 <!-- KIDS: HAYES SOLID STARTS -->
 <div class="screen" id="screen-kids-hayes-solids">
   <div class="header">
@@ -1167,7 +1309,7 @@
 
   <!-- PDF Link -->
   <div style="padding:16px 16px 0;">
-    <a href="https://raw.githubusercontent.com/imperialinteractive/steph-hq/main/solid-starts-first-100-days.pdf" target="_blank" style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:16px;padding:14px 16px;text-decoration:none;color:var(--text);">
+    <a href="#" onclick="showScreen('kids-hayes-solids-pdf'); return false;" style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:16px;padding:14px 16px;text-decoration:none;color:var(--text);">
       <span style="font-size:28px;">📄</span>
       <div style="font-family:-apple-system,sans-serif;">
         <div style="font-weight:700;font-size:14px;">Solid Starts First 100 Days</div>
@@ -1197,6 +1339,9 @@
       </div>
       <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:4px;text-align:right;" id="solids-progress-label">1 of 100 days</div>
     </div>
+
+    <!-- Done for Today button -->
+    <button id="solids-done-btn" onclick="solidsDoneDay()" style="width:100%;margin-top:12px;background:var(--green);color:#fff;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">✅ Done for Today</button>
   </div>
 
   <!-- Today's meal -->
@@ -1233,11 +1378,24 @@
 
   <!-- Notes -->
   <div class="list-section">
-    <h2>📝 Notes</h2>
+    <h2>📝 Day Log & Notes</h2>
     <div id="solids-notes-list"></div>
     <div class="add-row">
       <input class="add-input" id="solids-note-input" placeholder="e.g. Loved broccoli! Gagged on mango..." style="flex:1;" onkeydown="if(event.key==='Enter')solidAddNote()">
       <button class="add-btn" onclick="solidAddNote()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Done for Today modal (fixed overlay, lives outside screen div intentionally) -->
+<div id="solids-done-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:var(--white);border-radius:20px;padding:24px;width:100%;max-width:380px;font-family:-apple-system,sans-serif;">
+    <div style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;" id="solids-done-modal-title">Day done! 🎉</div>
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:16px;">What did Hayes try today? Add a note (optional).</div>
+    <input id="solids-done-note-input" class="add-input" placeholder="e.g. Loved sweet potato! Made a face at peas..." style="width:100%;margin-bottom:16px;">
+    <div style="display:flex;gap:10px;">
+      <button onclick="solidsDoneDayConfirm()" style="flex:1;background:var(--green);color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;">Mark Done & Next Day →</button>
+      <button onclick="document.getElementById('solids-done-modal').style.display='none'" style="background:var(--card);color:var(--text);border:none;border-radius:12px;padding:13px 16px;font-size:15px;cursor:pointer;">Cancel</button>
     </div>
   </div>
 </div>
@@ -1384,9 +1542,9 @@
       <div style="font-size:15px;font-weight:700;color:var(--brown);margin-bottom:14px;font-family:-apple-system,sans-serif;">📅 Day 2</div>
       <div style="margin-bottom:12px;">
         <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:4px;">🌅 BREAKFAST</div>
-        <div style="font-size:14px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;">Cottage Cheese &amp; Fruit Plate</div>
-        <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:3px;">1 cup 2% cottage cheese · sliced strawberries + blueberries · 2 rice cakes · drizzle honey (light)</div>
-        <div style="font-size:12px;color:var(--green);font-family:-apple-system,sans-serif;margin-top:4px;">~380 cal · 35g protein · 36g carbs · 10g sugar</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;">Greek Yogurt Parfait</div>
+        <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:3px;">¾ cup Liberté 11% Greek yogurt · 1 scoop protein powder stirred in · raspberries + blueberries · ⅓ cup Carbonaut granola</div>
+        <div style="font-size:12px;color:var(--green);font-family:-apple-system,sans-serif;margin-top:4px;">~420 cal · 38g protein · 32g carbs · 8g sugar</div>
       </div>
       <div style="margin-bottom:12px;">
         <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:4px;">☀️ LUNCH</div>
@@ -1432,7 +1590,7 @@
         <a href="https://www.halfbakedharvest.com/vegetable-dumpling-soup/" target="_blank" style="display:inline-block;margin-top:6px;background:var(--brown);color:#fff;border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;text-decoration:none;font-weight:600;">View on HBH ↗</a> <button onclick="openRecipeById(5)" style="display:inline-block;margin-top:6px;background:var(--card);border:1px solid var(--brown);color:var(--brown);border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;font-weight:600;">See Recipe</button>
       </div>
       <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.06);">
-        <div style="font-size:12px;color:var(--brown);font-weight:600;font-family:-apple-system,sans-serif;">🥛 Snack idea: cottage cheese + berries &nbsp;·&nbsp; ~180 cal · 20g protein · 12g carbs</div>
+        <div style="font-size:12px;color:var(--brown);font-weight:600;font-family:-apple-system,sans-serif;">💪 Snack idea: Arrae clear protein + handful almonds &nbsp;·&nbsp; ~210 cal · 21g protein · 8g carbs</div>
       </div>
       <div style="margin-top:8px;background:rgba(122,158,126,0.12);border-radius:10px;padding:8px 12px;">
         <div style="font-size:12px;color:var(--text);font-family:-apple-system,sans-serif;font-weight:600;">Day total: ~1,850 cal · 112g protein · 116g carbs · 61g fat · ~16g sugar ✅</div>
@@ -1555,9 +1713,10 @@
   <div id="workout-weekly-cals" style="margin:0 16px 16px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
   <div id="workout-week-summary" style="display:none;margin:0 16px 16px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
   <div class="grid" id="workout-day-grid"></div>
-  <div style="padding:0 16px 24px;">
+  <div style="padding:0 16px 8px;">
     <button onclick="showScreen('workout-library')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--card);font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">📚 My Workout Library</button>
   </div>
+  <div id="weight-tracker-card" style="margin:0 16px 24px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
 </div>
 
 <!-- WORKOUT LIBRARY SCREEN -->
@@ -2021,7 +2180,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-02-v186';
+const APP_VERSION = '2026-03-10-v188';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -2485,6 +2644,37 @@ const RECIPES = [
       </ol>
       <h3>Notes</h3>
       <p>~180 cal · 4g protein · 18g carbs · 11g fat per piece (recipe makes ~12 pieces). Skip chocolate to reduce sugar. Great toddler snack too — Rush approved! 🍌</p>`
+  },
+  {
+    id: 13,
+    name: 'Greek Salad (foodbymaria)',
+    desc: 'foodbymaria · Classic & simple · No lettuce · 10 min',
+    cat: '🥗 Salads & Bowls',
+    source: 'https://www.instagram.com/foodbymaria',
+    body: `
+      <h3>Ingredients (Serves 4)</h3>
+      <ul>
+        <li>2 large tomatoes, cut into bite-size pieces</li>
+        <li>1 large cucumber, halved and chopped (peeling optional)</li>
+        <li>1 large fresh green pepper, chopped into bite-size pieces</li>
+        <li>1 small/medium red onion, sliced</li>
+        <li>¼ cup assorted olives</li>
+        <li>¼ cup traditional feta cheese</li>
+        <li>1 tsp dried oregano</li>
+        <li>3–4 tbsp good quality olive oil</li>
+        <li>1 tbsp red wine vinegar</li>
+        <li>1 tsp sea salt</li>
+      </ul>
+      <h3>Method</h3>
+      <ol>
+        <li>Chop all vegetables and add to a large bowl.</li>
+        <li>Add olives and feta.</li>
+        <li>Drizzle with olive oil and red wine vinegar.</li>
+        <li>Sprinkle with oregano and sea salt.</li>
+        <li>Toss gently and serve immediately.</li>
+      </ol>
+      <h3>Notes</h3>
+      <p>No lettuce — won't go soggy when dressed. Best enjoyed fresh. Dressed salad keeps in an airtight container in the fridge for up to 1 day. Add grilled chicken for a protein boost. 🥗</p>`
   },
 ];
 
@@ -3133,6 +3323,9 @@ function showScreen(name) {
   if (name === 'wellness-selfcare') renderWellness();
   if (name === 'wellness-mood') renderMoodLog();
   if (name === 'kids-rush') { renderKidsFocus(); renderKidFacts('rush'); }
+  if (name === 'kids-rush-pp') { loadUserdata().then(() => renderPP()); }
+  if (name === 'kids-hayes-growth') { loadUserdata().then(() => { renderGrowthTracker(); setTimeout(drawGrowthChart, 50); }); }
+  if (name === 'kids-activities') { loadUserdata().then(() => renderKidsActivities()); }
   if (name === 'kids-hayes') { renderKidsFocus(); renderKidFacts('hayes'); }
   if (name === 'kids-rush-memories') { renderMemories(); }
   if (name === 'kids-hayes-memories') { renderMemories(); }
@@ -3140,7 +3333,7 @@ function showScreen(name) {
   if (name === 'kids-todos') renderKidsTodos();
   if (name === 'kids-playdates') renderPlaydates();
   if (name === 'calendar') renderCalendar();
-  if (name === 'workouts') { loadUserdata().then(() => { renderWorkouts(); getWorkoutLibrary(); }); }
+  if (name === 'workouts') { loadUserdata().then(() => { renderWorkouts(); getWorkoutLibrary(); }); fetchWeightAndRender(); }
   if (name === 'posture') renderPosture();
   if (name === 'workout-library') renderWorkoutLibrary();
 }
@@ -3470,6 +3663,7 @@ let currentTodoCat = null;
 async function renderTodo() {
   await loadUserdata();
   todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || JSON.parse(JSON.stringify(TODO_ITEMS));
+  renderTodoPinnedBar();
   const grid = document.getElementById('todo-cat-grid');
   if (!grid) return;
   grid.innerHTML = '';
@@ -3482,6 +3676,49 @@ async function renderTodo() {
     tile.onclick = () => openTodoCat(cat);
     grid.appendChild(tile);
   });
+}
+
+let _pinnedBarOpen = false;
+function renderTodoPinnedBar() {
+  const bar = document.getElementById('todo-pinned-bar');
+  if (!bar) return;
+  const pinned = (todoItems || []).filter(x => x.pinned && !x.done);
+  if (!pinned.length) { bar.innerHTML = ''; return; }
+  bar.innerHTML = `
+    <div style="background:linear-gradient(135deg,#b5804a,#c8945a);border-radius:16px;overflow:hidden;">
+      <button onclick="togglePinnedBar()" style="width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:15px;">📌</span>
+          <span style="font-size:13px;font-weight:700;color:white;font-family:-apple-system,sans-serif;letter-spacing:0.3px;">IMPORTANT</span>
+          <span style="background:rgba(255,255,255,0.25);color:white;font-size:11px;font-weight:700;font-family:-apple-system,sans-serif;border-radius:20px;padding:2px 8px;">${pinned.length}</span>
+        </div>
+        <span style="color:white;font-size:16px;transition:transform 0.2s;" id="pinned-chevron">${_pinnedBarOpen ? '▲' : '▼'}</span>
+      </button>
+      <div id="pinned-bar-list" style="display:${_pinnedBarOpen ? 'block' : 'none'};padding:0 16px 14px;">
+        ${pinned.map(item => `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.15);" id="pinned-row-${item.id}">
+            <button onclick="togglePinnedDone(${item.id})" style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.7);background:transparent;cursor:pointer;flex-shrink:0;"></button>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:600;color:white;font-family:-apple-system,sans-serif;">${item.text}</div>
+              ${item.due ? `<div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">Due: ${item.due}</div>` : ''}
+            </div>
+            <span style="font-size:11px;color:rgba(255,255,255,0.6);font-family:-apple-system,sans-serif;">${(item.cat||'').replace(/^\S+\s/,'')}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+function togglePinnedBar() {
+  _pinnedBarOpen = !_pinnedBarOpen;
+  renderTodoPinnedBar();
+}
+function togglePinnedDone(id) {
+  const item = (todoItems||[]).find(x => x.id === id);
+  if (!item) return;
+  item.done = true;
+  saveUserdata('steph-todo', todoItems);
+  renderTodoPinnedBar();
+  const row = document.getElementById('pinned-row-' + id);
+  if (row) { row.style.opacity = '0.4'; row.style.textDecoration = 'line-through'; setTimeout(() => renderTodoPinnedBar(), 800); }
 }
 
 function openTodoCat(cat) {
@@ -3725,7 +3962,7 @@ function moveTodo(id, newCat) {
 function toggleTodo(id) {
   const i = todoItems.find(x=>x.id===id);
   if(i) i.done=!i.done;
-  localStorage.setItem('steph-todo',JSON.stringify(todoItems));
+  saveUserdata('steph-todo', todoItems);
   renderTodoCatList();
   renderTodo();
 }
@@ -3737,7 +3974,7 @@ function deleteTodo(id) {
     localStorage.setItem('steph-todo-deleted', JSON.stringify([...deleted]));
   }
   todoItems = todoItems.filter(x=>x.id!==id);
-  localStorage.setItem('steph-todo',JSON.stringify(todoItems));
+  saveUserdata('steph-todo', todoItems);
   renderTodoCatList();
   renderTodo();
 }
@@ -3892,6 +4129,87 @@ function getWorkoutWeekKey() {
   return mon.toLocaleDateString('en-CA'); // YYYY-MM-DD
 }
 
+// ---- WEIGHT TRACKER ----
+async function fetchWeightAndRender() {
+  try {
+    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const data = await res.json();
+    if (data['steph-weight-tracker']) {
+      localStorage.setItem('steph-weight-tracker', JSON.stringify(data['steph-weight-tracker']));
+    }
+  } catch(e) {}
+  renderWeightTracker();
+}
+function getWeightData() {
+  return JSON.parse(localStorage.getItem('steph-weight-tracker') || 'null') || { start: null, entries: [] };
+}
+function saveWeightData(data) {
+  saveUserdata('steph-weight-tracker', data);
+}
+function renderWeightTracker() {
+  const el = document.getElementById('weight-tracker-card');
+  if (!el) return;
+  const data = getWeightData();
+  const entries = data.entries || [];
+  const start = data.start;
+  const latest = entries.length ? entries[entries.length - 1] : null;
+  const current = latest ? latest.weight : null;
+  const diff = (start && current) ? (current - start).toFixed(1) : null;
+  const diffSign = diff > 0 ? '+' : '';
+  const diffColor = diff < 0 ? 'var(--green)' : diff > 0 ? '#c0594b' : 'var(--text-light)';
+
+  // Build history rows (last 5)
+  const recent = entries.slice(-5).reverse();
+  const historyHTML = recent.map(e => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
+      <span style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">${e.date}</span>
+      <span style="font-size:14px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;">${e.weight} lbs</span>
+      <button onclick="deleteWeightEntry('${e.id}')" style="background:none;border:none;color:var(--text-light);font-size:16px;cursor:pointer;padding:0 4px;opacity:0.5;">×</button>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">⚖️ WEIGHT TRACKER</div>
+    <div style="display:flex;gap:12px;margin-bottom:14px;">
+      <div style="flex:1;background:var(--card2);border-radius:12px;padding:10px 12px;text-align:center;">
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:2px;">START</div>
+        <div style="font-size:20px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;">${start ? start + '<span style="font-size:12px;font-weight:400"> lbs</span>' : '—'}</div>
+      </div>
+      <div style="flex:1;background:var(--card2);border-radius:12px;padding:10px 12px;text-align:center;">
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:2px;">NOW</div>
+        <div style="font-size:20px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;">${current ? current + '<span style="font-size:12px;font-weight:400"> lbs</span>' : '—'}</div>
+      </div>
+      <div style="flex:1;background:var(--card2);border-radius:12px;padding:10px 12px;text-align:center;">
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:2px;">CHANGE</div>
+        <div style="font-size:20px;font-weight:700;font-family:-apple-system,sans-serif;color:${diff !== null ? diffColor : 'var(--text-light)'};">${diff !== null ? diffSign + diff + '<span style="font-size:12px;font-weight:400"> lbs</span>' : '—'}</div>
+      </div>
+    </div>
+    ${recent.length > 0 ? `<div style="margin-bottom:12px;">${historyHTML}</div>` : ''}
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input id="weight-input" type="number" step="0.1" placeholder="Log today's weight (lbs)" style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+      <button onclick="logWeight()" style="padding:10px 16px;border-radius:12px;border:none;background:var(--brown);color:white;font-size:14px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;">Log</button>
+    </div>
+    ${!start ? `<div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:8px;">First entry will be saved as your starting weight 🌿</div>` : ''}`;
+}
+function logWeight() {
+  const input = document.getElementById('weight-input');
+  const val = parseFloat(input.value);
+  if (!val || val < 50 || val > 500) { input.style.border = '1.5px solid #c0594b'; setTimeout(() => input.style.border = '', 1200); return; }
+  const data = getWeightData();
+  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const entry = { id: Date.now(), date: today, weight: val };
+  if (!data.start) data.start = val;
+  data.entries.push(entry);
+  saveWeightData(data);
+  input.value = '';
+  renderWeightTracker();
+}
+function deleteWeightEntry(id) {
+  const data = getWeightData();
+  data.entries = data.entries.filter(e => String(e.id) !== String(id));
+  saveWeightData(data);
+  renderWeightTracker();
+}
+
 function renderWorkouts() {
   const grid = document.getElementById('workout-day-grid');
   if (!grid) return;
@@ -3997,7 +4315,7 @@ function estimateCalsBurned(text) {
   // Duration extraction — look for "30 min", "45min", "1 hour", "1hr" etc.
   let mins = 45; // default
   // Use the LARGEST minute value found (avoids picking up "5 min warm-up" instead of "45 min total")
-  const allMinMatches = [...t.matchAll(/(\d+)\s*min/g)].filter(m => parseInt(m[1]) >= 5); // ignore tiny values like "3 min warm-up"
+  const allMinMatches = [...t.matchAll(/(\d+)[\s\-]*min/g)].filter(m => parseInt(m[1]) >= 5); // ignore tiny values like "3 min warm-up"
   const minMatch = allMinMatches.length ? allMinMatches.reduce((a, b) => parseInt(a[1]) >= parseInt(b[1]) ? a : b) : null;
   const hrMatch = t.match(/(\d+\.?\d*)\s*h(ou)?r/);
   if (hrMatch) mins = Math.round(parseFloat(hrMatch[1]) * 60);
@@ -4011,13 +4329,13 @@ function estimateCalsBurned(text) {
   else if (/barre|pilates|reformer/.test(t)) met = 4.5;
   else if (/run|jog|running|jogging/.test(t)) met = 9.0;
   else if (/walk|stroll/.test(t)) met = 3.5;
-  else if (/yoga|stretch|mobility|flexibility/.test(t)) met = 2.5;
+  else if (/yoga|stretch|mobility|flexibility|restorative/.test(t)) met = 2.5;
   else if (/swim|swimming/.test(t)) met = 7.0;
   else if (/bike|cycling|spin/.test(t)) met = 6.5;
   else if (/dance/.test(t)) met = 5.0;
   else if (/rest/.test(t)) met = 1.5;
 
-  const cals = Math.round(met * WEIGHT_KG * hrs);
+  const cals = Math.max(10, Math.round(met * WEIGHT_KG * hrs));
   return { cals, mins, met };
 }
 
@@ -4025,7 +4343,7 @@ function estimateCalsBurned(text) {
 const WORKOUT_CALS = [
   { label: 'HIIT Class', est: '~350–450 cal', detail: 'HIIT · 45–60 min · moderate intensity' },
   { label: 'Move If You Can', est: '~100–200 cal', detail: 'Light movement · 20–30 min' },
-  { label: 'Rest Day', est: '~0 cal', detail: 'Rest — recovery is part of the plan' },
+  { label: 'Pilates Reformer', est: '~85–120 cal', detail: 'Restorative reformer · 30 min · light springs' },
   { label: '45 Min Full Body', est: '~300–380 cal', detail: 'Full body strength + cardio · 45 min' },
   { label: 'Treadmill Walk', est: '~80–120 cal', detail: 'Incline walk · 20 min' },
   { label: 'Barre Class', est: '~280–350 cal', detail: 'Barre · 45–60 min' },
@@ -4571,22 +4889,23 @@ function navMealPlan(direction) {
 function showInlineRecipe(nameEnc, recipeEnc) {
   const name = decodeURIComponent(nameEnc);
   const recipe = decodeURIComponent(recipeEnc).replace(/\n/g, '<br>');
-  const modal = document.getElementById('turkey-bowl-modal');
-  if (!modal) return;
-  modal.querySelector('h2').textContent = name;
-  modal.querySelector('p').textContent = '';
-  modal.querySelector('h3').style.display = 'none';
-  modal.querySelector('ul').style.display = 'none';
-  modal.querySelector('ol').style.display = 'none';
-  // Use the modal body area for free-form recipe text
-  const body = modal.querySelector('.recipe-inline-body') || (() => {
-    const d = document.createElement('div');
-    d.className = 'recipe-inline-body';
-    d.style.cssText = 'font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);line-height:1.8;';
-    modal.querySelector('div:last-child').appendChild(d);
-    return d;
-  })();
-  body.innerHTML = recipe;
+  // Use a dedicated inline recipe modal — never mutate the turkey-bowl-modal
+  let modal = document.getElementById('inline-recipe-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'inline-recipe-modal';
+    modal.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;overflow-y:auto;';
+    modal.innerHTML = `<div style="background:var(--bg);margin:60px 16px 40px;border-radius:24px;padding:24px 20px;max-width:480px;margin-left:auto;margin-right:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2 id="inline-recipe-title" style="font-size:18px;font-weight:700;color:var(--text);margin:0;font-family:-apple-system,sans-serif;"></h2>
+        <button onclick="document.getElementById('inline-recipe-modal').style.display='none'" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-light);">×</button>
+      </div>
+      <div id="inline-recipe-body" style="font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);line-height:1.8;"></div>
+    </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('inline-recipe-title').textContent = name;
+  document.getElementById('inline-recipe-body').innerHTML = recipe;
   modal.style.display = 'block';
 }
 
@@ -4771,8 +5090,8 @@ function renderMealLogFromData(meals) {
   const today = new Date().toLocaleDateString('en-CA');
   const viewMeals = mealData.filter(m => m.date === viewKey && m.action !== 'delete');
   const totals = viewMeals.reduce((acc, m) => {
-    acc.cal += m.cal; acc.protein += m.protein; acc.carbs += m.carbs;
-    acc.fibre += m.fibre; acc.sugar += m.sugar; acc.fat += (m.fat||0); return acc;
+    acc.cal += (m.cal||0); acc.protein += (m.protein||0); acc.carbs += (m.carbs||0);
+    acc.fibre += (m.fibre||0); acc.sugar += (m.sugar||0); acc.fat += (m.fat||0); return acc;
   }, { cal:0, protein:0, carbs:0, fibre:0, sugar:0, fat:0 });
 
   const card = document.getElementById('meal-totals-card');
@@ -4825,7 +5144,7 @@ function renderMealLogFromData(meals) {
         <h4>${typeEmoji[m.type]||'🍽️'} ${m.type.charAt(0).toUpperCase()+m.type.slice(1)} — ${m.name}</h4>
         ${canDelete ? `<button onclick="deleteMealEntry('${m.id}')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0;flex-shrink:0;">×</button>` : ''}
       </div>
-      <p>${m.cal} cal · ${m.protein}g protein · ${m.carbs}g carbs · ${m.fat||0}g fat · ${m.fibre}g fibre · ${m.sugar}g sugar</p>`;
+      <p>${m.cal||0} cal · ${m.protein||0}g protein · ${m.carbs||0}g carbs · ${m.fat||0}g fat · ${m.fibre||0}g fibre · ${m.sugar||0}g sugar</p>`;
     list.appendChild(div);
   });
 }
@@ -4890,7 +5209,7 @@ async function smartLogMeal() {
       body: JSON.stringify({ key: 'steph-meal-pending', data: {
         description: desc,
         type,
-        date: new Date().toLocaleDateString('en-CA'),
+        date: mealLogDate || new Date().toLocaleDateString('en-CA'),
         requestedAt: new Date().toISOString(),
         handled: false
       }})
@@ -4998,7 +5317,7 @@ async function confirmQuickMealPortion() {
 
   if (source === 'fav' && item.cal) {
     // Known macros — scale by portion if possible, else log as-is with portion in name
-    const today = new Date().toLocaleDateString('en-CA');
+    const today = mealLogDate || new Date().toLocaleDateString('en-CA');
     const name = `${item.name}${portion && portion !== '1 serving' ? ' (' + portion + ')' : ''}`;
     // Simple scaling: if portion is a number, multiply; otherwise just note it
     let scale = 1;
@@ -5021,7 +5340,7 @@ async function confirmQuickMealPortion() {
       body: JSON.stringify({ key: 'steph-meal-pending', data: {
         description,
         type,
-        date: new Date().toLocaleDateString('en-CA'),
+        date: mealLogDate || new Date().toLocaleDateString('en-CA'),
         requestedAt: new Date().toISOString(),
         handled: false
       }})
@@ -5036,8 +5355,8 @@ async function quickLogMeal(id) {
   const meals = getQuickMeals();
   const m = meals.find(x => x.id === id) || meals[parseInt(id)];
   if (!m) return;
-  const today = new Date().toLocaleDateString('en-CA');
-  const entry = { id: Date.now() + 'Q', date: today, name: m.name, type: m.type, cal: m.cal, protein: m.protein, carbs: m.carbs, fat: m.fat||0, fibre: m.fibre, sugar: m.sugar };
+  const today = mealLogDate || new Date().toLocaleDateString('en-CA');
+  const entry = { id: Date.now() + 'Q', date: today, name: m.name, type: m.type, cal: m.cal||0, protein: m.protein||0, carbs: m.carbs||0, fat: m.fat||0, fibre: m.fibre||0, sugar: m.sugar||0 };
   try {
     await fetch(MEALS_API, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-lumen-key': MEALS_KEY }, body: JSON.stringify(entry) });
     document.getElementById('add-meal-modal').style.display = 'none';
@@ -5170,7 +5489,7 @@ async function confirmQuickMealPortionFromSearch() {
   const portionBox = document.getElementById('quick-meal-portion-box');
   if (portionBox) portionBox.style.display = 'none';
   const type = document.getElementById('smart-meal-type')?.value || r.data.type || 'meal';
-  const today = new Date().toLocaleDateString('en-CA');
+  const date = mealLogDate || new Date().toLocaleDateString('en-CA');
 
   // Parse portion multiplier
   let scale = 1;
@@ -5183,20 +5502,20 @@ async function confirmQuickMealPortionFromSearch() {
   const d = r.data;
   let cal, protein, carbs, fat, fibre, sugar;
   if (r.kind === 'meal') {
-    cal = Math.round(d.cal * scale); protein = Math.round(d.protein * scale);
-    carbs = Math.round(d.carbs * scale); fat = Math.round((d.fat||0) * scale);
+    cal = Math.round((d.cal||0) * scale); protein = Math.round((d.protein||0) * scale);
+    carbs = Math.round((d.carbs||0) * scale); fat = Math.round((d.fat||0) * scale);
     fibre = Math.round((d.fibre||0) * scale); sugar = Math.round((d.sugar||0) * scale);
   } else {
     // Food DB item — scale by grams or unit
     const unitG = UNIT_TO_G[d.unit] || 1;
     const grams = (isNaN(num) ? 1 : num) * unitG;
     const mult = d.unit === 'g' ? grams / 100 : scale;
-    cal = Math.round(d.cal * mult); protein = Math.round((d.protein||0) * mult);
+    cal = Math.round((d.cal||0) * mult); protein = Math.round((d.protein||0) * mult);
     carbs = Math.round((d.carbs||0) * mult); fat = Math.round((d.fat||0) * mult);
     fibre = Math.round((d.fibre||0) * mult); sugar = Math.round((d.sugar||0) * mult);
   }
 
-  const entry = { id: Date.now() + 'S', date: today, name: `${r.label} (${portion})`, type, cal, protein, carbs, fat, fibre, sugar };
+  const entry = { id: Date.now() + 'S', date, name: `${r.label} (${portion})`, type, cal, protein, carbs, fat, fibre, sugar };
   try {
     await fetch(MEALS_API, { method:'POST', headers:{'Content-Type':'application/json','x-lumen-key':MEALS_KEY}, body:JSON.stringify(entry) });
     document.getElementById('add-meal-modal').style.display = 'none';
@@ -5208,9 +5527,9 @@ async function confirmQuickMealPortionFromSearch() {
 async function saveManualMeal() {
   const name = document.getElementById('smart-meal-desc')?.value.trim() || 'Meal';
   const type = document.getElementById('smart-meal-type')?.value || 'meal';
-  const today = new Date().toLocaleDateString('en-CA');
+  const date = mealLogDate || new Date().toLocaleDateString('en-CA');
   const entry = {
-    id: Date.now() + 'M', date: today, name, type,
+    id: Date.now() + 'M', date, name, type,
     cal: parseInt(document.getElementById('manual-cal')?.value || '0'),
     protein: parseInt(document.getElementById('manual-protein')?.value || '0'),
     carbs: parseInt(document.getElementById('manual-carbs')?.value || '0'),
@@ -5303,7 +5622,7 @@ async function saveAddedMeal() {
   if (!name) { alert('Please enter a meal name'); return; }
   const meal = {
     id: Date.now(),
-    date: new Date().toLocaleDateString('en-CA'),
+    date: mealLogDate || new Date().toLocaleDateString('en-CA'),
     name,
     type: document.getElementById('add-meal-type').value,
     cal: parseInt(document.getElementById('add-meal-cal').value) || 0,
@@ -5315,7 +5634,7 @@ async function saveAddedMeal() {
   };
   document.getElementById('add-meal-modal').style.display = 'none';
   try {
-    await fetch(`${MEALS_API}?key=${MEALS_KEY}`, {
+    await fetch(MEALS_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-lumen-key': MEALS_KEY },
       body: JSON.stringify(meal),
@@ -5335,11 +5654,11 @@ async function deleteMealEntry(id) {
 }
 
 async function clearTodayMeals() {
-  const todayKey = new Date().toLocaleDateString('en-CA');
+  const dateKey = mealLogDate || new Date().toLocaleDateString('en-CA');
   try {
     const res = await fetch(`${MEALS_API}?key=${MEALS_KEY}&t=${Date.now()}`);
     const data = await res.json();
-    const toDelete = (data.meals || []).filter(m => m.date === todayKey);
+    const toDelete = (data.meals || []).filter(m => m.date === dateKey);
     await Promise.all(toDelete.map(m => fetch(`${MEALS_API}?key=${MEALS_KEY}&id=${m.id}`, {
       method: 'DELETE', headers: { 'x-lumen-key': MEALS_KEY }
     })));
@@ -5421,7 +5740,7 @@ function addWarranty() {
   const e = document.getElementById('warranty-expiry');
   if (!n || !n.value.trim()) return;
   householdWarranty.push({ id: Date.now(), name: n.value.trim(), expiry: e ? e.value.trim() : '' });
-  localStorage.setItem('steph-household-warranty', JSON.stringify(householdWarranty));
+  saveUserdata('steph-household-warranty', householdWarranty);
   n.value = ''; if (e) e.value = '';
   renderHouseholdWarranty();
 }
@@ -5432,16 +5751,16 @@ function editWarranty(id, subKey) {
   householdWarranty = JSON.parse(localStorage.getItem('steph-household-warranty') || '[]');
   const item = householdWarranty.find(x => x.id === id);
   if (item) { item.name = name; item[subKey] = sub; }
-  localStorage.setItem('steph-household-warranty', JSON.stringify(householdWarranty));
+  saveUserdata('steph-household-warranty', householdWarranty);
   renderHouseholdWarranty();
 }
-function deleteWarranty(id) { householdWarranty = householdWarranty.filter(x => x.id !== id); localStorage.setItem('steph-household-warranty', JSON.stringify(householdWarranty)); renderHouseholdWarranty(); }
+function deleteWarranty(id) { householdWarranty = householdWarranty.filter(x => x.id !== id); saveUserdata('steph-household-warranty', householdWarranty); renderHouseholdWarranty(); }
 function addMaintenance() {
   const t = document.getElementById('maintenance-task');
   const d = document.getElementById('maintenance-due');
   if (!t || !t.value.trim()) return;
   householdMaintenance.push({ id: Date.now(), name: t.value.trim(), due: d ? d.value.trim() : '' });
-  localStorage.setItem('steph-household-maintenance', JSON.stringify(householdMaintenance));
+  saveUserdata('steph-household-maintenance', householdMaintenance);
   t.value = ''; if (d) d.value = '';
   renderHouseholdMaintenance();
 }
@@ -5452,10 +5771,10 @@ function editMaintenance(id, subKey) {
   householdMaintenance = JSON.parse(localStorage.getItem('steph-household-maintenance') || '[]');
   const item = householdMaintenance.find(x => x.id === id);
   if (item) { item.name = name; item[subKey] = sub; }
-  localStorage.setItem('steph-household-maintenance', JSON.stringify(householdMaintenance));
+  saveUserdata('steph-household-maintenance', householdMaintenance);
   renderHouseholdMaintenance();
 }
-function deleteMaintenance(id) { householdMaintenance = householdMaintenance.filter(x => x.id !== id); localStorage.setItem('steph-household-maintenance', JSON.stringify(householdMaintenance)); renderHouseholdMaintenance(); }
+function deleteMaintenance(id) { householdMaintenance = householdMaintenance.filter(x => x.id !== id); saveUserdata('steph-household-maintenance', householdMaintenance); renderHouseholdMaintenance(); }
 
 // ---- LONG TERM GOALS ----
 async function renderLongtermGoals() {
@@ -5547,7 +5866,7 @@ function wlConfirmEdit(id) {
   waitlistData = JSON.parse(localStorage.getItem('steph-waitlist') || '[]');
   const item = waitlistData.find(x => x.id === id);
   if (item) { item.name = name; item.phone = phone; item.email = email; }
-  localStorage.setItem('steph-waitlist', JSON.stringify(waitlistData));
+  saveUserdata('steph-waitlist', waitlistData);
   renderWaitlist();
 }
 function addWaitlistPatient() {
@@ -5561,13 +5880,13 @@ function addWaitlistPatient() {
     phone: phone ? phone.value.trim() : '',
     email: email ? email.value.trim() : ''
   });
-  localStorage.setItem('steph-waitlist', JSON.stringify(waitlistData));
+  saveUserdata('steph-waitlist', waitlistData);
   name.value = ''; if (phone) phone.value = ''; if (email) email.value = '';
   renderWaitlist();
 }
 function deleteWaitlistPatient(id) {
   waitlistData = waitlistData.filter(x => x.id !== id);
-  localStorage.setItem('steph-waitlist', JSON.stringify(waitlistData));
+  saveUserdata('steph-waitlist', waitlistData);
   renderWaitlist();
 }
 
@@ -5601,30 +5920,85 @@ async function renderNotes() {
   });
 }
 
-function addNote() {
-  const title = prompt('Title (optional):') || '';
-  const body = prompt('Note:');
-  if (!body || !body.trim()) return;
+let _noteEditId = null;
+
+function openNoteModal(id) {
+  _noteEditId = id || null;
+  const note = id ? notesData.find(n => n.id === id) : null;
+  let modal = document.getElementById('note-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'note-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:flex-end;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:20px 16px 36px;box-shadow:0 -4px 24px rgba(0,0,0,0.12);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-size:16px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;" id="note-modal-title">New Note</div>
+          <button onclick="closeNoteModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-light);">×</button>
+        </div>
+        <input id="note-title-input" placeholder="Title (optional)" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:var(--card);font-size:15px;font-family:-apple-system,sans-serif;color:var(--text);margin-bottom:10px;box-sizing:border-box;">
+        <div style="display:flex;gap:6px;margin-bottom:8px;">
+          <button onclick="noteInsertBullet()" style="padding:7px 14px;border-radius:10px;border:none;background:var(--card);color:var(--brown);font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;">• Bullet</button>
+          <button onclick="noteInsertLine()" style="padding:7px 14px;border-radius:10px;border:none;background:var(--card);color:var(--brown);font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;">― Divider</button>
+        </div>
+        <textarea id="note-body-input" placeholder="Start typing... Enter for new line, tap • Bullet for a list" style="width:100%;min-height:180px;padding:12px 14px;border-radius:14px;border:1px solid rgba(0,0,0,0.1);background:var(--card);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;outline:none;box-sizing:border-box;line-height:1.6;"></textarea>
+        <button onclick="saveNoteModal()" style="width:100%;margin-top:12px;padding:14px;border-radius:14px;border:none;background:var(--brown);color:white;font-size:15px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;">Save Note</button>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('note-modal-title').textContent = id ? 'Edit Note' : 'New Note';
+  document.getElementById('note-title-input').value = note ? (note.title || '') : '';
+  document.getElementById('note-body-input').value = note ? (note.body || '') : '';
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('note-body-input').focus(), 100);
+}
+function closeNoteModal() {
+  const modal = document.getElementById('note-modal');
+  if (modal) modal.style.display = 'none';
+}
+function noteInsertBullet() {
+  const ta = document.getElementById('note-body-input');
+  if (!ta) return;
+  const pos = ta.selectionStart;
+  const before = ta.value.substring(0, pos);
+  const after = ta.value.substring(pos);
+  const needsNewline = before.length > 0 && !before.endsWith('\n');
+  const insert = (needsNewline ? '\n' : '') + '• ';
+  ta.value = before + insert + after;
+  const newPos = pos + insert.length;
+  ta.setSelectionRange(newPos, newPos);
+  ta.focus();
+}
+function noteInsertLine() {
+  const ta = document.getElementById('note-body-input');
+  if (!ta) return;
+  const pos = ta.selectionStart;
+  const before = ta.value.substring(0, pos);
+  const after = ta.value.substring(pos);
+  const insert = (before.length > 0 && !before.endsWith('\n') ? '\n' : '') + '――――――――――\n';
+  ta.value = before + insert + after;
+  const newPos = pos + insert.length;
+  ta.setSelectionRange(newPos, newPos);
+  ta.focus();
+}
+function saveNoteModal() {
+  const title = document.getElementById('note-title-input').value.trim();
+  const body = document.getElementById('note-body-input').value.trim();
+  if (!body) return;
   const now = new Date();
-  const date = now.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
-  notesData.push({ id: Date.now(), title: title.trim(), body: body.trim(), date });
+  const date = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  if (_noteEditId) {
+    const note = notesData.find(n => n.id === _noteEditId);
+    if (note) { note.title = title; note.body = body; }
+  } else {
+    notesData.push({ id: Date.now(), title, body, date });
+  }
   saveUserdata('steph-notes', notesData);
+  closeNoteModal();
   renderNotes();
 }
-
-function editNote(id) {
-  const note = notesData.find(n => n.id === id);
-  if (!note) return;
-  const newTitle = prompt('Title:', note.title || '');
-  if (newTitle === null) return;
-  const newBody = prompt('Note:', note.body);
-  if (!newBody || !newBody.trim()) return;
-  note.title = newTitle.trim();
-  note.body = newBody.trim();
-  saveUserdata('steph-notes', notesData);
-  renderNotes();
-}
-
+function addNote() { openNoteModal(null); }
+function editNote(id) { openNoteModal(id); }
 function deleteNote(id) {
   if (!confirm('Delete this note?')) return;
   notesData = notesData.filter(n => n.id !== id);
@@ -6974,7 +7348,9 @@ function saveStory() {
   if (!title || !body) { alert('Please add a title and the story text.'); return; }
   const stories = getStories(_currentStoriesKid);
   stories.push({ id: 's' + Date.now(), title, character, body });
-  localStorage.setItem('steph-kids-stories-' + _currentStoriesKid, JSON.stringify(stories));
+  const storeKey = 'steph-kids-stories-' + _currentStoriesKid;
+  localStorage.setItem(storeKey, JSON.stringify(stories));
+  saveUserdata(storeKey, stories);
   document.getElementById('add-story-modal').style.display = 'none';
   renderStoriesList();
 }
@@ -6982,7 +7358,9 @@ function saveStory() {
 function deleteCurrentStory() {
   if (!_currentStoryId) return;
   const stories = getStories(_currentStoriesKid).filter(s => s.id !== _currentStoryId);
-  localStorage.setItem('steph-kids-stories-' + _currentStoriesKid, JSON.stringify(stories));
+  const storeKey = 'steph-kids-stories-' + _currentStoriesKid;
+  localStorage.setItem(storeKey, JSON.stringify(stories));
+  saveUserdata(storeKey, stories);
   _currentStoryId = null;
   showScreen('kids-stories');
   renderStoriesList();
@@ -7044,24 +7422,61 @@ function factConfirmEdit(kid, id) {
 }
 // ── SOLID STARTS TRACKER ────────────────────────────────────────────
 const SOLIDS_PLAN = {
-  1:  { week:1, meal:"Broccoli Two Ways", newFoods:["Broccoli","Hemp Seeds","Olive Oil"], allergens:[] },
-  2:  { week:1, meal:"Mango or Banana Two Ways", newFoods:["Mango"], allergens:[] },
-  3:  { week:1, meal:"Cauliflower Two Ways", newFoods:["Cauliflower"], allergens:[] },
-  4:  { week:1, meal:"Oatmeal Two Ways", newFoods:["Oats"], allergens:[] },
-  5:  { week:1, meal:"Broccoli/Cauliflower Florets + Mashed Cannellini Beans", newFoods:["Cannellini Beans"], allergens:[] },
-  6:  { week:1, meal:"Mango Two Ways (repeat)", newFoods:[], allergens:[] },
-  7:  { week:1, meal:"Stewed Apple Two Ways", newFoods:["Apple"], allergens:[] },
-  8:  { week:2, meal:"Cauliflower-Egg Mash 🚨 (Egg intro)", newFoods:["Egg","Corn"], allergens:["Egg"] },
-  9:  { week:2, meal:"Broccoli Egg Strips", newFoods:[], allergens:["Egg"] },
-  10: { week:2, meal:"Scrambled Egg + Bell Pepper + Corn on the Cob", newFoods:["Bell Pepper"], allergens:["Egg"] },
-  11: { week:2, meal:"Peanut Butter intro on mango/oatmeal 🚨 (Peanut intro)", newFoods:["Peanut"], allergens:["Egg","Peanut"] },
-  12: { week:2, meal:"Chickpea Hummus + Bell Pepper", newFoods:["Chickpea","Lemon"], allergens:["Egg","Peanut"] },
-  13: { week:2, meal:"Egg + Peanut repeats", newFoods:[], allergens:["Egg","Peanut"] },
-  14: { week:2, meal:"Egg + Peanut repeats", newFoods:[], allergens:["Egg","Peanut"] },
+  1:  { week:1, meal:"Broccoli Two Ways", how:"Steam broccoli until very soft. Serve two ways: (1) as a large spear he can hold and gum, and (2) mashed/pureed with a little olive oil. Sprinkle hemp seeds on the puree.", newFoods:["Broccoli","Hemp Seeds","Olive Oil"], allergens:[] },
+  2:  { week:1, meal:"Mango or Banana Two Ways", how:"Ripe mango: slice into a long spear (with skin left on one side so he can grip it) and also mash a small amount. Banana: offer a whole peeled banana he can hold, or mash it smooth. Both should be very ripe and soft.", newFoods:["Mango","Banana"], allergens:[] },
+  3:  { week:1, meal:"Cauliflower Two Ways", how:"Steam cauliflower florets until completely soft. Offer one large floret as a handle-able piece, and also mash or puree a portion smooth with a little olive oil or breast milk to loosen.", newFoods:["Cauliflower"], allergens:[] },
+  4:  { week:1, meal:"Oatmeal Two Ways", how:"Cook rolled oats with water or breast milk until very thick and gloopy — thick enough to stick to a preloaded spoon. Offer a spoon he can grab, and also spread a thin layer on a tray for him to scoop. Can add a mashed banana for sweetness.", newFoods:["Oats"], allergens:[] },
+  5:  { week:1, meal:"Broccoli/Cauliflower Florets + Mashed Cannellini Beans", how:"Steam broccoli or cauliflower spears until soft. For the beans: drain and rinse canned cannellini beans, then mash with olive oil, a pinch of garlic, and a squeeze of lemon until smooth and spreadable. Offer beans on a preloaded spoon.", newFoods:["Cannellini Beans"], allergens:[] },
+  6:  { week:1, meal:"Mango Two Ways (repeat)", how:"Repeat from Day 2 — ripe mango as a spear with skin on for grip, and a small mashed portion. Great practice day to build exposure.", newFoods:[], allergens:[] },
+  7:  { week:1, meal:"Stewed Apple Two Ways", how:"Peel, core and dice 1 apple. Simmer in a little water for 8–10 min until very soft. Offer as soft stewed chunks he can pick up, and also mash a portion smooth. No added sugar needed — apple is naturally sweet.", newFoods:["Apple"], allergens:[] },
+  8:  { week:2, meal:"Cauliflower-Egg Mash 🚨 (Egg intro)", how:"Cook 1 egg (well-done scrambled or hard boiled and mashed). Mash with steamed cauliflower and a little butter or olive oil. Offer on a preloaded spoon. Start with a small amount — watch for any reaction for 10–15 min. Also offer corn on the cob (raw or lightly cooked) as a teether/holder.", newFoods:["Egg","Corn"], allergens:["Egg"] },
+  9:  { week:2, meal:"Broccoli Egg Strips", how:"Scramble 1 egg until fully cooked and slightly firm. Cut into strips wide enough to grip. Serve alongside steamed broccoli spears. The egg strips act as finger food — he can pick them up and gum them.", newFoods:[], allergens:["Egg"] },
+  10: { week:2, meal:"Scrambled Egg + Bell Pepper + Corn on the Cob", how:"Scramble 1 egg well-done. Roast or steam bell pepper strips until very soft (remove skin if possible). Offer corn on the cob as a gnawing/teething food — he gets flavour without eating much. Lay everything out and let him explore.", newFoods:["Bell Pepper"], allergens:["Egg"] },
+  11: { week:2, meal:"Peanut Butter on Mango/Oatmeal 🚨 (Peanut intro)", how:"Thin 1 tsp smooth peanut butter with a little warm water until runny — never serve thick PB as it is a choking hazard. Spread thinly on a soft mango spear, OR stir into oatmeal. Start with just a small taste and watch closely for 15–20 min.", newFoods:["Peanut"], allergens:["Egg","Peanut"] },
+  12: { week:2, meal:"Chickpea Hummus + Bell Pepper", how:"Use store-bought or homemade hummus (blended chickpeas, tahini, lemon, olive oil). Spread on a soft pita strip or offer on a preloaded spoon. Serve with very soft roasted bell pepper strips. Tahini is sesame — note as a new exposure.", newFoods:["Chickpea","Lemon","Sesame/Tahini"], allergens:["Egg","Peanut"] },
+  13: { week:2, meal:"Egg + Peanut repeats", how:"Repeat egg and peanut butter in any form that worked well earlier this week — scrambled egg strips, peanut butter oatmeal, or PB on banana. The goal is continued exposure to build tolerance.", newFoods:[], allergens:["Egg","Peanut"] },
+  14: { week:2, meal:"Egg + Peanut repeats", how:"Repeat again. Keep offering both egg and peanut at least 2–3x per week going forward. You can start getting more creative — egg mixed into veggie purees, peanut butter in smoothie oatmeal, etc.", newFoods:[], allergens:["Egg","Peanut"] },
 };
 
-function renderSolidsScreen() {
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
+const SOLIDS_API = '/api/solids';
+const SOLIDS_KEY = 'lumen-steph-2026';
+let solidsCache = null;
+
+async function solidsGet() {
+  if (solidsCache) return solidsCache;
+  try {
+    const res = await fetch(`${SOLIDS_API}?key=${SOLIDS_KEY}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    solidsCache = await res.json();
+  } catch(e) {
+    console.warn('solidsGet fetch failed, using defaults:', e);
+    solidsCache = { currentDay: 1, foodsTried: [], allergens: [], notes: [] };
+  }
+  return solidsCache;
+}
+
+async function solidsPut(patch) {
+  const data = await solidsGet();
+  const updated = { ...data, ...patch };
+  solidsCache = updated;
+  try {
+    await fetch(SOLIDS_API, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'x-lumen-key': SOLIDS_KEY },
+      body: JSON.stringify(updated)
+    });
+  } catch(e) { console.warn('solidsPut failed:', e); }
+  return updated;
+}
+
+async function renderSolidsScreen() {
+  const todayCard = document.getElementById('solids-today-card');
+  if(todayCard) todayCard.innerHTML = '<span style="color:var(--text-light);font-size:13px;">Loading...</span>';
+
+  const data = await solidsGet();
+  // Always show the first incomplete day (currentDay = next day to do)
+  const completedDays = data.completedDays || [];
+  // currentDay is the "next up" day — the one not yet done
   const day = data.currentDay || 1;
   const plan = SOLIDS_PLAN[day] || { week: Math.ceil(day/7), meal:"See Solid Starts guide", newFoods:[], allergens:[] };
 
@@ -7069,7 +7484,6 @@ function renderSolidsScreen() {
   const weekEl = document.getElementById('solids-week-display');
   const bar = document.getElementById('solids-progress-bar');
   const label = document.getElementById('solids-progress-label');
-  const todayCard = document.getElementById('solids-today-card');
   const newFoodsEl = document.getElementById('solids-new-foods');
   const foodsEl = document.getElementById('solids-foods-tried');
   const allergensEl = document.getElementById('solids-allergens');
@@ -7081,7 +7495,8 @@ function renderSolidsScreen() {
   if(label) label.textContent = day + ' of 100 days';
 
   if(todayCard) {
-    todayCard.innerHTML = `<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;">${plan.meal}</div>` +
+    todayCard.innerHTML = `<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">${plan.meal}</div>` +
+      (plan.how ? `<div style="font-size:13px;color:var(--text-light);line-height:1.6;margin-bottom:6px;">${plan.how}</div>` : '') +
       (plan.allergens.length ? `<div style="font-size:12px;color:#c0392b;margin-top:6px;font-weight:600;">⚠️ Allergens: ${plan.allergens.join(', ')}</div>` : '');
   }
 
@@ -7091,95 +7506,130 @@ function renderSolidsScreen() {
       : '<span style="color:var(--text-light);font-size:13px;">No new foods today — repeat and practice!</span>';
   }
 
-  const tried = data.foodsTried || ['Avocado','Yogurt (Dairy)','Broccoli','Hemp Hearts','Olive Oil'];
+  const tried = data.foodsTried || [];
   if(foodsEl) {
-    foodsEl.innerHTML = tried.map((f,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--card);color:var(--text);border-radius:20px;padding:4px 10px;font-size:13px;font-weight:600;">
+    foodsEl.innerHTML = tried.length ? tried.map((f,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--card);color:var(--text);border-radius:20px;padding:4px 10px;font-size:13px;font-weight:600;">
       ${f}<button onclick="solidRemoveFood(${i})" style="background:none;border:none;color:var(--text-light);cursor:pointer;font-size:14px;padding:0;line-height:1;">×</button>
-    </span>`).join('') || '<span style="color:var(--text-light);font-size:13px;">None yet</span>';
+    </span>`).join('') : '<span style="color:var(--text-light);font-size:13px;">None yet</span>';
   }
 
-  const allergens = data.allergens || ['Dairy'];
+  const allergens = data.allergens || [];
   if(allergensEl) {
-    allergensEl.innerHTML = allergens.map((a,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:#fde8e8;color:#c0392b;border-radius:20px;padding:4px 10px;font-size:13px;font-weight:600;">
+    allergensEl.innerHTML = allergens.length ? allergens.map((a,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:#fde8e8;color:#c0392b;border-radius:20px;padding:4px 10px;font-size:13px;font-weight:600;">
       ${a}<button onclick="solidRemoveAllergen(${i})" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;padding:0;line-height:1;">×</button>
-    </span>`).join('') || '<span style="color:var(--text-light);font-size:13px;">None yet</span>';
+    </span>`).join('') : '<span style="color:var(--text-light);font-size:13px;">None yet</span>';
   }
 
-  const notes = data.notes || [
-    { text: 'Day 1 ✅ — Broccoli Two Ways with hemp hearts + yogurt. Loved it!', date: '2026-03-10' },
-    { text: 'Pre-Day 1 ✅ — Smashed avocado + yogurt. Very into it!', date: '2026-03-09' }
-  ];
+  const notes = data.notes || [];
   if(notesEl) {
-    notesEl.innerHTML = notes.map((n,i)=>`<div class="list-item"><span class="li-text">${n.text}<br><span style="font-size:11px;color:var(--text-light);">${n.date}</span></span>
+    notesEl.innerHTML = notes.length ? notes.map((n,i)=>`<div class="list-item"><span class="li-text">
+      ${n.day ? `<span style="font-size:11px;font-weight:700;color:var(--brown);background:var(--card);border-radius:8px;padding:2px 7px;margin-right:6px;">Day ${n.day}</span>` : ''}${n.text}<br>
+      <span style="font-size:11px;color:var(--text-light);">${n.date}</span></span>
       <button onclick="solidRemoveNote(${i})" style="background:none;border:none;color:var(--text-light);cursor:pointer;font-size:18px;padding:0 4px;">×</button>
-    </div>`).join('') || '<span style="color:var(--text-light);font-size:13px;padding:8px 0;display:block;">No notes yet</span>';
+    </div>`).join('') : '<span style="color:var(--text-light);font-size:13px;padding:8px 0;display:block;">No notes yet — tap ✅ Done for Today after each session!</span>';
   }
 }
 
-function solidsDayChange(delta) {
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  const current = data.currentDay || 1;
-  const next = Math.max(1, Math.min(100, current + delta));
-  data.currentDay = next;
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+async function solidsDayChange(delta) {
+  const data = await solidsGet();
+  const next = Math.max(1, Math.min(100, (data.currentDay || 1) + delta));
+  await solidsPut({ currentDay: next });
   renderSolidsScreen();
 }
 
-function solidAddFood() {
+function solidsDoneDay() {
+  const modal = document.getElementById('solids-done-modal');
+  const inp = document.getElementById('solids-done-note-input');
+  const title = document.getElementById('solids-done-modal-title');
+  solidsGet().then(data => {
+    const day = data.currentDay || 1;
+    if(title) title.textContent = `Day ${day} done! 🎉`;
+    if(inp) inp.value = '';
+    if(modal) modal.style.display = 'flex';
+  });
+}
+
+async function solidsDoneDayConfirm() {
+  const modal = document.getElementById('solids-done-modal');
+  const inp = document.getElementById('solids-done-note-input');
+  const noteText = inp ? inp.value.trim() : '';
+  const data = await solidsGet();
+  const day = data.currentDay || 1;
+
+  // Mark this day as completed
+  const completedDays = [...(data.completedDays || [])];
+  if(!completedDays.includes(day)) completedDays.push(day);
+
+  // Add note with day tag if there's a note, or add a simple "Did it!" entry
+  const notes = [...(data.notes || [])];
+  notes.unshift({
+    day: day,
+    text: noteText || '✅ Day completed',
+    date: new Date().toLocaleDateString('en-CA')
+  });
+
+  // Advance to next day
+  const nextDay = Math.min(100, day + 1);
+
+  await solidsPut({ currentDay: nextDay, completedDays, notes });
+  if(modal) modal.style.display = 'none';
+  renderSolidsScreen();
+}
+
+async function solidAddFood() {
   const inp = document.getElementById('solids-food-input');
   if(!inp || !inp.value.trim()) return;
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  if(!data.foodsTried) data.foodsTried = ['Avocado','Yogurt (Dairy)'];
-  data.foodsTried.push(inp.value.trim());
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+  const data = await solidsGet();
+  const tried = [...(data.foodsTried || [])];
+  tried.push(inp.value.trim());
+  await solidsPut({ foodsTried: tried });
   inp.value = '';
   renderSolidsScreen();
 }
 
-function solidRemoveFood(i) {
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  if(!data.foodsTried) return;
-  data.foodsTried.splice(i, 1);
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+async function solidRemoveFood(i) {
+  const data = await solidsGet();
+  const tried = [...(data.foodsTried || [])];
+  tried.splice(i, 1);
+  await solidsPut({ foodsTried: tried });
   renderSolidsScreen();
 }
 
-function solidAddAllergen() {
+async function solidAddAllergen() {
   const inp = document.getElementById('solids-allergen-input');
   if(!inp || !inp.value.trim()) return;
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  if(!data.allergens) data.allergens = ['Dairy'];
-  data.allergens.push(inp.value.trim());
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+  const data = await solidsGet();
+  const allergens = [...(data.allergens || [])];
+  allergens.push(inp.value.trim());
+  await solidsPut({ allergens });
   inp.value = '';
   renderSolidsScreen();
 }
 
-function solidRemoveAllergen(i) {
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  if(!data.allergens) return;
-  data.allergens.splice(i, 1);
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+async function solidRemoveAllergen(i) {
+  const data = await solidsGet();
+  const allergens = [...(data.allergens || [])];
+  allergens.splice(i, 1);
+  await solidsPut({ allergens });
   renderSolidsScreen();
 }
 
-function solidAddNote() {
+async function solidAddNote() {
   const inp = document.getElementById('solids-note-input');
   if(!inp || !inp.value.trim()) return;
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  if(!data.notes) data.notes = [];
-  const now = new Date();
-  data.notes.unshift({ text: inp.value.trim(), date: now.toLocaleDateString('en-CA') });
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+  const data = await solidsGet();
+  const notes = [...(data.notes || [])];
+  notes.unshift({ text: inp.value.trim(), date: new Date().toLocaleDateString('en-CA') });
+  await solidsPut({ notes });
   inp.value = '';
   renderSolidsScreen();
 }
 
-function solidRemoveNote(i) {
-  const data = JSON.parse(localStorage.getItem('steph-hayes-solids') || '{}');
-  if(!data.notes) return;
-  data.notes.splice(i, 1);
-  localStorage.setItem('steph-hayes-solids', JSON.stringify(data));
+async function solidRemoveNote(i) {
+  const data = await solidsGet();
+  const notes = [...(data.notes || [])];
+  notes.splice(i, 1);
+  await solidsPut({ notes });
   renderSolidsScreen();
 }
 // ── END SOLID STARTS ────────────────────────────────────────────────
@@ -7351,6 +7801,1012 @@ function memConfirmEdit(kid, id) {
   renderMemories();
 }
 
+// ---- HAYES GROWTH CHART ----
+// WHO Boys percentile data (weight kg, height cm, head cm) — months 0-6
+const WHO_BOYS = {
+  weight: { // kg at months 0,1,2,3,4,5,6
+    p3:  [2.5, 3.4, 4.3, 5.0, 5.6, 6.1, 6.4],
+    p15: [2.9, 3.9, 4.9, 5.7, 6.2, 6.7, 7.1],
+    p50: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9],
+    p85: [3.9, 5.1, 6.3, 7.2, 7.8, 8.4, 8.8],
+    p97: [4.4, 5.8, 7.1, 8.0, 8.7, 9.3, 9.8],
+  },
+  height: { // cm at months 0,1,2,3,4,5,6
+    p3:  [46.3, 50.8, 54.4, 57.3, 59.7, 61.7, 63.3],
+    p15: [47.9, 52.6, 56.3, 59.3, 61.8, 63.8, 65.5],
+    p50: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6],
+    p85: [51.8, 56.8, 60.6, 63.5, 66.0, 68.0, 69.8],
+    p97: [53.4, 58.6, 62.4, 65.5, 68.0, 70.1, 71.9],
+  },
+  head: { // cm at months 0,1,2,3,4,5,6
+    p3:  [31.9, 34.9, 36.8, 38.1, 39.2, 40.1, 40.9],
+    p15: [33.1, 36.1, 38.1, 39.5, 40.6, 41.5, 42.3],
+    p50: [34.5, 37.3, 39.1, 40.5, 41.6, 42.6, 43.3],
+    p85: [35.8, 38.6, 40.4, 41.8, 42.9, 43.8, 44.6],
+    p97: [36.9, 39.6, 41.5, 42.9, 44.0, 45.0, 45.8],
+  }
+};
+
+let _growthTab = 'weight';
+
+function growthSetTab(tab) {
+  _growthTab = tab;
+  ['weight','height','head'].forEach(t => {
+    const btn = document.getElementById('growth-tab-'+t);
+    if (btn) { btn.style.background = t===tab ? 'var(--brown)' : 'var(--card)'; btn.style.color = t===tab ? 'white' : 'var(--brown)'; }
+  });
+  drawGrowthChart();
+}
+
+function drawGrowthChart() {
+  const canvas = document.getElementById('growth-chart');
+  if (!canvas) return;
+  const data = getGrowthData();
+  const tab = _growthTab;
+  const who = WHO_BOYS[tab];
+  const titles = {weight:'WHO GROWTH CHART — WEIGHT (BOYS)', height:'WHO GROWTH CHART — HEIGHT (BOYS)', head:'WHO GROWTH CHART — HEAD CIRC (BOYS)'};
+  const titleEl = document.getElementById('growth-chart-title');
+  if (titleEl) titleEl.textContent = titles[tab];
+
+  // Canvas sizing
+  canvas.width = canvas.parentElement.offsetWidth - 24;
+  const W = canvas.width, H = 260;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const PAD = {top:16, right:16, bottom:32, left:36};
+  const cw = W - PAD.left - PAD.right;
+  const ch = H - PAD.top - PAD.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f9f6f1';
+  ctx.fillRect(0, 0, W, H);
+
+  // Axis ranges
+  const maxMonth = 6;
+  let minVal, maxVal, unit, toVal;
+  if (tab === 'weight') {
+    minVal = 2; maxVal = 11; unit = 'kg';
+    toVal = lbs => lbs * 0.453592;
+  } else if (tab === 'height') {
+    minVal = 44; maxVal = 74; unit = 'cm';
+    toVal = cm => cm;
+  } else {
+    minVal = 30; maxVal = 47; unit = 'cm';
+    toVal = cm => cm;
+  }
+
+  const xScale = m => PAD.left + (m / maxMonth) * cw;
+  const yScale = v => PAD.top + ch - ((v - minVal) / (maxVal - minVal)) * ch;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(0,0,0,0.07)';
+  ctx.lineWidth = 1;
+  for (let m = 0; m <= maxMonth; m++) {
+    const x = xScale(m);
+    ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + ch); ctx.stroke();
+  }
+  const gridSteps = 5;
+  for (let i = 0; i <= gridSteps; i++) {
+    const v = minVal + (i / gridSteps) * (maxVal - minVal);
+    const y = yScale(v);
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + cw, y); ctx.stroke();
+  }
+
+  // Draw WHO bands
+  function drawBand(p_lo, p_hi, color) {
+    ctx.beginPath();
+    p_lo.forEach((v,i) => { const x=xScale(i), y=yScale(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    [...p_hi].reverse().forEach((v,i) => { const x=xScale(maxMonth-i), y=yScale(v); ctx.lineTo(x,y); });
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+  drawBand(who.p3, who.p97, 'rgba(200,230,201,0.6)');
+  drawBand(who.p15, who.p85, 'rgba(129,199,132,0.5)');
+
+  // 50th line (dashed)
+  ctx.beginPath();
+  ctx.setLineDash([4,3]);
+  ctx.strokeStyle = '#388e3c';
+  ctx.lineWidth = 1.5;
+  who.p50.forEach((v,i) => { const x=xScale(i), y=yScale(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Hayes data points
+  const birthDate = new Date('2025-09-09');
+  const points = data.filter(e => {
+    const v = tab === 'weight' ? (e.weight ? toVal(e.weight) : null) : (tab === 'height' ? e.height : e.head);
+    return v !== null && v !== undefined;
+  }).map(e => {
+    const d = new Date(e.date + 'T12:00:00');
+    const monthAge = (d - birthDate) / (1000 * 60 * 60 * 24 * 30.44);
+    const v = tab === 'weight' ? toVal(e.weight) : (tab === 'height' ? e.height : e.head);
+    return { m: monthAge, v, label: e.displayDate };
+  }).filter(p => p.m >= 0 && p.m <= maxMonth + 0.5 && p.v >= minVal && p.v <= maxVal);
+
+  // Line
+  if (points.length > 1) {
+    ctx.beginPath();
+    ctx.strokeStyle = '#e57373';
+    ctx.lineWidth = 2;
+    points.forEach((p,i) => { const x=xScale(p.m), y=yScale(p.v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+  }
+  // Dots
+  points.forEach(p => {
+    const x = xScale(p.m), y = yScale(p.v);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI*2);
+    ctx.fillStyle = '#e57373';
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // X axis labels
+  ctx.fillStyle = '#7a6a5e';
+  ctx.font = '10px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  for (let m = 0; m <= maxMonth; m++) {
+    ctx.fillText(m+'m', xScale(m), H - 8);
+  }
+  // Y axis labels
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= gridSteps; i++) {
+    const v = minVal + (i/gridSteps)*(maxVal-minVal);
+    ctx.fillText(v.toFixed(0), PAD.left - 4, yScale(v) + 3);
+  }
+}
+
+// ---- HAYES GROWTH TRACKER ----
+function getGrowthData() {
+  return JSON.parse(localStorage.getItem('steph-hayes-growth') || '[]');
+}
+function saveGrowthData(data) {
+  saveUserdata('steph-hayes-growth', data);
+}
+function addGrowthEntry() {
+  const date = document.getElementById('growth-date').value;
+  const label = document.getElementById('growth-label').value.trim();
+  const weight = parseFloat(document.getElementById('growth-weight').value) || null;
+  const height = parseFloat(document.getElementById('growth-height').value) || null;
+  const head = parseFloat(document.getElementById('growth-head').value) || null;
+  if (!date || (!weight && !height && !head)) return;
+  const data = getGrowthData();
+  const displayDate = new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  data.push({ id: Date.now(), date, displayDate, label, weight, height, head });
+  data.sort((a,b) => a.date.localeCompare(b.date));
+  saveGrowthData(data);
+  document.getElementById('growth-date').value = '';
+  document.getElementById('growth-label').value = '';
+  document.getElementById('growth-weight').value = '';
+  document.getElementById('growth-height').value = '';
+  document.getElementById('growth-head').value = '';
+  renderGrowthTracker();
+  setTimeout(drawGrowthChart, 50);
+}
+function deleteGrowthEntry(id) {
+  const data = getGrowthData().filter(e => String(e.id) !== String(id));
+  saveGrowthData(data);
+  renderGrowthTracker();
+  setTimeout(drawGrowthChart, 50);
+}
+function renderGrowthTracker() {
+  const summaryEl = document.getElementById('hayes-growth-summary');
+  const historyEl = document.getElementById('hayes-growth-history');
+  if (!summaryEl || !historyEl) return;
+  // Set today's date as default
+  const dateInput = document.getElementById('growth-date');
+  if (dateInput && !dateInput.value) dateInput.value = new Date().toLocaleDateString('en-CA');
+  const data = getGrowthData();
+  // Latest values
+  const latest = data.length ? data[data.length - 1] : null;
+  const birth = data.find(e => e.label && e.label.toLowerCase().includes('birth')) || data[0];
+  if (latest) {
+    summaryEl.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px;">
+      <div style="background:var(--brown);border-radius:14px;padding:12px;text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">WEIGHT</div>
+        <div style="font-size:20px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${latest.weight ? latest.weight+'<span style="font-size:11px;font-weight:400"> lbs</span>' : '—'}</div>
+      </div>
+      <div style="background:var(--brown);border-radius:14px;padding:12px;text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">HEIGHT</div>
+        <div style="font-size:20px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${latest.height ? latest.height+'<span style="font-size:11px;font-weight:400"> cm</span>' : '—'}</div>
+      </div>
+      <div style="background:var(--brown);border-radius:14px;padding:12px;text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">HEAD</div>
+        <div style="font-size:20px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${latest.head ? latest.head+'<span style="font-size:11px;font-weight:400"> cm</span>' : '—'}</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;text-align:center;margin-bottom:16px;">Last measured: ${latest.displayDate}${latest.label ? ' · '+latest.label : ''}</div>`;
+  } else {
+    summaryEl.innerHTML = `<div style="background:var(--card);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;"><div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">No measurements yet — add Hayes' birth stats to get started 🌿</div></div>`;
+  }
+  if (!data.length) { historyEl.innerHTML = ''; return; }
+  historyEl.innerHTML = [...data].reverse().map(e => `
+    <div style="background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${e.displayDate}</div>
+          ${e.label ? `<div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${e.label}</div>` : ''}
+        </div>
+        <button onclick="deleteGrowthEntry('${e.id}')" style="background:none;border:none;color:var(--text-light);font-size:18px;cursor:pointer;opacity:0.5;padding:0 4px;">×</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="background:var(--card2);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">⚖️ Weight</div>
+          <div style="font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;">${e.weight ? e.weight+' lbs' : '—'}</div>
+        </div>
+        <div style="background:var(--card2);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">📏 Height</div>
+          <div style="font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;">${e.height ? e.height+' cm' : '—'}</div>
+        </div>
+        <div style="background:var(--card2);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-light);font-family:-apple-system,sans-serif;">🔵 Head</div>
+          <div style="font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;">${e.head ? e.head+' cm' : '—'}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ---- PLAYING PRESCHOOL ----
+const PP_DATA = {
+  y1: [
+    { unit:1, theme:'Apples', letter:'Aa', emoji:'🍎', question:'What are the parts of an apple? How do apples grow?',
+      supplies:['12 apples (4 red, 4 green, 4 yellow + extras for taste testing)','Apple sauce','Red, green, yellow paint','Red, green, yellow construction paper','Glue stick','White construction paper or small dry erase board','Painter\'s tape or masking tape','Sticky notes','Golf tees or toothpicks','Dot stickers'],
+      books:[{t:'Hello, World! How Do Apples Grow?',a:'Jill McDonald'},{t:'An Apple\'s Life',a:'Nancy Dickmann'},{t:'Apple Picking Day!',a:'Candice Ransom'},{t:'Apples, Apples, Apples',a:'Nancy Wallace'},{t:'The Mouse\'s Apples',a:''}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Hello, World! How Do Apples Grow?',activity:'Sort apples by colour and size. Look at parts of an apple together.'},
+        {day:'Tue',focus:'Letter Aa + Numbers',book:'Reread Monday\'s book',activity:'Introduce letter Aa. Find Aa in the book. Count apple seeds.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'An Apple\'s Life',activity:'Compare apples by size — smallest to largest.'},
+        {day:'Thu',focus:'Letter Aa + Numbers',book:'Reread Wednesday\'s book',activity:'Revisit letter Aa. Apple stamping with paint.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Apple Picking Day!',activity:'Ask Rush to recall apple facts. Shape hunt — what shape is an apple?'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Apples, Apples, Apples',activity:'Sort apples by different uses. What can we make with apples?'},
+        {day:'Tue W2',focus:'Letter Aa + Numbers',book:'Reread Monday\'s book',activity:'Review Aa. Count and sort apples into groups.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'How Do Apples Grow?',activity:'Build ramps and roll apples — compare distances.'},
+        {day:'Thu W2',focus:'Letter Aa + Numbers',book:'Reread Wednesday\'s book',activity:'Aa letter review. Count apple seeds from multiple apples.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'The Mouse\'s Apples',activity:'Name recognition activity. Apple taste test — Granny Smith vs Gala vs Fuji.'},
+      ]},
+    { unit:2, theme:'Colors', letter:'Rr', emoji:'🌈', question:'What is your favourite color? What colors do you see in our world?',
+      poem:'Yellow, Yellow funny fellow / Keeps his pockets full of Jell-O. / Green, green jelly bean... / Red, red go to bed — an ice cream sundae on your HEAD!',
+      song:'Red, yellow, green and blue, green and blue / Purple, orange, brown and black (to the tune of Head, Shoulders, Knees & Toes)',
+      supplies:['White paper or dry erase board','Construction paper','Washable tempera paint + watercolour paint','Dry erase marker','Q-tips','Froot Loops (or similar coloured cereal)','Yarn or thick string','Food colouring','Ziplock bags','Marshmallows','Baking soda + vinegar','Muffin tin','Tin foil','Squirt bottle'],
+      books:[{t:'Freight Train',a:'Donald Crews'},{t:'Mouse Paint',a:'Ellen Stoll Walsh'},{t:'Green',a:'Laura Vaccaro Seeger'},{t:'The Rainbow Fish',a:'Marcus Pfister'},{t:'Harold and the Purple Crayon',a:'Crockett Johnson'},{t:'Ten Black Dots',a:'Donald Crews'},{t:'Pete the Cat: I Love My White Shoes',a:'Eric Litwin'},{t:'Brown Bear, Brown Bear, What Do You See?',a:'Bill Martin Jr'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting — RED day',book:'Freight Train',activity:'Sort toys by colour. Play "run to something red/blue/green!" around the house.'},
+        {day:'Tue',focus:'Letter Rr + Numbers — RED day',book:'Reread Freight Train',activity:'Introduce letter Rr for Rainbow. Alphabet hunt — find Rr in the book.'},
+        {day:'Wed',focus:'Predicting & Measuring — ORANGE day',book:'Mouse Paint',activity:'Color mixing in a tub or bath — mix red + yellow = orange! Talk about how colors are made.'},
+        {day:'Thu',focus:'Letter Rr + Numbers — YELLOW day',book:'Reread Mouse Paint',activity:'Revisit Rr. Walk the house collecting yellow things — sort into groups of 5.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes — GREEN day',book:'Green',activity:'Recall colors learned this week. Shape hunt with green toys — spot squares, circles, triangles.'},
+        {day:'Mon W2',focus:'Predicting & Sorting — BLUE day',book:'The Rainbow Fish',activity:'Sort blue objects by shade, size, or material. Talk about kindness + sharing (book theme).'},
+        {day:'Tue W2',focus:'Letter Rr + Numbers — PURPLE day',book:'Harold and the Purple Crayon',activity:'Review Rr. Alphabet book page for Rr. Free draw with purple crayon like Harold!'},
+        {day:'Wed W2',focus:'Predicting & Measuring — BLACK day',book:'Ten Black Dots',activity:'Cut 10 black dots and measure objects around the house with them.'},
+        {day:'Thu W2',focus:'Letter Rr + Numbers — WHITE day',book:'Pete the Cat: I Love My White Shoes',activity:'Rr review. Make a Froot Loop colour graph on paper.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes — BROWN day',book:'Brown Bear, Brown Bear',activity:'Alphabet review Aa + Rr. Science: milk + food colouring + dish soap swirl in a muffin tin!'},
+      ]},
+    { unit:3, theme:'Nursery Rhymes', letter:'Nn', emoji:'🎶', question:'What are nursery rhymes? What are rhyming words?',
+      supplies:['Pom pom balls','Cotton balls','Cardboard piece','2 empty tissue boxes','Glue stick + wet glue','White construction paper or dry erase board','Coloured construction paper','Sticky notes','Small dry noodles','Tea bags, teapot, cups + saucers','1-3 raw eggs (save shells)','Dry cereal','String/ribbon','Toy/plastic spider','White crayon','Watercolour paint'],
+      books:[{t:'The Real Mother Goose',a:'Blanche Fisher Wright'},{t:'The Neighborhood Mother Goose',a:'Nina Crews'},{t:'Mary Had a Little Lamb',a:''},{t:'Hickory Dickory Dock',a:'Keith Baker'},{t:'Jack and Jill Went Up the Hill',a:''}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'The Real Mother Goose',activity:'Introduce nursery rhymes. Read 2-3 rhymes. Sort picture cards — which things rhyme?'},
+        {day:'Tue',focus:'Letter Nn + Numbers',book:'Reread Monday\'s book',activity:'Introduce Nn for Nursery Rhymes. Find Nn in print. Practice counting 1-10.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'The Neighborhood Mother Goose',activity:'Measure with yarn — how long is a ribbon? How tall is Rush?'},
+        {day:'Thu',focus:'Letter Nn + Numbers',book:'Reread Wednesday\'s book',activity:'Revisit Nn. Alphabet book page. Rhyming word game — "cat/hat, dog/log."'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Mary Had a Little Lamb',activity:'Recite 3 nursery rhymes from memory. Shape hunt.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Hickory Dickory Dock',activity:'Sort nursery rhyme characters. What\'s the mouse doing in Hickory Dickory Dock?'},
+        {day:'Tue W2',focus:'Letter Nn + Numbers',book:'Reread Monday\'s book',activity:'Review Nn. Rhyming pairs matching game.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Jack and Jill Went Up the Hill',activity:'Build a hill with pillows — act out Jack & Jill. Measure the hill.'},
+        {day:'Thu W2',focus:'Letter Nn + Numbers',book:'Reread Wednesday\'s book',activity:'Nn review. Count syllables in nursery rhyme words by clapping.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any nursery rhyme anthology',activity:'Rush recites a favourite nursery rhyme. Alphabet review Aa, Rr, Nn.'},
+      ]},
+    { unit:4, theme:'Clothing', letter:'Cc & Jj', emoji:'👕', question:'What is clothing? Why do we wear it?',
+      supplies:['Assorted buttons','Jewels/gems/beads','Articles of clothing including lots of hats, socks, shoes','Rice for sensory bin','Playing cards','Celery','Washable paint','Painter\'s tape or masking tape','Sticky notes','Clothes pins','Wet glue','Roll of white butcher paper','Twine or yarn'],
+      books:[{t:'Pete the Cat and his Four Groovy Buttons',a:'Eric Litwin'},{t:'Caps for Sale',a:'Esphyr Slobodkina'},{t:'Animals Should Definitely Not Wear Clothing',a:'Judi Barrett'},{t:'Red Shoes',a:'Karen English'},{t:'Fancy Nancy',a:'Jane O\'Connor'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting — Cc week',book:'Pete the Cat and his Four Groovy Buttons',activity:'Sort clothing items by type (tops, bottoms, shoes, hats). Count Pete\'s buttons.'},
+        {day:'Tue',focus:'Letter Cc + Numbers',book:'Reread Monday\'s book',activity:'Introduce Cc for Clothing. Find Cc in the book. Button sorting by size/colour.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Caps for Sale',activity:'How many caps tall is Rush? Measure with hats stacked up.'},
+        {day:'Thu',focus:'Letter Cc + Numbers',book:'Reread Wednesday\'s book',activity:'Cc review. Celery printing with paint — what shape does it make?'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Animals Should Definitely Not Wear Clothing',activity:'Why do we wear clothes? What happens if animals wear them? Shape hunt with clothing items.'},
+        {day:'Mon W2',focus:'Predicting & Sorting — Jj week',book:'Red Shoes',activity:'Introduce Jj for Jacket. Sort clothes by weather — what do you wear when it\'s cold/hot?'},
+        {day:'Tue W2',focus:'Letter Jj + Numbers',book:'Reread Monday\'s book',activity:'Jj introduction. Counting 1-10 with buttons.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Fancy Nancy',activity:'Measure clothing items with yarn. Which sock is longer?'},
+        {day:'Thu W2',focus:'Letter Jj + Numbers',book:'Reread Wednesday\'s book',activity:'Jj review. Make a paper doll and dress it.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any clothing book',activity:'Dressing activity — can Rush dress himself timed? Alphabet review Cc, Jj.'},
+      ]},
+    { unit:5, theme:'Food', letter:'Mm', emoji:'🍎', question:'What types of food do we eat? Where does our food come from?',
+      supplies:['Ice cube tray','Sandwich + gallon sealable bags','Vegetables for Stone Soup','Ingredients for ice cream in a bag: cream, chocolate syrup, ice, salt','Ingredients for bread in a bag: flour, water, rapid rise yeast, butter, salt, sugar','Peas + carrots, bananas, carrot, celery, potato, bread, marshmallow','Assorted fruits and vegetables for graphing','Cheese cubes','Washable tempera paint','Sticky notes','White butcher paper'],
+      books:[{t:'Hot Pot Night!',a:'Linda Sue Park'},{t:'Right This Very Minute: A Table-to-Farm Book',a:'Lisl H. Detlefsen'},{t:'Stone Soup',a:''},{t:'Growing Vegetable Soup',a:'Lois Ehlert'},{t:'The Very Hungry Caterpillar',a:'Eric Carle'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Hot Pot Night!',activity:'Sort foods by category: fruits, vegetables, grains, proteins. Talk about where food comes from.'},
+        {day:'Tue',focus:'Letter Mm + Numbers',book:'Reread Monday\'s book',activity:'Introduce Mm. Find Mm in print. Count food items.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Stone Soup',activity:'Make Stone Soup together — Rush helps add vegetables! Measure ingredients.'},
+        {day:'Thu',focus:'Letter Mm + Numbers',book:'Reread Wednesday\'s book',activity:'Mm review. Fruit and veggie graphing on paper.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Growing Vegetable Soup',activity:'What foods did we learn about? What shapes are vegetables? Carrot = triangle, pea = circle.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Right This Very Minute',activity:'Sort foods by farm vs store. Where does bread come from?'},
+        {day:'Tue W2',focus:'Letter Mm + Numbers',book:'Reread Monday\'s book',activity:'Mm review. Make ice cream in a bag — shake it!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'The Very Hungry Caterpillar',activity:'Make bread in a bag. Measure flour and water together.'},
+        {day:'Thu W2',focus:'Letter Mm + Numbers',book:'Reread Wednesday\'s book',activity:'Mm alphabet page. Count the foods the caterpillar ate.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any food book',activity:'Rush names his favourite foods. Alphabet review Mm. Tasting activity — sweet, sour, salty, bitter.'},
+      ]},
+    { unit:6, theme:'Five Senses', letter:'Ss', emoji:'👃', question:'What are our five senses? How do we use them?',
+      supplies:['Muffin tin','Lemon','Construction paper','Washable paint or finger paint','Playing cards','Dot stickers','Pom pom balls','Painter\'s tape','Sticky notes','Glue','Sandpaper','2 tin cans + string','White butcher paper','Empty tissue box or wipes container','Baking soda + vinegar'],
+      books:[{t:'My 5 Senses',a:'Aliki'},{t:'Look, Listen, Taste, Touch and Smell',a:'Pamela Hill Nettleton'},{t:'Squeak, Rumble, Whomp! Whomp! Whomp!',a:'Wynton Marsalis'},{t:'The Listening Walk',a:'Paul Showers'},{t:'I Hear a Pickle',a:'Rachel Isadora'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'My 5 Senses',activity:'Name all 5 senses. Sort objects by which sense we use to explore them.'},
+        {day:'Tue',focus:'Letter Ss + Numbers',book:'Reread Monday\'s book',activity:'Introduce Ss for Senses. Find Ss in print. Count body parts (eyes, ears, hands...).'},
+        {day:'Wed',focus:'Predicting & Measuring — SIGHT',book:'Look, Listen, Taste, Touch and Smell',activity:'Sight walk — go outside and list 5 things you see. Measure with dot stickers.'},
+        {day:'Thu',focus:'Letter Ss + Numbers — SOUND',book:'Reread Wednesday\'s book',activity:'Ss review. Make a tin can telephone. Listen walk inside the house.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes — TASTE',book:'Squeak, Rumble, Whomp!',activity:'Taste test: sour (lemon), sweet (marshmallow), salty (cracker). What do we use to taste?'},
+        {day:'Mon W2',focus:'Predicting & Sorting — TOUCH',book:'The Listening Walk',activity:'Touch texture sort — rough (sandpaper), smooth (plastic), soft (cotton ball), bumpy.'},
+        {day:'Tue W2',focus:'Letter Ss + Numbers — SMELL',book:'Reread Monday\'s book',activity:'Ss review. Smell jars — can Rush guess the smell? (lemon, cinnamon, vanilla)'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'I Hear a Pickle',activity:'Baking soda + vinegar volcano — which senses do we use? Sight, smell, touch, sound!'},
+        {day:'Thu W2',focus:'Letter Ss + Numbers',book:'Reread Wednesday\'s book',activity:'Ss alphabet page. Sensory bin exploration — what can Rush feel?'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any senses book',activity:'Rush teaches YOU about the 5 senses. Alphabet review Ss.'},
+      ]},
+    { unit:7, theme:'Teddy Bears', letter:'Bb', emoji:'🧸', question:'What is a teddy bear? How can teddy bears help us learn?',
+      supplies:['Teddy bears + stuffed animals (gather several, borrow from friends)','Construction paper','Washable paint','Flashlight','Gummy bears','Dice','Sticky notes','Playing cards','White butcher paper','Dot stickers','Basket','Blanket','Picnic supplies for bear picnic'],
+      books:[{t:'Goldilocks and the Three Bears',a:''},{t:'Where\'s My Teddy?',a:'Jez Alborough'},{t:'We\'re Going on a Bear Hunt',a:'Michael Rosen'},{t:'Corduroy',a:'Don Freeman'},{t:'Share Some Kindness, Bring Some Light',a:'Apryl Stott'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Goldilocks and the Three Bears',activity:'Sort teddy bears by size: small, medium, large. Predict what happens next in the story.'},
+        {day:'Tue',focus:'Letter Bb + Numbers',book:'Reread Monday\'s book',activity:'Introduce Bb for Bears. Bear graphing — sort by colour. Count all the bears in the house.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Where\'s My Teddy?',activity:'Measure stuffed animals with yarn. Biggest to smallest line-up.'},
+        {day:'Thu',focus:'Letter Bb + Numbers',book:'Reread Wednesday\'s book',activity:'Bb review. Bear addition — "2 bears + 3 bears = ?"'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'We\'re Going on a Bear Hunt',activity:'Act out the story! Go on a bear hunt through the house. Shape hunt with teddy bear spots.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Corduroy',activity:'Sort buttons by size/colour. Talk about what Corduroy needed vs wanted.'},
+        {day:'Tue W2',focus:'Letter Bb + Numbers',book:'Reread Monday\'s book',activity:'Bb alphabet page. Bear picnic planning — what do bears eat?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Share Some Kindness',activity:'Measure with gummy bears — how many gummy bears tall is a book?'},
+        {day:'Thu W2',focus:'Letter Bb + Numbers',book:'Reread Wednesday\'s book',activity:'Bb flashlight shadow play in a dark room. Make bear shadow puppets.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any bear book',activity:'🎉 TEDDY BEAR PICNIC — invite a friend! Bears welcome. Alphabet review Bb.'},
+      ]},
+    { unit:8, theme:'Things that Go Together', letter:'Qq & Uu', emoji:'🔗', question:'What things go together? Why do some things belong together?',
+      supplies:['Salt + pepper shakers','Fork + spoon pairs','Matching pairs of household objects','Construction paper','White board or paper','Dice','Playing cards','Sticky notes','Dot stickers','Wet glue'],
+      books:[{t:'We Belong Together',a:'Todd Parr'},{t:'We Go Together',a:'Cheryl Archer'},{t:'Friends',a:'Rob Lewis'},{t:'We are Best Friends',a:'Aliki'},{t:'When Pencil Met Eraser',a:'Karen Kilpatrick'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'We Belong Together',activity:'Match pairs of objects: sock/shoe, cup/saucer, toothbrush/toothpaste. Why do they go together?'},
+        {day:'Tue',focus:'Letter Qq + Numbers',book:'Reread Monday\'s book',activity:'Introduce Qq. Find Qq in books — it\'s rare! Count pairs: how many socks total?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'We Go Together',activity:'Opposites that go together: hot/cold, big/small. Measure pairs — which is longer?'},
+        {day:'Thu',focus:'Letter Qq + Numbers',book:'Reread Wednesday\'s book',activity:'Qq review. Introduce Uu. Make pattern pairs with dot stickers.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Friends',activity:'What goes together in nature? Sun + rain = rainbow. Shape pairs hunt.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'We are Best Friends',activity:'What do friends do together? Sort friendship activities. Rush + Hayes!'},
+        {day:'Tue W2',focus:'Letter Uu + Numbers',book:'Reread Monday\'s book',activity:'Uu review. Count to 20. Number pairs: 1+1=2, 2+2=4.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'When Pencil Met Eraser',activity:'Kitchen pair experiment — what foods go together? Peanut butter + banana, etc.'},
+        {day:'Thu W2',focus:'Letter Uu + Numbers',book:'Reread Wednesday\'s book',activity:'Qq + Uu alphabet pages. Pair matching memory game.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any book',activity:'Rush names 5 things that go together. Alphabet review Qq, Uu.'},
+      ]},
+    { unit:9, theme:'Community Helpers', letter:'Hh', emoji:'👮', question:'Who are community helpers? How do they help us?',
+      supplies:['Envelopes','Construction paper','White paper or dry erase board','Dry erase marker','4 lbs cornmeal','Washable paint','Ruler','Painter\'s tape','Spray bottle','Glue','Band-aids','Toothbrush','1 paper plate','Small animal toys','Several board books'],
+      books:[{t:'Helpers in My Community',a:'Bobbie Kalman'},{t:'National Geographic Readers: Helpers in Your Neighborhood',a:'Shira Evans'},{t:'Whose Hat is This?',a:'Sharon Katz Cooper'},{t:'Tinyville Town Gets to Work',a:'Brian Biggs'},{t:'Let\'s Meet a Firefighter',a:'Gina Bellisario'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Helpers in My Community',activity:'Name community helpers: doctor, firefighter, teacher, mail carrier. Sort by where they work.'},
+        {day:'Tue',focus:'Letter Hh + Numbers',book:'Reread Monday\'s book',activity:'Introduce Hh for Helpers. Find Hh in print. Count helpers in pictures.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Whose Hat is This?',activity:'Match hats to helpers. Measure hats — which is tallest?'},
+        {day:'Thu',focus:'Letter Hh + Numbers',book:'Reread Wednesday\'s book',activity:'Hh review. Play mail carrier — deliver envelopes around the house.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'National Geographic Helpers',activity:'Rush names 5 helpers. What do they do? Shape hunt with helper tools.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Tinyville Town Gets to Work',activity:'Sort helper tools: stethoscope, fire hose, paintbrush. Who uses each?'},
+        {day:'Tue W2',focus:'Letter Hh + Numbers',book:'Reread Monday\'s book',activity:'Hh alphabet page. Rush "becomes" a helper — dress up + role play.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Let\'s Meet a Firefighter',activity:'Cornmeal sensory bin — hide small animal toys for a "rescue" activity.'},
+        {day:'Thu W2',focus:'Letter Hh + Numbers',book:'Reread Wednesday\'s book',activity:'Hh review. Count to 20. Community helper sorting game.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any community helper book',activity:'Rush draws his favourite helper. Alphabet review Hh.'},
+      ]},
+    { unit:10, theme:'Transportation', letter:'Tt', emoji:'🚗', question:'How do people get from place to place?',
+      supplies:['Various cars and trucks','Train tracks and trains','Construction paper','Washable paint','Playing cards','Painter\'s tape','Glue','Dry erase marker','White butcher paper','1 paper plate','Paper napkins','String','Paper clips','Dot stickers','Dice','Sticky notes'],
+      books:[{t:'Truck',a:'Donald Crews'},{t:'The Little Engine that Could',a:'Watty Piper'},{t:'Boats Float!',a:'George Ella Lyon'},{t:'The Old Truck',a:'Jarrett Pumphrey'},{t:'The Airport Book',a:'Lisa Brown'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Truck',activity:'Sort vehicles: land, water, air. Play with cars on painter\'s tape "roads" on the floor.'},
+        {day:'Tue',focus:'Letter Tt + Numbers',book:'Reread Monday\'s book',activity:'Introduce Tt for Transportation. Count wheels on different vehicles.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Boats Float!',activity:'Test what floats vs sinks in the bathtub. Measure boats with dot stickers.'},
+        {day:'Thu',focus:'Letter Tt + Numbers',book:'Reread Wednesday\'s book',activity:'Tt review. Car racing — which goes farthest? Count and compare.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'The Little Engine that Could',activity:'"I think I can!" — talk about perseverance. Shape hunt with vehicle shapes.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'The Old Truck',activity:'Sort vehicles by old vs new, big vs small, fast vs slow.'},
+        {day:'Tue W2',focus:'Letter Tt + Numbers',book:'Reread Monday\'s book',activity:'Tt alphabet page. Map of the house — draw rooms, add roads.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'The Airport Book',activity:'Paper airplane making + measuring how far they fly.'},
+        {day:'Thu W2',focus:'Letter Tt + Numbers',book:'Reread Wednesday\'s book',activity:'Tt review. Build a train track as long as Rush is tall.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any transport book',activity:'Rush names all types of transport. Alphabet review Tt.'},
+      ]},
+    { unit:11, theme:'On the Farm', letter:'Ff', emoji:'🐄', question:'What lives on a farm? What do farmers do?',
+      supplies:['Plastic animal toys','Cotton balls','White construction paper or whiteboard','Dice','Washable paint','Yarn','Paper plate','Rubber glove','Magnetic alphabet letters','Popcorn kernels','Tissue box','Cheerios','½ cup heavy whipping cream + small jar (make butter!)','Milk'],
+      books:[{t:'Farming',a:'Gail Gibbons'},{t:'Big Red Barn',a:'Margaret Wise Brown'},{t:'Farm',a:'Elisha Cooper'},{t:'Farm Animals',a:'Lucy Cousins'},{t:'Mrs. Wishy Washy\'s Farm',a:'Joy Cowley'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Big Red Barn',activity:'Sort farm animals by where they live (barn, pasture, pond). What sounds do they make?'},
+        {day:'Tue',focus:'Letter Ff + Numbers',book:'Reread Monday\'s book',activity:'Introduce Ff for Farm. Find Ff in print. Count animals on a farm page.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Farming',activity:'Plant seeds in clear cups — watch them grow over the unit! Measure dirt depth.'},
+        {day:'Thu',focus:'Letter Ff + Numbers',book:'Reread Wednesday\'s book',activity:'Ff review. Make butter — put cream in a jar and shake! Rush shakes it until it turns.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Mrs. Wishy Washy\'s Farm',activity:'Act out washing the animals. What shapes are farm fields from above?'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Farm Animals',activity:'Sort farm products: milk, eggs, wool, vegetables. Where does each come from?'},
+        {day:'Tue W2',focus:'Letter Ff + Numbers',book:'Reread Monday\'s book',activity:'Ff alphabet page. Counting farm animals — how many legs total?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Farm',activity:'Check seed cups — how much have they grown? Measure with ruler.'},
+        {day:'Thu W2',focus:'Letter Ff + Numbers',book:'Reread Wednesday\'s book',activity:'Ff review. Popcorn science — watch kernels pop (supervised). Count popped vs unpopped.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any farm book',activity:'Rush tells you about farm life. Alphabet review Ff.'},
+      ]},
+    { unit:12, theme:'Weather', letter:'Ww', emoji:'⛅', question:'What is weather? How does weather affect us?',
+      supplies:['Cotton balls (lots)','Plastic cups','Shaving cream','Food colouring','Painter\'s tape','Glue','Straws','Plastic tongs','Flour','String','Plastic bag','Froot Loops','Empty plastic litre bottle','Sticky notes','Dice','Paint','Ribbon','Dot stickers'],
+      books:[{t:'All About Weather',a:'Huda Harajli'},{t:'Shapes in the Sky',a:'Josepha Sherman'},{t:'In the Rain',a:'Elly MacKay'},{t:'Hello, World! Weather',a:'Jill McDonald'},{t:'Goodbye Winter, Hello Spring',a:'Kenard Pak'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'All About Weather',activity:'Sort weather types: sunny, cloudy, rainy, snowy, windy. Look out the window — what\'s today\'s weather?'},
+        {day:'Tue',focus:'Letter Ww + Numbers',book:'Reread Monday\'s book',activity:'Introduce Ww for Weather. Find Ww in print. Start a weather chart — mark today!'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Shapes in the Sky',activity:'Cloud shapes in cotton balls. Shaving cream cloud + food colouring rain experiment.'},
+        {day:'Thu',focus:'Letter Ww + Numbers',book:'Reread Wednesday\'s book',activity:'Ww review. Make a windsock from a plastic bag + ribbon. Test it outside.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'In the Rain',activity:'Name 5 types of weather. What do we wear for each? Shape hunt with cloud shapes.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Hello, World! Weather',activity:'Sort clothes by weather: raincoat, sunhat, mittens, boots. Match to weather type.'},
+        {day:'Tue W2',focus:'Letter Ww + Numbers',book:'Reread Monday\'s book',activity:'Ww alphabet page. Count days on weather chart — how many sunny days this week?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Goodbye Winter, Hello Spring',activity:'Make a mini tornado in a bottle: fill with water, swirl, watch!'},
+        {day:'Thu W2',focus:'Letter Ww + Numbers',book:'Reread Wednesday\'s book',activity:'Ww review. Measure rainfall with a cup outside (or pretend with squirt bottle).'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any weather book',activity:'Rush does a weather report — what will tomorrow\'s weather be? Alphabet review Ww.'},
+      ]},
+    { unit:13, theme:'Eggs', letter:'Ee', emoji:'🥚', question:'What comes from eggs? What is inside an egg?',
+      supplies:['Lots of plastic eggs','Pom pom balls','Washable paint','White board or paper','Sticky notes','Food colouring','Ingredients for play dough','Glue','Dry erase marker','2-3 hardboiled eggs','Dice','Sharpie','4 lbs uncooked rice','Empty egg cartons','Cookie sheet','Baking soda + vinegar + peri bottle','Small plastic animals','Magnetic alphabet letters'],
+      books:[{t:'Chickens Aren\'t the Only Ones',a:'Ruth Heller'},{t:'Guess What is Growing Inside This Egg',a:'Mia Posada'},{t:'An Egg is Quiet',a:'Dianna Aston'},{t:'Hattie Peck',a:'Emma Levey'},{t:'The Odd Egg',a:'Emily Gravett'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Chickens Aren\'t the Only Ones',activity:'What animals come from eggs? Sort: egg layers vs not. Open plastic eggs — what\'s inside?'},
+        {day:'Tue',focus:'Letter Ee + Numbers',book:'Reread Monday\'s book',activity:'Introduce Ee. Find Ee in print. Count eggs in carton: how many groups of 2?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'An Egg is Quiet',activity:'Measure eggs — which is tallest? Heaviest? Float a raw egg in salt water vs fresh water.'},
+        {day:'Thu',focus:'Letter Ee + Numbers',book:'Reread Wednesday\'s book',activity:'Ee review. Make play dough eggs. Egg-shaped alphabet letters.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Guess What is Growing Inside This Egg',activity:'What shape is an egg? Oval = stretched circle! Oval shape hunt.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Hattie Peck',activity:'Rice sensory bin — hide plastic animals in "nests." Sort animals that hatch vs don\'t.'},
+        {day:'Tue W2',focus:'Letter Ee + Numbers',book:'Reread Monday\'s book',activity:'Ee alphabet page. Egg carton counting — fill each cup with the right number of pom poms.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'The Odd Egg',activity:'Baking soda eggs: mold baking soda into egg shapes, hide a plastic animal inside, dissolve with vinegar!'},
+        {day:'Thu W2',focus:'Letter Ee + Numbers',book:'Reread Wednesday\'s book',activity:'Ee review. Hardboiled egg rolling race down a ramp.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any egg book',activity:'Rush names animals that hatch from eggs. Alphabet review Ee.'},
+      ]},
+    { unit:14, theme:'Plants', letter:'Pp', emoji:'🌱', question:'How do plants grow? What do plants need?',
+      supplies:['Seed packets in varying sizes (keep packaging)','Grass seed','2 small clear cups for planting','1 lima bean','Pom pom balls','Flowers (discounted from grocery store)','Construction paper','2 sponges','Wet glue','Chalk','Ruler','Foam bath letters','Washable paint','Dice','Sticky notes'],
+      books:[{t:'How a Seed Grows',a:'Helene Jordan'},{t:'Lola Plants a Garden',a:'Anna McQuinn'},{t:'If You Plant a Seed',a:'Kadir Nelson'},{t:'The Tiny Seed',a:'Eric Carle'},{t:'Plants Feed Me',a:'Lizzy Rockwell'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'How a Seed Grows',activity:'Sort seeds by size — compare seed packets. What grows from each? Plant a bean in a clear cup today!'},
+        {day:'Tue',focus:'Letter Pp + Numbers',book:'Reread Monday\'s book',activity:'Introduce Pp for Plants. Find Pp in print. Count seeds in each packet.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Lola Plants a Garden',activity:'Measure the planted bean — did it sprout? Sponge garden: wet a sponge, add grass seed, watch it grow.'},
+        {day:'Thu',focus:'Letter Pp + Numbers',book:'Reread Wednesday\'s book',activity:'Pp review. Flower dissection — gently take apart a flower + name its parts.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'If You Plant a Seed',activity:'Name the parts of a plant: root, stem, leaf, flower, seed. Leaf shape hunt outside.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'The Tiny Seed',activity:'Sort plants by what they give us: food, shade, flowers, oxygen. What do plants need to grow?'},
+        {day:'Tue W2',focus:'Letter Pp + Numbers',book:'Reread Monday\'s book',activity:'Pp alphabet page. Measure plant growth with a ruler — chart it!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Plants Feed Me',activity:'Cook or prepare a plant-based food together: salad, smoothie, or veggie sticks.'},
+        {day:'Thu W2',focus:'Letter Pp + Numbers',book:'Reread Wednesday\'s book',activity:'Pp review. Chalk drawings of plants on the sidewalk or driveway.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any plant book',activity:'Rush reports on his bean plant! Did it grow? Alphabet review Pp.'},
+      ]},
+    { unit:15, theme:'Construction', letter:'Dd', emoji:'🏗️', question:'How are buildings made? What do builders do?',
+      supplies:['Assorted construction vehicles + trucks','Bag of nuts and bolts','Assorted real tools','Construction paper','4 lbs uncooked rice','Piece of styrofoam','Golf tees or toothpicks','Toy hammer','Washable paint','Painter\'s tape','Sticky notes','Empty cardboard boxes','Yarn','Dot stickers','Dice','Playing cards'],
+      books:[{t:'Builders and Breakers',a:'Steve Light'},{t:'Busy Busy Construction Site',a:'Sherri Duskey Rinker'},{t:'The Construction Alphabet Book',a:'Jerry Pallotta'},{t:'Goodnight, Goodnight, Construction Site',a:'Sherri Duskey Rinker'},{t:'Building a House',a:'Byron Barton'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Builders and Breakers',activity:'Sort construction vehicles: digger, dump truck, crane, cement mixer. What does each do?'},
+        {day:'Tue',focus:'Letter Dd + Numbers',book:'Reread Monday\'s book',activity:'Introduce Dd for Demolition/Digger. Find Dd in print. Count vehicles on each page.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Busy Busy Construction Site',activity:'Build the tallest tower with cardboard boxes. Measure it with a ruler or yarn.'},
+        {day:'Thu',focus:'Letter Dd + Numbers',book:'Reread Wednesday\'s book',activity:'Dd review. Golf tee hammering into styrofoam with toy hammer — great fine motor!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'The Construction Alphabet Book',activity:'Name construction tools. What shapes are used in buildings? Rectangle, square, triangle.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Goodnight, Goodnight, Construction Site',activity:'Sort nuts and bolts by size. Use real tools (supervised) to tighten a bolt.'},
+        {day:'Tue W2',focus:'Letter Dd + Numbers',book:'Reread Monday\'s book',activity:'Dd alphabet page. Count sides of construction shapes: triangle=3, square=4.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Building a House',activity:'Rice sensory bin with construction vehicles. Build roads + buildings.'},
+        {day:'Thu W2',focus:'Letter Dd + Numbers',book:'Reread Wednesday\'s book',activity:'Dd review. Design and build a house from cardboard boxes — Rush is the architect!'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any construction book',activity:'Rush presents his building. Alphabet review Dd.'},
+      ]},
+    { unit:16, theme:'Pets', letter:'Gg', emoji:'🐶', question:'What are pets? How do we care for them?',
+      supplies:['Plastic or stuffed animal pets','Construction paper','Washable paint','Flashlight','Playing cards','Sticky notes','Dot stickers','Small boxes (pet "cages/homes")','Pipe cleaners','Pom pom balls'],
+      books:[{t:'My Pet Wants a Pet',a:'Elise Broach'},{t:'Not Norman',a:'Kelly Bennett'},{t:'Strictly No Elephants!',a:'Lisa Mantchev'},{t:'Some Pets',a:'Angela DiTerlizzi'},{t:'How Do Dinosaurs Love Their Dogs?',a:'Jane Yolen'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'My Pet Wants a Pet',activity:'Sort pets by type: dog, cat, bird, fish, reptile. What do pets need to survive?'},
+        {day:'Tue',focus:'Letter Gg + Numbers',book:'Reread Monday\'s book',activity:'Introduce Gg. Find Gg in print. Count pets in the story.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Not Norman',activity:'Measure a pet toy with yarn. Build a pet habitat from a cardboard box.'},
+        {day:'Thu',focus:'Letter Gg + Numbers',book:'Reread Wednesday\'s book',activity:'Gg review. Create a "pet care" routine chart for Roni and Bubbles.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Strictly No Elephants!',activity:'What pets do we have? Rush tells you about Roni + Bubbles. Shape hunt.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Some Pets',activity:'Sort pet needs: food, water, shelter, love, exercise. Which pets need what?'},
+        {day:'Tue W2',focus:'Letter Gg + Numbers',book:'Reread Monday\'s book',activity:'Gg alphabet page. Count pet legs — dog=4, bird=2, fish=0.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'How Do Dinosaurs Love Their Dogs?',activity:'Pet vet role play — stuffed animal checkup. Measure, weigh with a kitchen scale.'},
+        {day:'Thu W2',focus:'Letter Gg + Numbers',book:'Reread Wednesday\'s book',activity:'Gg review. Rush "cares for" a stuffed animal pet for the day.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any pet book',activity:'Rush explains how to care for a pet. Alphabet review Gg.'},
+      ]},
+    { unit:17, theme:'Opposites', letter:'Ll', emoji:'⬆️⬇️', question:'What are opposites? What words mean the opposite?',
+      supplies:['Storage container','Empty toilet paper tube','Flashlight','White paper or whiteboard','Loose change/coins','Sandpaper','Pieces of wood','10 containers with lids','Dry erase marker','Large magnet','Black + white paint','Construction paper','Crackers','Pom pom balls'],
+      books:[{t:'The Opposite Zoo',a:'Il Sung Na'},{t:'A World of Opposites',a:'Gray Malin'},{t:'Big Bear, Small Mouse',a:'Karma Wilson'},{t:'You and Me: We\'re Opposite',a:'Harriet Ziefert'},{t:'Olivia\'s Opposites',a:'Ian Falconer'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'The Opposite Zoo',activity:'Name opposite pairs: big/small, hot/cold, fast/slow. Sort toys by opposites.'},
+        {day:'Tue',focus:'Letter Ll + Numbers',book:'Reread Monday\'s book',activity:'Introduce Ll. Find Ll in print. Count big objects vs small objects in the room.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Big Bear, Small Mouse',activity:'Measure big vs small — compare two objects. Which is heavier using a simple balance?'},
+        {day:'Thu',focus:'Letter Ll + Numbers',book:'Reread Wednesday\'s book',activity:'Ll review. Flashlight play — light vs dark. What\'s loud vs quiet?'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'A World of Opposites',activity:'Rush names 5 opposite pairs. Shape opposites: tall/short, wide/narrow.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'You and Me: We\'re Opposite',activity:'Opposites in nature: day/night, wet/dry, hot/cold. Sort pictures.'},
+        {day:'Tue W2',focus:'Letter Ll + Numbers',book:'Reread Monday\'s book',activity:'Ll alphabet page. Up/down counting — count up to 20, count back from 10.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Olivia\'s Opposites',activity:'Full/empty experiment: fill containers with water then empty them. Which is heavier?'},
+        {day:'Thu W2',focus:'Letter Ll + Numbers',book:'Reread Wednesday\'s book',activity:'Ll review. Opposites freeze dance — when music stops, do the opposite of what you were doing!'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any opposites book',activity:'Rush teaches opposites to Hayes 🥰. Alphabet review Ll.'},
+      ]},
+    { unit:18, theme:'Fairy Tales & Folk Tales', letter:'Vv', emoji:'📖', question:'What are fairy tales? What lessons do they teach?',
+      supplies:['Plastic building bricks','Cooked spaghetti','Construction paper','White paper or whiteboard','Dry erase marker','Basket','Craft sticks','Miscellaneous buttons','Gingerbread play dough ingredients','Gingerbread Man cookie cutter','Washable paint','Wooden spoon','Playing cards'],
+      books:[{t:'The Three Little Pigs',a:''},{t:'Three Billy Goats Gruff',a:''},{t:'Little Red Riding Hood',a:''},{t:'The Gingerbread Man',a:''},{t:'Goldy Luck and the Three Pandas',a:'Natasha Yim'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'The Three Little Pigs',activity:'Sort building materials: straw, sticks, bricks. Which is strongest? Test with building blocks.'},
+        {day:'Tue',focus:'Letter Vv + Numbers',book:'Reread Monday\'s book',activity:'Introduce Vv. Find Vv in print — it\'s tricky! Count to 3 (3 pigs, 3 houses).'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Three Billy Goats Gruff',activity:'Build a bridge from craft sticks. Will it hold a toy? Measure its length.'},
+        {day:'Thu',focus:'Letter Vv + Numbers',book:'Reread Wednesday\'s book',activity:'Vv review. Act out Three Billy Goats Gruff — Rush gets to be the troll!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Little Red Riding Hood',activity:'Retell the story in order. What lesson does it teach? Path shape through the house.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'The Gingerbread Man',activity:'Make gingerbread play dough together. Who chased the gingerbread man? Sort characters.'},
+        {day:'Tue W2',focus:'Letter Vv + Numbers',book:'Reread Monday\'s book',activity:'Vv alphabet page. Sequence story events: first, then, next, last.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Goldy Luck and the Three Pandas',activity:'Compare Goldilocks (original) vs Goldy Luck. What\'s the same? Different?'},
+        {day:'Thu W2',focus:'Letter Vv + Numbers',book:'Reread Wednesday\'s book',activity:'Vv review. Rush makes up his own fairy tale — you write it down!'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any fairy tale',activity:'Favourite fairy tale vote. Alphabet review Vv.'},
+      ]},
+    { unit:19, theme:'Water', letter:'Ii', emoji:'💧', question:'What is water? Where do we find water?',
+      supplies:['6 clear plastic cups','Hard candy, salt, paper, beans, block, cracker (dissolve experiment)','Washable paint','White board or paper','Turkey baster or medicine dropper','Ice cube tray','Lots of ice cubes','Food colouring','Chalk','Construction paper','Dice','Small hammer or meat mallet','Storage container','Spray/squirt bottle','Peri bottle or pipette','4-6 sponges','Kraft paper or shower curtain liner'],
+      books:[{t:'I Get Wet',a:'Vicki Cobb'},{t:'Water is Water',a:'Miranda Paul'},{t:'Hey, Water!',a:'Antoinette Portis'},{t:'Wet',a:'Des Cowley'},{t:'Water Can Be...',a:'Laura Purdie Salas'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Water is Water',activity:'Where do we find water? Rain, rivers, oceans, ice. Sort pictures of water in different forms.'},
+        {day:'Tue',focus:'Letter Ii + Numbers',book:'Reread Monday\'s book',activity:'Introduce Ii. Find Ii in print. Count cups of water — fill the ice cube tray!'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Hey, Water!',activity:'Dissolving experiment: which items dissolve in water? (candy=yes, block=no). Measure water with cups.'},
+        {day:'Thu',focus:'Letter Ii + Numbers',book:'Reread Wednesday\'s book',activity:'Ii review. Ice play — bring out the ice cubes. What happens when ice melts? Time it!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'I Get Wet',activity:'Name 3 forms of water: liquid, ice (solid), steam (gas). Water shape? It takes the shape of its container!'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Wet',activity:'Sort activities by whether they use water: swimming, baking bread, flying kite. Why do we need water?'},
+        {day:'Tue W2',focus:'Letter Ii + Numbers',book:'Reread Monday\'s book',activity:'Ii alphabet page. Water volume: which cup holds more? Count "fills" to compare.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Water Can Be...',activity:'Coloured ice painting — freeze coloured water, use ice like crayons on paper!'},
+        {day:'Thu W2',focus:'Letter Ii + Numbers',book:'Reread Wednesday\'s book',activity:'Ii review. Sponge squeezing + water transfer relay. How many squeezes to fill a cup?'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any water book',activity:'🎉 YEAR 1 COMPLETE! Rush has finished Playing Preschool Year 1! Celebrate with a water play party 💦'},
+      ]},
+  ],
+  y2: [
+    { unit:1, theme:'All About Me', letter:'Aa', emoji:'🙋', question:'What makes me unique? What do I like?',
+      supplies:['Mirror','White butcher paper (trace Rush\'s body outline)','Construction paper','Washable paint (hand/footprints)','Magazines for collage','Glue','Sticky notes','Dice','Playing cards','Dot stickers'],
+      books:[{t:'I Like Myself!',a:'Karen Beaumont'},{t:'Chrysanthemum',a:'Kevin Henkes'},{t:'I\'m Like You, You\'re Like Me',a:'Cindy Gainer'},{t:'Big Feelings',a:'Alexandra Penfold'},{t:'I am Human',a:'Susan Verde'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'I Like Myself!',activity:'What makes Rush unique? Make a list. Sort things Rush likes vs doesn\'t like.'},
+        {day:'Tue',focus:'Letter Aa + Numbers',book:'Reread Monday\'s book',activity:'Review Aa from Year 1. Find Aa in print. Count letters in Rush\'s full name.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Chrysanthemum',activity:'Trace Rush\'s body on butcher paper — measure how tall he is!'},
+        {day:'Thu',focus:'Letter Aa + Numbers',book:'Reread Wednesday\'s book',activity:'Aa review. Hand + footprint art. Compare hand sizes — Rush vs Steph vs Joel.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'I\'m Like You, You\'re Like Me',activity:'How is Rush like Hayes? How is he different? Make a simple Venn diagram.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Big Feelings',activity:'Name feelings: happy, sad, angry, scared, surprised. Sort situations into feelings.'},
+        {day:'Tue W2',focus:'Letter Aa + Numbers',book:'Reread Monday\'s book',activity:'Aa review. Count the letters in Rush\'s name + family members\' names.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'I am Human',activity:'All About Me book — Rush draws: favourite food, colour, animal, what he wants to be.'},
+        {day:'Thu W2',focus:'Letter Aa + Numbers',book:'Reread Wednesday\'s book',activity:'Aa alphabet page Y2. Magazine collage of "things I love."'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any book about feelings/identity',activity:'Rush presents his All About Me book. Celebrate! 🎉'},
+      ]},
+    { unit:2, theme:'Animals', letter:'Hh', emoji:'🦁', question:'What types of animals are there? Where do animals live?',
+      supplies:['Plastic animal toys','Construction paper','Washable paint','Animal habitat pictures (print or draw)','Dice','Sticky notes','Playing cards','Yarn','Nature magazines','Glue'],
+      books:[{t:'Little Kids First Big Book of Animals',a:'Catherine Hughes'},{t:'Daytime Nighttime, All Through the Year',a:'Brian Lies'},{t:'Birds',a:'Kevin Henkes'},{t:'The Umbrella',a:'Jan Brett'},{t:'Over in the Ocean: In a Coral Reef',a:'Marianne Berkes'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Little Kids First Big Book of Animals',activity:'Sort animals by habitat: jungle, ocean, farm, arctic, desert. Match animal to home.'},
+        {day:'Tue',focus:'Letter Hh + Numbers',book:'Reread Monday\'s book',activity:'Review Hh from Year 1. Count legs: insects=6, spiders=8, mammals=4. Sort by leg count.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Daytime Nighttime',activity:'Sort animals by nocturnal vs daytime. Measure animal toys — biggest to smallest.'},
+        {day:'Thu',focus:'Letter Hh + Numbers',book:'Reread Wednesday\'s book',activity:'Hh review. Animal sounds matching — what sound does each animal make?'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Birds',activity:'What makes a bird a bird? Feathers, wings, beak, lays eggs. Shape hunt with animal shapes.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'The Umbrella',activity:'Sort animals by what they eat: herbivore, carnivore, omnivore. What does Rush eat?'},
+        {day:'Tue W2',focus:'Letter Hh + Numbers',book:'Reread Monday\'s book',activity:'Hh alphabet page Y2. Count animals in a habitat picture — which has the most?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Over in the Ocean',activity:'Ocean animal exploration. Sing the song from the book! How deep is the ocean?'},
+        {day:'Thu W2',focus:'Letter Hh + Numbers',book:'Reread Wednesday\'s book',activity:'Hh review. Animal art — draw and name Rush\'s favourite animal.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any animal book',activity:'Rush picks his favourite animal and tells you 3 facts about it. Alphabet review Hh.'},
+      ]},
+    { unit:3, theme:'Alphabet', letter:'Ee', emoji:'🔤', question:'How do letters make words? What is the alphabet?',
+      supplies:['Magnetic alphabet letters','Alphabet stamps or foam letters','White board or paper','Sand tray or cornmeal tray for letter tracing','Construction paper','Sticky notes','Dot stickers','Dice'],
+      books:[{t:'Q is for Duck',a:'Mary Elting'},{t:'Oops Pounce Quick Run',a:'Mike Twohy'},{t:'Chicka Chicka Boom Boom',a:'Bill Martin Jr.'},{t:'Alphabet Adventure',a:'Audrey Wood'},{t:'Z is for Moose',a:'Kelly Bingham'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Chicka Chicka Boom Boom',activity:'Review the whole alphabet. Sort magnetic letters: uppercase vs lowercase.'},
+        {day:'Tue',focus:'Letter Ee + Numbers',book:'Reread Monday\'s book',activity:'Focus on Ee. Find all letters in Rush\'s name in the magnetic set. Spell R-U-S-H.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Q is for Duck',activity:'Q is for Duck game — play it together! Letters aren\'t always for what you think!'},
+        {day:'Thu',focus:'Letter Ee + Numbers',book:'Reread Wednesday\'s book',activity:'Ee review. Trace letters in a cornmeal/sand tray. Practice A-Z in order.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Oops Pounce Quick Run',activity:'OPQR: four letters in order. Letter shape hunt — find curves, straight lines, diagonals.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Alphabet Adventure',activity:'Alphabet scavenger hunt — find something for each letter in the house.'},
+        {day:'Tue W2',focus:'Letter Ee + Numbers',book:'Reread Monday\'s book',activity:'Ee alphabet page. Spell 5 simple words: CAT, DOG, SUN, HAT, BIG.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Z is for Moose',activity:'Measure words — count the letters. Which word is longest? Shortest?'},
+        {day:'Thu W2',focus:'Letter Ee + Numbers',book:'Reread Wednesday\'s book',activity:'Ee review. Sing the alphabet song backwards — challenge mode!'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any alphabet book',activity:'Rush recites the full alphabet. Alphabet review — spot check any tricky letters.'},
+      ]},
+    { unit:4, theme:'Blocks', letter:'Bb', emoji:'🟦', question:'What can we build with blocks? What makes a structure strong?',
+      supplies:['All the blocks in the house','Cardboard boxes','Empty toilet paper/paper towel rolls','Tape','Construction paper','Washable paint','Sticky notes','Measuring tape or ruler','Dice'],
+      books:[{t:'When I Build With Blocks',a:'Niki Alling'},{t:'Block City',a:'Robert Louis Stevenson'},{t:'Be a Maker',a:'Katey Howes'},{t:'Dreaming Up',a:'Christy Hale'},{t:'Rex Wrecks It',a:'Ben Clanton'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'When I Build With Blocks',activity:'Sort blocks by shape: cube, rectangle, cylinder, arch. Which shapes stack best?'},
+        {day:'Tue',focus:'Letter Bb + Numbers',book:'Reread Monday\'s book',activity:'Review Bb from Year 1. Count blocks — how many does it take to build a tower as tall as Rush?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Block City',activity:'Build a city from blocks! Measure the tallest building. Which is taller — Rush or the tower?'},
+        {day:'Thu',focus:'Letter Bb + Numbers',book:'Reread Wednesday\'s book',activity:'Bb review. Engineering challenge: build a bridge that holds a toy car.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Be a Maker',activity:'What makes a strong structure? Wide base = more stable. Test it! 3D shape hunt.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Dreaming Up',activity:'Architect challenge — Rush designs a building on paper, then builds it.'},
+        {day:'Tue W2',focus:'Letter Bb + Numbers',book:'Reread Monday\'s book',activity:'Bb alphabet page Y2. Count shapes in the block city: how many rectangles?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Rex Wrecks It',activity:'Build the biggest structure you can — then REX WRECKS IT! (Rush = Rex 😄)'},
+        {day:'Thu W2',focus:'Letter Bb + Numbers',book:'Reread Wednesday\'s book',activity:'Bb review. Cardboard box construction — tape boxes together for a mega build.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any building book',activity:'Rush explains how to build a strong tower. Alphabet review Bb.'},
+      ]},
+    { unit:5, theme:'Environment', letter:'Rr & Ll', emoji:'🌍', question:'What is our environment? How do we take care of it?',
+      supplies:['Recycling bin items (cleaned)','Construction paper','Washable paint','Glue','Nature items: leaves, sticks, rocks','Plastic bags for litter pickup','Gardening gloves','Seeds','Soil + small pots','Magnifying glass'],
+      books:[{t:'The Earth Book',a:'Todd Parr'},{t:'10 Things I Can Do to Help My World',a:'Melanie Walsh'},{t:'We Planted a Tree',a:'Diane Muldrow'},{t:'Why Should I Recycle?',a:'Jen Green'},{t:'We are Extremely Very Good Recyclers',a:'Lauren Child'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'The Earth Book',activity:'Sort items: recycle, reuse, trash. What can we recycle in our house?'},
+        {day:'Tue',focus:'Letter Rr + Numbers',book:'Reread Monday\'s book',activity:'Review Rr from Year 1. Count recycling items. Sort by material: plastic, paper, glass.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'We Planted a Tree',activity:'Plant seeds together! Measure the pot, fill with soil, plant + water.'},
+        {day:'Thu',focus:'Letter Ll + Numbers',book:'Reread Wednesday\'s book',activity:'Introduce Ll review. Nature walk + litter pickup in the yard or street.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'10 Things I Can Do to Help My World',activity:'Rush lists 5 ways to help the Earth. Make a pledge poster.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Why Should I Recycle?',activity:'Sort nature items: leaf, rock, stick, pinecone. Living vs non-living.'},
+        {day:'Tue W2',focus:'Letter Rr & Ll + Numbers',book:'Reread Monday\'s book',activity:'Rr + Ll review. Make art from recycled materials — cardboard tubes, newspaper, etc.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'We are Extremely Very Good Recyclers',activity:'Measure plant growth. Make a nature journal — draw what we see outside.'},
+        {day:'Thu W2',focus:'Letter Rr & Ll + Numbers',book:'Reread Wednesday\'s book',activity:'Rr + Ll alphabet pages. Compost experiment — what breaks down?'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any environment book',activity:'Rush is an Earth Hero! Present the pledge poster. Alphabet review Rr, Ll.'},
+      ]},
+    { unit:6, theme:'Numbers', letter:'Nn', emoji:'🔢', question:'What are numbers? What can we count?',
+      supplies:['Counting manipulatives (blocks, pom poms, coins, beans)','Number cards 1-20','Dice (regular + 10-sided if available)','Construction paper','Dry erase board + marker','Muffin tin','Egg carton','Playing cards','Sticky notes'],
+      books:[{t:'I Know Numbers!',a:'Taro Gomi'},{t:'The Deep Deep Puddle',a:'Jessica Somers'},{t:'1-2-3 Peas',a:'Keith Baker'},{t:'Anno\'s Counting Book',a:'Mitsumasa Anno'},{t:'Quack and Count',a:'Keith Baker'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Anno\'s Counting Book',activity:'Count objects in pictures. Sort manipulatives into groups by number.'},
+        {day:'Tue',focus:'Letter Nn + Numbers',book:'Reread Monday\'s book',activity:'Review Nn from Year 1. Count to 20. Write numbers 1-10 on sticky notes + match to groups.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'I Know Numbers!',activity:'Number hunt around the house — find numbers on packages, clocks, doors.'},
+        {day:'Thu',focus:'Letter Nn + Numbers',book:'Reread Wednesday\'s book',activity:'Nn review. Muffin tin numbers — fill each cup with the right number of pom poms.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'1-2-3 Peas',activity:'Count peas (or beans)! Group into 5s. Introduction to "five frames."'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'The Deep Deep Puddle',activity:'Measure depth with counting cubes. Sort by "more than 5" vs "less than 5."'},
+        {day:'Tue W2',focus:'Letter Nn + Numbers',book:'Reread Monday\'s book',activity:'Nn alphabet page. Number line on the floor with tape — hop to each number.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Quack and Count',activity:'7 ducks sorting game — how many ways can you split 7? (5+2, 4+3, 6+1)'},
+        {day:'Thu W2',focus:'Letter Nn + Numbers',book:'Reread Wednesday\'s book',activity:'Nn review. Card game: flip two cards, which is bigger?'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any counting book',activity:'Rush counts to 20 confidently. Number shapes — what does the number 8 look like?'},
+      ]},
+    { unit:7, theme:'Systems', letter:'Oo & Ff', emoji:'⚙️', question:'What is a system? How do simple machines help us?',
+      supplies:['Wooden ramps or cardboard ramps','Toy cars','Pulleys (or improvised with string + bucket)','Lever materials: ruler + eraser as fulcrum','Wheel + axle examples (toy car, rolling pin)','Construction paper','Sticky notes','Dice','Playing cards'],
+      books:[{t:'Simple Machines',a:'Allan Fowler'},{t:'Stick and Stone',a:'Beth Ferry'},{t:'How Do You Lift a Lion?',a:'Robert Wells'},{t:'Move It!',a:'Adrienne Mason'},{t:'Machines at Work',a:'Byron Barton'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'How Do You Lift a Lion?',activity:'Introduce simple machines: ramp, lever, wheel, pulley. Sort toy machines by type.'},
+        {day:'Tue',focus:'Letter Oo + Numbers',book:'Reread Monday\'s book',activity:'Introduce Oo. Ramp experiment — does steeper = faster? Test with toy cars.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Simple Machines',activity:'Lever activity: use a ruler + eraser to lift objects. What happens when you move the fulcrum?'},
+        {day:'Thu',focus:'Letter Ff + Numbers',book:'Reread Wednesday\'s book',activity:'Introduce Ff review. Wheel + axle: roll a cylinder vs slide a block. Which is easier?'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Stick and Stone',activity:'Name 3 simple machines Rush learned. Where do we see them in real life? Ramp = slide, wheel = car.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Machines at Work',activity:'Sort construction machines by which simple machine they use.'},
+        {day:'Tue W2',focus:'Letter Oo & Ff + Numbers',book:'Reread Monday\'s book',activity:'Oo + Ff review. Pulley system: string over a chair arm + bucket — lift things!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Move It!',activity:'Engineer challenge: move a heavy book from one side of the room using ONLY simple machines.'},
+        {day:'Thu W2',focus:'Letter Oo & Ff + Numbers',book:'Reread Wednesday\'s book',activity:'Oo + Ff alphabet pages. Measure ramp distances — longer ramp = farther roll?'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any machines book',activity:'Rush explains a simple machine to you. Alphabet review Oo, Ff.'},
+      ]},
+    { unit:8, theme:'Shapes', letter:'Gg', emoji:'🔷', question:'What shapes do we see in our world? What makes a shape?',
+      supplies:['Shape cutouts in various sizes','Ruler','Construction paper','Tangrams (or make your own)','Geoboards with rubber bands (or dot paper)','Washable paint','Sticky notes','Pattern blocks'],
+      books:[{t:'The Shape of Things',a:'Dayle Ann Dodds'},{t:'Mouse Shapes',a:'Ellen Stoll Walsh'},{t:'Shapes, Shapes, Shapes',a:'Tana Hoban'},{t:'Round is a Mooncake',a:'Roseanne Thong'},{t:'When a Line Bends a Shape Begins',a:'Rhonda Gowler Greene'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'The Shape of Things',activity:'Name 2D shapes: circle, square, triangle, rectangle, oval, diamond. Sort pattern blocks.'},
+        {day:'Tue',focus:'Letter Gg + Numbers',book:'Reread Monday\'s book',activity:'Review Gg from Year 1. Count sides + corners of each shape. Which has the most?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Shapes, Shapes, Shapes',activity:'Shape hunt photograph walk — what shapes can Rush spot outside?'},
+        {day:'Thu',focus:'Letter Gg + Numbers',book:'Reread Wednesday\'s book',activity:'Gg review. 3D shapes introduction: sphere, cube, cylinder, cone. Find in the kitchen!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Round is a Mooncake',activity:'Cultural shapes exploration. Make a shape collage from coloured paper.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Mouse Shapes',activity:'Make pictures using only shapes! A house = square + triangle. Creative play.'},
+        {day:'Tue W2',focus:'Letter Gg + Numbers',book:'Reread Monday\'s book',activity:'Gg alphabet page. Count total sides in a group of shapes: 3 triangles = 9 sides.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'When a Line Bends',activity:'Measure shape perimeters with string. Which shape uses the most string?'},
+        {day:'Thu W2',focus:'Letter Gg + Numbers',book:'Reread Wednesday\'s book',activity:'Gg review. Tangram challenge — make a shape using all 7 tangram pieces.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any shapes book',activity:'Rush draws and names 6 shapes from memory. Alphabet review Gg.'},
+      ]},
+    { unit:9, theme:'Solids and Liquids', letter:'Dd', emoji:'💧🧊', question:'What is a solid? What is a liquid? How are they different?',
+      supplies:['Ice cubes','Various liquids: water, juice, honey, oil','Various solids: block, rock, cracker, sponge','Clear cups or containers','Measuring cups','Food colouring','Cornstarch + water (oobleck!)','Ziplock bags','Construction paper'],
+      books:[{t:'What is the World Made of?',a:'Kathleen Weidner Zoehfeld'},{t:'Solid, Liquid, or Gas?',a:'Sally Hewitt'},{t:'Ice is Nice!',a:'Bonnie Worth'},{t:'Matter: See It, Touch It, Taste It, Smell It',a:'Darlene Stille'},{t:'Change It! Solids, Liquids, Gases and You',a:'Adrienne Mason'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'What is the World Made of?',activity:'Sort: solid vs liquid. Can you hold it? Does it flow? Ice = solid, water = liquid.'},
+        {day:'Tue',focus:'Letter Dd + Numbers',book:'Reread Monday\'s book',activity:'Review Dd from Year 1. Measure liquids — 1 cup, 2 cups. Does shape change when you pour?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Solid, Liquid, or Gas?',activity:'Ice melting experiment — how long does it take? Does salt make it melt faster?'},
+        {day:'Thu',focus:'Letter Dd + Numbers',book:'Reread Wednesday\'s book',activity:'Dd review. Make oobleck (cornstarch + water) — is it solid OR liquid? Both!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Ice is Nice!',activity:'Name 3 solids and 3 liquids in the house. What shape does a liquid take?'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Change It!',activity:'What makes things change? Heat melts ice. Cold freezes water. Freeze juice into popsicles!'},
+        {day:'Tue W2',focus:'Letter Dd + Numbers',book:'Reread Monday\'s book',activity:'Dd alphabet page. Liquid density tower: layer honey, water, and oil in a cup. Do they mix?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Matter',activity:'Measure oobleck — 1 cup cornstarch + 0.5 cup water. Adjust until right.'},
+        {day:'Thu W2',focus:'Letter Dd + Numbers',book:'Reread Wednesday\'s book',activity:'Dd review. Solid to liquid: melt chocolate chips (with help). Liquid to solid: freeze water.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any matter book',activity:'Rush explains solid vs liquid. Enjoy the popsicles! 🍦 Alphabet review Dd.'},
+      ]},
+    { unit:10, theme:'Maps and Directions', letter:'Cc', emoji:'🗺️', question:'What is a map? How do we find our way?',
+      supplies:['Large paper or butcher paper','Markers','Ruler','Compass (optional)','Toy cars + masking tape roads','Small toys for landmarks','Sticky notes','Construction paper'],
+      books:[{t:'Me on the Map',a:'Joan Swanson'},{t:'Mapping Sam',a:'Joyce Hesselberth'},{t:'My Map Book',a:'Sara Fanelli'},{t:'Map My Room',a:'Ashley Glasser'},{t:'Mapping Penny\'s World',a:'Loreen Leedy'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Me on the Map',activity:'Concept of maps: street, city, province, country, world. Where does Rush live? Zoom out from house to Earth.'},
+        {day:'Tue',focus:'Letter Cc + Numbers',book:'Reread Monday\'s book',activity:'Review Cc from Year 1. Draw a map of Rush\'s bedroom — where is the bed, window, door?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'My Map Book',activity:'Measure the room with steps. How many steps wide? How many steps long?'},
+        {day:'Thu',focus:'Letter Cc + Numbers',book:'Reread Wednesday\'s book',activity:'Cc review. Tape road map on the floor. Rush drives toy cars and follows directions: turn left, go straight.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Mapping Sam',activity:'Directional language: up, down, left, right, near, far. Treasure map + hunt!'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Map My Room',activity:'Map of the main floor of the house — Rush draws the rooms in the right places.'},
+        {day:'Tue W2',focus:'Letter Cc + Numbers',book:'Reread Monday\'s book',activity:'Cc alphabet page. Grid map: A1, B2, C3 — find the treasure!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Mapping Penny\'s World',activity:'Backyard map — draw the yard with the house, trees, garden.'},
+        {day:'Thu W2',focus:'Letter Cc + Numbers',book:'Reread Wednesday\'s book',activity:'Cc review. Rush gives YOU directions to navigate from one room to another.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any maps book',activity:'Rush draws a map of something from memory. Alphabet review Cc.'},
+      ]},
+    { unit:11, theme:'Balls', letter:'Ss', emoji:'⚽', question:'What can balls do? How do different balls move?',
+      supplies:['Collection of balls: tennis, soccer, ping pong, stress ball, yarn ball','Ramps','Measuring tape','Buckets or targets','Painter\'s tape','Construction paper','Dice','Sticky notes'],
+      books:[{t:'The Ball Book',a:'Margaret Hillert'},{t:'Duck and Goose',a:'Tad Hills'},{t:'A Ball for Daisy',a:'Chris Raschka'},{t:'The Field',a:'Baptiste Paul'},{t:'Ball',a:'Mary Sullivan'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Duck and Goose',activity:'Sort balls by size, material, bounce (bouncy vs not). Which rolls farthest?'},
+        {day:'Tue',focus:'Letter Ss + Numbers',book:'Reread Monday\'s book',activity:'Review Ss from Year 1. Count balls. Roll a ball + measure distance with tape.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'The Ball Book',activity:'Bounce test: which ball bounces highest? Drop from same height + compare.'},
+        {day:'Thu',focus:'Letter Ss + Numbers',book:'Reread Wednesday\'s book',activity:'Ss review. Target practice — tape circles on the floor at different distances. Score!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'A Ball for Daisy',activity:'Talk about emotions (Daisy loses her ball). Circles everywhere — shape of a ball. Sphere = 3D!'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'The Field',activity:'Sports sort: which sports use balls? Which don\'t? Sort by outdoor vs indoor sport.'},
+        {day:'Tue W2',focus:'Letter Ss + Numbers',book:'Reread Monday\'s book',activity:'Ss alphabet page. How many bounces before it stops? Count and compare.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Ball',activity:'Ramp racing: roll different balls down a ramp — which goes farthest? Predict first!'},
+        {day:'Thu W2',focus:'Letter Ss + Numbers',book:'Reread Wednesday\'s book',activity:'Ss review. Make a yarn ball together — roll tightly around a pom pom.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any sports/ball book',activity:'Rush\'s favourite ball sport! Play it together outside. Alphabet review Ss.'},
+      ]},
+    { unit:12, theme:'Size', letter:'Jj & Vv', emoji:'📏', question:'How do we measure size? What words describe size?',
+      supplies:['Ruler and measuring tape','Non-standard measuring items: paperclips, blocks, cubes','Construction paper','Balance scale (or make one with a hanger)','Sticky notes','Playing cards','Dice'],
+      books:[{t:'Actual Size',a:'Steve Jenkins'},{t:'Is a Blue Whale the Biggest Thing There Is?',a:'Robert Wells'},{t:'The Best Bug Parade',a:'Stuart Murphy'},{t:'Who Sank the Boat?',a:'Pamela Allen'},{t:'Measurement',a:'Henry Pluckrose'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Actual Size',activity:'Compare actual animal sizes. Sort toys from smallest to largest. Biggest vs smallest in the room.'},
+        {day:'Tue',focus:'Letter Jj + Numbers',book:'Reread Monday\'s book',activity:'Introduce Jj. Measure Rush with non-standard units: how many blocks tall?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Is a Blue Whale the Biggest?',activity:'How long is a blue whale? (30m) — pace it out outside! Compare to Rush\'s height.'},
+        {day:'Thu',focus:'Letter Vv + Numbers',book:'Reread Wednesday\'s book',activity:'Introduce Vv. Volume: which container holds more? Fill with water to compare.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'The Best Bug Parade',activity:'Order bugs smallest to largest. Size vocabulary: tiny, small, medium, large, huge, enormous.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Who Sank the Boat?',activity:'Weight sort: heavier vs lighter. Which object sinks? Does heavier always sink?'},
+        {day:'Tue W2',focus:'Letter Jj & Vv + Numbers',book:'Reread Monday\'s book',activity:'Jj + Vv review. Standard measurement: use a ruler! Measure 5 objects. Record results.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Measurement',activity:'Area exploration: how many blocks fit on a piece of paper? How many fit on the table?'},
+        {day:'Thu W2',focus:'Letter Jj & Vv + Numbers',book:'Reread Wednesday\'s book',activity:'Jj + Vv alphabet pages. Balance scale: find things that are the same weight.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any measurement book',activity:'Rush measures 3 things and reports results. Alphabet review Jj, Vv.'},
+      ]},
+    { unit:13, theme:'Patterns', letter:'Qq & Uu', emoji:'🔁', question:'What is a pattern? Where do we see patterns?',
+      supplies:['Pattern blocks','Coloured beads for stringing','Coloured construction paper strips','Stickers in 2-3 colours/shapes','Washable paint for stamping','Fruit for pattern snack','Sticky notes','Dice'],
+      books:[{t:'A-B-A-B-A Book of Pattern Play',a:'Brian Cleary'},{t:'Pattern by Henry Pluckrose',a:'Henry Pluckrose'},{t:'Teddy Bear Patterns',a:'Barbara Barbieri McGrath'},{t:'My First Book of Patterns',a:'Bobby George'},{t:'Pitter Pattern',a:'Joyce Hesselberth'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'A-B-A-B-A Book of Pattern Play',activity:'Introduction to AB patterns: clap-stomp, clap-stomp. Make a pattern with two colours.'},
+        {day:'Tue',focus:'Letter Qq + Numbers',book:'Reread Monday\'s book',activity:'Review Qq from Year 1. Extend a pattern — what comes next? ABAB? What about AABB?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Pattern by Henry Pluckrose',activity:'Pattern hunt: stripes on clothing, tiles on floor, bricks on wall. Count the repeats.'},
+        {day:'Thu',focus:'Letter Uu + Numbers',book:'Reread Wednesday\'s book',activity:'Review Uu. Make a pattern with 3 elements: ABC, ABC, ABC (e.g. red-blue-green).'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Pitter Pattern',activity:'Create a wearable pattern bracelet with beads. ABAB or AABB — Rush chooses!'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Teddy Bear Patterns',activity:'Pattern snack: strawberry-grape-strawberry-grape. Predict what comes next!'},
+        {day:'Tue W2',focus:'Letter Qq & Uu + Numbers',book:'Reread Monday\'s book',activity:'Qq + Uu review. Growing patterns: 1, 2, 3, 1, 2, 3 → 1, 2, 3, 4, 1, 2, 3, 4.'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'My First Book of Patterns',activity:'Stamp pattern art — use objects dipped in paint to make repeating designs.'},
+        {day:'Thu W2',focus:'Letter Qq & Uu + Numbers',book:'Reread Wednesday\'s book',activity:'Qq + Uu alphabet pages. Error correction: spot the mistake in the pattern!'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any patterns book',activity:'Rush creates his most complex pattern yet and explains the rule. Alphabet review Qq, Uu.'},
+      ]},
+    { unit:14, theme:'Magnets', letter:'Mm & Yy', emoji:'🧲', question:'What do magnets do? What do magnets attract?',
+      supplies:['Several magnets of different strengths','Collection of metal + non-metal items to test','Paperclips','Iron filings (optional — can order online)','Compass','Construction paper','Sticky notes','Small containers'],
+      books:[{t:'A Look at Magnets',a:'Barbara Alpert'},{t:'Magnets: Pulling Together, Pushing Apart',a:'Natalie Rosinsky'},{t:'Magnets Push, Magnets Pull',a:'David Adler'},{t:'What Makes a Magnet?',a:'Franklyn Branley'},{t:'What Can Magnets Do?',a:'Wiley Blevins'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Magnets Push, Magnets Pull',activity:'Test: what does a magnet attract? Sort: magnetic vs not magnetic. Predict first!'},
+        {day:'Tue',focus:'Letter Mm + Numbers',book:'Reread Monday\'s book',activity:'Review Mm from Year 1. Count magnetic items in the house. Which magnet is strongest?'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'What Makes a Magnet?',activity:'Magnet strength test: how many paperclips can each magnet hold? Measure + compare.'},
+        {day:'Thu',focus:'Letter Yy + Numbers',book:'Reread Wednesday\'s book',activity:'Introduce Yy. Poles: like poles repel, opposite poles attract. Push magnets together — feel the force!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Magnets: Pulling Together',activity:'Name 3 things magnets attract. Why? (They contain iron.) Real-life magnets: fridge, compass.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'A Look at Magnets',activity:'Magnet maze: move a paperclip through a paper maze using a magnet underneath.'},
+        {day:'Tue W2',focus:'Letter Mm & Yy + Numbers',book:'Reread Monday\'s book',activity:'Mm + Yy review. Distance test: how far away can a magnet attract a paperclip?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'What Can Magnets Do?',activity:'Magnet fishing game: paperclips + magnet on a string. Count fish caught!'},
+        {day:'Thu W2',focus:'Letter Mm & Yy + Numbers',book:'Reread Wednesday\'s book',activity:'Mm + Yy alphabet pages. Magnet art: iron filings on paper, magnet underneath — patterns!'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any magnets book',activity:'Rush teaches you about magnets. Alphabet review Mm, Yy.'},
+      ]},
+    { unit:15, theme:'Texture', letter:'Ii', emoji:'🖐️', question:'What is texture? How do different things feel?',
+      supplies:['Items with various textures: sandpaper, velvet, cotton, bark, bubble wrap, satin','Blindfold','Construction paper','Glue','Nature items: leaves, pinecones, bark','Washable paint for texture prints','Sticky notes','Bags for mystery texture game'],
+      books:[{t:'Sort It by Texture',a:'Jennifer Boothroyd'},{t:'Spiky, Slimy, Smooth',a:'Jane Brocket'},{t:'I Feel a Foot!',a:'Maranke Rinck'},{t:'Textures',a:'Patricia Whitehouse'},{t:'See, Touch, Feel: A First Sensory Book',a:'Roger Priddy'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Sort It by Texture',activity:'Sort items by texture: rough, smooth, soft, hard, bumpy, slimy. Feel without looking!'},
+        {day:'Tue',focus:'Letter Ii + Numbers',book:'Reread Monday\'s book',activity:'Review Ii from Year 1. Texture walk: find 5 textures in the house. Count and describe.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Spiky, Slimy, Smooth',activity:'Mystery bag: feel without looking — can Rush guess what\'s inside? 5 objects.'},
+        {day:'Thu',focus:'Letter Ii + Numbers',book:'Reread Wednesday\'s book',activity:'Ii review. Texture rubbings: place paper over textured surface, rub with crayon.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'See, Touch, Feel',activity:'Texture art collage: glue different textured materials onto paper.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'I Feel a Foot!',activity:'Foot texture walk: different surfaces (carpet, tile, grass, wood). How do they feel?'},
+        {day:'Tue W2',focus:'Letter Ii + Numbers',book:'Reread Monday\'s book',activity:'Ii alphabet page. Count textures: how many smooth things in the kitchen?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Textures',activity:'Texture in food: crunchy vs smooth. Make a snack mixing textures: apple + peanut butter.'},
+        {day:'Thu W2',focus:'Letter Ii + Numbers',book:'Reread Wednesday\'s book',activity:'Ii review. Nature texture sort: bark, leaf, rock, pinecone, feather.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any texture/senses book',activity:'Rush names 6 texture words. Texture poetry — "the grass feels ___, the blanket feels ___." Alphabet review Ii.'},
+      ]},
+    { unit:16, theme:'Science Experiments', letter:'Xx & Zz', emoji:'🔬', question:'What is science? How do scientists think?',
+      supplies:['Baking soda + vinegar','Food colouring','Dish soap','Cornstarch','Balloons','Bottles','Magnifying glass','Sticky notes + pencil (for recording)','Construction paper','Various household experiment supplies'],
+      books:[{t:'What Is Science?',a:'Rebecca Kai Dotlich'},{t:'What Is a Scientist?',a:'Barbara Lehn'},{t:'I Use Science Tools',a:'Natalie Rosinsky'},{t:'What Sinks? What Floats?',a:'Leslie Garrett'},{t:'Scientist, Scientist, Who Do You See?',a:'Jan Magnuson'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'What Is Science?',activity:'Scientist habits: observe, predict, test, record. Do a simple experiment: does a raisin sink or float?'},
+        {day:'Tue',focus:'Letter Xx + Numbers',book:'Reread Monday\'s book',activity:'Introduce Xx. Baking soda + vinegar volcano — observe, predict, test, record!'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'What Is a Scientist?',activity:'Sink or float lab: test 10 items. Record results on paper. Any surprises?'},
+        {day:'Thu',focus:'Letter Zz + Numbers',book:'Reread Wednesday\'s book',activity:'Introduce Zz. Balloon experiment: blow up with baking soda + vinegar in a bottle!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'I Use Science Tools',activity:'Name science tools: magnifying glass, ruler, scale, thermometer. Use the magnifying glass!'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'What Sinks? What Floats?',activity:'Oobleck experiment revisited — is it solid or liquid? The science of non-Newtonian fluids!'},
+        {day:'Tue W2',focus:'Letter Xx & Zz + Numbers',book:'Reread Monday\'s book',activity:'Xx + Zz review. Milk + food colouring + dish soap explosion experiment — wow!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Scientist, Scientist',activity:'Design your own experiment: Rush picks something to test. You help him set it up.'},
+        {day:'Thu W2',focus:'Letter Xx & Zz + Numbers',book:'Reread Wednesday\'s book',activity:'Xx + Zz alphabet pages. Magnifying glass exploration: look at a leaf, fabric, sugar up close.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any science book',activity:'Rush presents his experiment findings! Scientist of the Year 🏆 Alphabet review Xx, Zz.'},
+      ]},
+    { unit:17, theme:'Health', letter:'Kk & Pp', emoji:'🏥', question:'How do we stay healthy? What does our body need?',
+      supplies:['Bandaids','Toy doctor kit (if available)','Toothbrush + timer','Construction paper','Washable paint (body outline)','Food pictures for sorting','Exercise cards or videos','Sticky notes'],
+      books:[{t:'Me and My Amazing Body',a:'Joan Swanson'},{t:'Why I Sneeze, Shiver, Hiccup, Yawn',a:'Melvin Berger'},{t:'X-Ray Me!: Look Inside Your Body',a:'Felicitas Horstschäfer'},{t:'Germs Are Not For Sharing',a:'Elizabeth Verdick'},{t:'The Busy Body Book',a:'Lizzy Rockwell'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Me and My Amazing Body',activity:'What does our body need? Sort: healthy food, exercise, sleep, water, hygiene.'},
+        {day:'Tue',focus:'Letter Kk + Numbers',book:'Reread Monday\'s book',activity:'Introduce Kk. Count body parts: fingers, toes, teeth. Brush teeth for 2 minutes — time it!'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Why I Sneeze, Shiver, Hiccup, Yawn',activity:'Measure your heart rate: count heartbeats for 30 sec. Jump 20 times — check again!'},
+        {day:'Thu',focus:'Letter Pp + Numbers',book:'Reread Wednesday\'s book',activity:'Review Pp from Year 1. Germs: sneeze into elbow, wash hands 20 sec. Time it!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Germs Are Not For Sharing',activity:'Healthy vs unhealthy sort: food, habits, activities. What shapes are healthy foods?'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'X-Ray Me!',activity:'Look at bones + organs. What\'s inside our body? Trace Rush on butcher paper + draw the skeleton.'},
+        {day:'Tue W2',focus:'Letter Kk & Pp + Numbers',book:'Reread Monday\'s book',activity:'Kk + Pp review. Exercise routine: 10 jumping jacks, 5 push-ups, 10 hops. Count!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'The Busy Body Book',activity:'Sleep is healthy! How many hours does Rush sleep? Count on a clock.'},
+        {day:'Thu W2',focus:'Letter Kk & Pp + Numbers',book:'Reread Wednesday\'s book',activity:'Kk + Pp alphabet pages. Create a "Health Pledge" poster: I will eat veggies, sleep 10 hrs, wash hands.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any health book',activity:'Rush teaches you how to stay healthy. Alphabet review Kk, Pp.'},
+      ]},
+    { unit:18, theme:'Rhyming Words', letter:'Tt', emoji:'🎵', question:'What are rhyming words? How do we hear rhymes?',
+      supplies:['Rhyming cards or pictures','Construction paper','Sticky notes','Whiteboard + marker','Rhyming game (can make with index cards)','Pencil for writing words'],
+      books:[{t:'A Frog in the Bog',a:'Karma Wilson'},{t:'Rhyming Dust Bunnies',a:'Jan Thomas'},{t:'The Gruffalo',a:'Julia Donaldson'},{t:'Sheep in a Jeep',a:'Nancy Shaw'},{t:'Dog on a Frog?',a:'Kes Gray'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'The Gruffalo',activity:'Listen for rhymes! What words rhyme? Sort picture cards into rhyming pairs.'},
+        {day:'Tue',focus:'Letter Tt + Numbers',book:'Reread Monday\'s book',activity:'Review Tt from Year 1. Find rhyming words in the book. Count syllables by clapping.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'Rhyming Dust Bunnies',activity:'Rhyme or Not? Rush holds thumbs up for rhyme, down for not: cat/hat ✅ cat/dog ❌'},
+        {day:'Thu',focus:'Letter Tt + Numbers',book:'Reread Wednesday\'s book',activity:'Tt review. Make your own rhyming word family: -at words: cat, bat, hat, mat, sat.'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'Sheep in a Jeep',activity:'Finish the rhyme: "Sheep in a ___." Rush makes up silly rhymes for objects in the room.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'A Frog in the Bog',activity:'Rhyming stories — what words rhyme in the story? Make a list.'},
+        {day:'Tue W2',focus:'Letter Tt + Numbers',book:'Reread Monday\'s book',activity:'Tt alphabet page. -ig word family: big, dig, fig, jig, pig, wig. Rush reads each one!'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Dog on a Frog?',activity:'Silly rhyme poetry: Rush writes (dictates) a 4-line rhyming poem about anything.'},
+        {day:'Thu W2',focus:'Letter Tt + Numbers',book:'Reread Wednesday\'s book',activity:'Tt review. Rhyming memory match card game.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any rhyming book',activity:'Rush recites his poem + shares his favourite rhyming word family. Alphabet review Tt.'},
+      ]},
+    { unit:19, theme:'Rocks', letter:'Ww', emoji:'🪨', question:'What are rocks? How are rocks different?',
+      supplies:['Collection of rocks (go outside and gather!)','Magnifying glass','Scale or balance','Water (rocks look different wet)','Sandpaper','Construction paper','Glue','Paint','Sticky notes'],
+      books:[{t:'Rocks: Hard, Soft, Smooth, Rough',a:'Natalie Rosinsky'},{t:'If You Find a Rock',a:'Peggy Christian'},{t:'Scribble Stones',a:'Diane Alber'},{t:'A Rock Can Be',a:'Laura Purdie Salas'},{t:'Let\'s Go Rock Collecting',a:'Roma Gans'}],
+      days:[
+        {day:'Mon',focus:'Predicting & Sorting',book:'Rocks: Hard, Soft, Smooth, Rough',activity:'Collect 10+ rocks outside. Sort by size, colour, texture, shape. Look with magnifying glass!'},
+        {day:'Tue',focus:'Letter Ww + Numbers',book:'Reread Monday\'s book',activity:'Review Ww from Year 1. Count rocks. Which is heaviest? Lightest? Use a balance scale.'},
+        {day:'Wed',focus:'Predicting & Measuring',book:'If You Find a Rock',activity:'Measure rocks: length, width. Look at rocks wet vs dry — does colour change?'},
+        {day:'Thu',focus:'Letter Ww + Numbers',book:'Reread Wednesday\'s book',activity:'Ww review. Rock art: paint rocks into animals, characters, or give as gifts!'},
+        {day:'Fri',focus:'Recall & Retell + Shapes',book:'A Rock Can Be',activity:'What are rocks used for? Buildings, roads, jewellery. Find 3 rock shapes in the collection.'},
+        {day:'Mon W2',focus:'Predicting & Sorting',book:'Scribble Stones',activity:'Scribble stone art — draw animals/people on rocks to give to a neighbour or friend.'},
+        {day:'Tue W2',focus:'Letter Ww + Numbers',book:'Reread Monday\'s book',activity:'Ww alphabet page. How many rocks can balance against Rush\'s favourite book?'},
+        {day:'Wed W2',focus:'Predicting & Measuring',book:'Let\'s Go Rock Collecting',activity:'Rock types: igneous, sedimentary, metamorphic (simplified: volcanic, layered, changed by heat/pressure).'},
+        {day:'Thu W2',focus:'Letter Ww + Numbers',book:'Reread Wednesday\'s book',activity:'Ww review. Rock museum: Rush labels and displays his collection.'},
+        {day:'Fri W2',focus:'Recall & Retell + Shapes',book:'Any rocks book',activity:'🎉 YEAR 2 COMPLETE! Rush has finished Playing Preschool Year 2! Rock party! 🪨🎊 Alphabet review: FULL A-Z!'},
+      ]},
+  ]
+};
+
+let _ppYear = 1;
+let _ppUnitIdx = null;
+
+function ppGetProgress() {
+  return JSON.parse(localStorage.getItem('steph-pp-progress') || '{}');
+}
+function ppSaveProgress(p) {
+  saveUserdata('steph-pp-progress', p);
+}
+function ppSetYear(y) {
+  _ppYear = y;
+  document.getElementById('pp-tab-y1').style.background = y===1 ? 'var(--brown)' : 'var(--card)';
+  document.getElementById('pp-tab-y1').style.color = y===1 ? 'white' : 'var(--brown)';
+  document.getElementById('pp-tab-y2').style.background = y===2 ? 'var(--brown)' : 'var(--card)';
+  document.getElementById('pp-tab-y2').style.color = y===2 ? 'white' : 'var(--brown)';
+  renderPPUnitList();
+}
+function renderPPUnitList() {
+  const list = document.getElementById('pp-unit-list');
+  if (!list) return;
+  const units = _ppYear === 1 ? PP_DATA.y1 : PP_DATA.y2;
+  const prog = ppGetProgress();
+  list.innerHTML = units.map((u, i) => {
+    const key = `y${_ppYear}_u${u.unit}`;
+    const done = !!prog[key];
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;" onclick="ppOpenUnit(${_ppYear},${i})">
+      <span style="font-size:22px;">${u.emoji}</span>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:${done?'var(--text-light)':'var(--text)'};font-family:-apple-system,sans-serif;${done?'text-decoration:line-through;':''}">${u.unit}. ${u.theme}</div>
+        <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">Letter ${u.letter} · 2 weeks</div>
+      </div>
+      <button onclick="event.stopPropagation();ppToggleDone(${_ppYear},${u.unit})" style="background:${done?'var(--green)':'var(--card2)'};border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;flex-shrink:0;">${done?'✅':'○'}</button>
+    </div>`;
+  }).join('');
+}
+function ppToggleDone(year, unitNum) {
+  const prog = ppGetProgress();
+  const key = `y${year}_u${unitNum}`;
+  if (prog[key]) delete prog[key]; else prog[key] = true;
+  ppSaveProgress(prog);
+  renderPPUnitList();
+  renderPPCurrentUnit();
+}
+function renderPPCurrentUnit() {
+  const el = document.getElementById('pp-current-unit');
+  if (!el) return;
+  const prog = ppGetProgress();
+  // Find first incomplete unit across Y1 then Y2
+  let found = null, foundYear = 1;
+  for (const u of PP_DATA.y1) {
+    if (!prog[`y1_u${u.unit}`]) { found = u; foundYear = 1; break; }
+  }
+  if (!found) {
+    for (const u of PP_DATA.y2) {
+      if (!prog[`y2_u${u.unit}`]) { found = u; foundYear = 2; break; }
+    }
+  }
+  if (!found) {
+    el.innerHTML = `<div style="background:var(--green);border-radius:18px;padding:16px 20px;text-align:center;"><div style="font-size:28px;">🎉</div><div style="font-size:16px;font-weight:700;color:white;font-family:-apple-system,sans-serif;margin-top:6px;">Both years complete!</div><div style="font-size:13px;color:rgba(255,255,255,0.85);font-family:-apple-system,sans-serif;margin-top:4px;">Rush is a Playing Preschool graduate! 🎓</div></div>`;
+    return;
+  }
+  const done = Object.keys(prog).filter(k=>k.startsWith('y1')).length + Object.keys(prog).filter(k=>k.startsWith('y2')).length;
+  const total = PP_DATA.y1.length + PP_DATA.y2.length;
+  const pct = Math.round((done/total)*100);
+  el.innerHTML = `<div style="background:var(--brown);border-radius:18px;padding:16px 20px;cursor:pointer;" onclick="ppOpenUnit(${foundYear},${found.unit-1})">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.5px;font-family:-apple-system,sans-serif;">▶ CURRENT UNIT · YEAR ${foundYear}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">${done}/${total} done</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:28px;">${found.emoji}</span>
+      <div>
+        <div style="font-size:17px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">Unit ${found.unit}: ${found.theme}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;">Letter ${found.letter} · Tap to open →</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.2);border-radius:6px;height:6px;overflow:hidden;">
+      <div style="height:100%;background:white;width:${pct}%;border-radius:6px;"></div>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;margin-top:4px;">${pct}% complete overall</div>
+  </div>`;
+}
+function ppOpenUnit(year, idx) {
+  const units = year === 1 ? PP_DATA.y1 : PP_DATA.y2;
+  const u = units[idx];
+  _ppUnitIdx = idx;
+  _ppYear = year;
+  document.getElementById('pp-unit-title').textContent = `${u.emoji} Unit ${u.unit}: ${u.theme}`;
+  const prog = ppGetProgress();
+  const done = !!prog[`y${year}_u${u.unit}`];
+  const amzBase = 'https://www.amazon.ca/s?k=';
+  const bookHtml = u.books.map(b=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
+    <div style="flex:1;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;">${b.t}</div>
+      ${b.a?`<div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">${b.a}</div>`:''}
+    </div>
+    <a href="${amzBase}${encodeURIComponent(b.t+' '+b.a)}" onclick="event.preventDefault();window.open('${amzBase}${encodeURIComponent(b.t+' '+b.a)}')" style="font-size:11px;color:var(--brown);font-family:-apple-system,sans-serif;text-decoration:none;padding:4px 8px;background:var(--card);border-radius:8px;flex-shrink:0;margin-left:8px;">Amazon →</a>
+  </div>`).join('');
+
+  const daysHtml = u.days.map((d,di)=>`<div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;">
+    <div style="font-size:12px;font-weight:700;color:var(--brown);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:4px;">${d.day.toUpperCase()} · ${d.focus}</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;margin-bottom:4px;">📖 ${d.book}</div>
+    <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;">🎯 ${d.activity}</div>
+  </div>`).join('');
+
+  const suppliesHtml = u.supplies.map(s=>`<div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);">• ${s}</div>`).join('');
+
+  document.getElementById('pp-unit-detail').innerHTML = `
+    <div style="background:var(--brown);border-radius:18px;padding:16px 20px;margin-bottom:16px;">
+      <div style="font-size:14px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;margin-bottom:4px;">Letter Focus: ${u.letter}</div>
+      <div style="font-size:14px;font-style:italic;color:rgba(255,255,255,0.9);font-family:-apple-system,sans-serif;">"${u.question}"</div>
+    </div>
+    <button onclick="ppToggleDone(${year},${u.unit})" style="width:100%;padding:14px;border-radius:14px;border:none;background:${done?'var(--green)':'var(--card2)'};color:${done?'white':'var(--brown)'};font-size:15px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;margin-bottom:16px;">${done?'✅ Unit Complete! Tap to undo':'○ Mark Unit Complete'}</button>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">📦 SUPPLIES NEEDED</div>
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:16px;">${suppliesHtml}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">📚 BOOKS</div>
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:16px;">${bookHtml}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">📅 DAILY LESSONS</div>
+    ${daysHtml}`;
+  showScreen('kids-rush-pp-unit');
+}
+function renderPP() {
+  renderPPCurrentUnit();
+  renderPPUnitList();
+}
+
+// ---- KIDS ACTIVITIES ----
+let kidsActivitiesData = [];
+function getKidsActivities() {
+  return JSON.parse(localStorage.getItem('steph-kids-activities') || '[]');
+}
+async function renderKidsActivities() {
+  kidsActivitiesData = getKidsActivities();
+  const list = document.getElementById('kids-activities-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!kidsActivitiesData.length) {
+    list.innerHTML = `<div style="text-align:center;color:var(--text-light);font-family:-apple-system,sans-serif;font-size:14px;padding:40px 0;">No activity ideas yet 🎨</div>`;
+    return;
+  }
+  kidsActivitiesData.forEach((a, idx) => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--card);border-radius:18px;margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);';
+    card.innerHTML = `
+      <div style="padding:14px 16px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <div style="font-size:16px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${a.emoji || '🎨'} ${a.name}</div>
+          <button onclick="deleteKidsActivity(${a.id})" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-light);opacity:0.5;padding:0 2px;">×</button>
+        </div>
+        ${a.age ? `<div style="font-size:11px;color:var(--brown);font-family:-apple-system,sans-serif;font-weight:600;margin-bottom:6px;">👶 ${a.age}</div>` : ''}
+        ${a.desc ? `<div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;margin-bottom:8px;">${a.desc}</div>` : ''}
+        ${a.materials && a.materials.length ? `<div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.4px;font-family:-apple-system,sans-serif;margin-bottom:4px;">📦 MATERIALS</div><div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.7;">${a.materials.map(m=>'• '+m).join('<br>')}</div>` : ''}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+function addKidsActivity() {
+  const name = prompt('Activity name:');
+  if (!name || !name.trim()) return;
+  const desc = prompt('Description (optional):') || '';
+  const age = prompt('Age range (e.g. 2-5 years):') || '';
+  const mat = prompt('Materials (comma separated, optional):') || '';
+  const materials = mat ? mat.split(',').map(m=>m.trim()).filter(Boolean) : [];
+  const data = getKidsActivities();
+  data.push({ id: Date.now(), name: name.trim(), desc: desc.trim(), age: age.trim(), materials, emoji: '🎨' });
+  saveUserdata('steph-kids-activities', data);
+  localStorage.setItem('steph-kids-activities', JSON.stringify(data));
+  renderKidsActivities();
+}
+function deleteKidsActivity(id) {
+  if (!confirm('Remove this activity?')) return;
+  const data = getKidsActivities().filter(a => a.id !== id);
+  saveUserdata('steph-kids-activities', data);
+  localStorage.setItem('steph-kids-activities', JSON.stringify(data));
+  renderKidsActivities();
+}
+
 // ---- KIDS FOCUS ----
 function renderKidsFocus() {
   ['rush','hayes'].forEach(kid => {
@@ -7388,7 +8844,7 @@ function addKidFocus(kid) {
   const inp = document.getElementById(`${kid}-focus-input`);
   if (!inp || !inp.value.trim()) return;
   kidsFocusData[kid].push({ id: Date.now(), text: inp.value.trim() });
-  localStorage.setItem('steph-kids-focus', JSON.stringify(kidsFocusData));
+  saveUserdata('steph-kids-focus', kidsFocusData);
   inp.value = '';
   renderKidsFocus();
 }
@@ -7409,13 +8865,13 @@ function focConfirmEdit(kid, id) {
   const item = (kidsFocusData[kid] || []).find(x => x.id === id);
   if (item) {
     item.text = inp.value.trim();
-    localStorage.setItem('steph-kids-focus', JSON.stringify(kidsFocusData));
+    saveUserdata('steph-kids-focus', kidsFocusData);
   }
   renderKidsFocus();
 }
 function deleteKidFocus(kid, id) {
   kidsFocusData[kid] = kidsFocusData[kid].filter(x => x.id !== id);
-  localStorage.setItem('steph-kids-focus', JSON.stringify(kidsFocusData));
+  saveUserdata('steph-kids-focus', kidsFocusData);
   renderKidsFocus();
 }
 
@@ -7508,6 +8964,7 @@ const ALL_USERDATA_KEYS = [
   'steph-household-warranty','steph-household-maintenance','steph-waitlist',
   'steph-notes','steph-meal-templates','steph-gifts','steph-custom-recipes',
   'steph-recipe-cat-overrides','steph-meal-plan-history',
+  'steph-kids-focus','steph-weight-tracker','steph-pp-progress','steph-hayes-growth','steph-kids-activities',
 ];
 
 let _userdataCache = null;
