@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v256 2026-03-13 -->
+<!-- v257 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3909,12 +3909,12 @@ function renderTodoCatList() {
     const pinIcon = item.pinned ? '📌' : '🔘';
     div.innerHTML = `
       <span class="todo-drag-handle" title="Hold &amp; drag to reorder">⠿</span>
-      <div class="li-check" onclick="toggleTodo(${item.id})"></div>
+      <div class="li-check" onclick="event.stopPropagation();toggleTodo(${item.id})"></div>
       ${timeTag}
       <span class="li-text" contenteditable="false" onclick="enableTodoEdit(this,${item.id})" onblur="saveEdit('todo-cat-list',${item.id},this.textContent)">${item.text}</span>
-      <span class="todo-pin-btn" onclick="toggleTodoPin(${item.id})" title="${item.pinned ? 'Unpin' : 'Pin to top'}">${item.pinned ? '📌' : '📍'}</span>
-      <span onclick="moveTodoPrompt(${item.id})" title="Move to category" style="cursor:pointer;font-size:15px;padding:0 2px;color:var(--text-light);">⇄</span>
-      <span class="li-delete" onclick="deleteTodo(${item.id})">×</span>`;
+      <span class="todo-pin-btn" onclick="event.stopPropagation();toggleTodoPin(${item.id})" title="${item.pinned ? 'Unpin' : 'Pin to top'}">${item.pinned ? '📌' : '📍'}</span>
+      <span onclick="event.stopPropagation();moveTodoPrompt(${item.id})" title="Move to category" style="cursor:pointer;font-size:15px;padding:0 2px;color:var(--text-light);">⇄</span>
+      <span class="li-delete" onclick="event.stopPropagation();deleteTodo(${item.id})">×</span>`;
     // Drag events
     div.addEventListener('mousedown', e => _todoPointerDown(e, item.id, div));
     div.addEventListener('touchstart', e => _todoPointerDown(e, item.id, div), { passive: false });
