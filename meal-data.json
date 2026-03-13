@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1773362227588,
+      "date": "2026-03-12",
+      "name": "Penne with Stefano Rosée Sauce (~1.5 cups cooked)",
+      "type": "dinner",
+      "cal": 480,
+      "protein": 13,
+      "carbs": 72,
+      "fat": 16,
+      "fibre": 4,
+      "sugar": 8
+    },
+    {
       "id": 1773362227587,
       "date": "2026-03-12",
       "name": "Brussels Sprouts with Olive Oil & Spices (1 cup roasted)",
