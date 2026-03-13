@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v262 2026-03-13 -->
+<!-- v263 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3299,7 +3299,7 @@ function showScreen(name) {
   window.scrollTo(0, 0);
   if (name === 'today') renderToday();
   if (name === 'todo') renderTodo();
-  if (name === 'todo-cat') renderTodoCatList();
+  // todo-cat is always entered via openTodoCat() which calls renderTodoCatList() already — don't double-call
   if (name === 'grocery') renderGrocery();
   if (name === 'notes') renderNotes();
   if (name === 'gifts') renderGifts();
@@ -3890,6 +3890,8 @@ function _todoPointerDown(e, id, div) {
 }
 
 function renderTodoCatList() {
+  // Always re-read from localStorage so we never work from stale in-memory data
+  todoItems = JSON.parse(localStorage.getItem('steph-todo') || 'null') || JSON.parse(JSON.stringify(TODO_ITEMS));
   const container = document.getElementById('todo-cat-list');
   container.innerHTML = '';
   const items = _todoGetSortedItems();
