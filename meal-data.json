@@ -1,6 +1,18 @@
 {
   "meals": [
     {
+      "id": 1773362227586,
+      "date": "2026-03-12",
+      "name": "1 Chicken Souvlaki Skewer",
+      "type": "dinner",
+      "cal": 200,
+      "protein": 28,
+      "carbs": 3,
+      "fat": 8,
+      "fibre": 0,
+      "sugar": 1
+    },
+    {
       "id": 1773352890832,
       "date": "2026-03-12",
       "name": "Small Caesar salad with grilled chicken",
