@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v259 2026-03-13 -->
+<!-- v260 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3701,7 +3701,7 @@ function renderTodoPinnedBar() {
       <div id="pinned-bar-list" style="display:${_pinnedBarOpen ? 'block' : 'none'};padding:0 16px 14px;">
         ${pinned.map(item => `
           <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.15);" id="pinned-row-${item.id}">
-            <button onclick="togglePinnedDone(${item.id})" style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.7);background:transparent;cursor:pointer;flex-shrink:0;"></button>
+            <button onclick="event.stopPropagation();togglePinnedDone(${item.id})" style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.7);background:transparent;cursor:pointer;flex-shrink:0;"></button>
             <div style="flex:1;">
               <div style="font-size:14px;font-weight:600;color:white;font-family:-apple-system,sans-serif;">${item.text}</div>
               ${item.due ? `<div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">Due: ${item.due}</div>` : ''}
@@ -3720,9 +3720,9 @@ function togglePinnedDone(id) {
   if (!item) return;
   item.done = true;
   saveUserdata('steph-todo', todoItems);
-  renderTodoPinnedBar();
   const row = document.getElementById('pinned-row-' + id);
-  if (row) { row.style.opacity = '0.4'; row.style.textDecoration = 'line-through'; setTimeout(() => renderTodoPinnedBar(), 800); }
+  if (row) { row.style.opacity = '0.4'; row.style.textDecoration = 'line-through'; }
+  setTimeout(() => { renderTodoPinnedBar(); renderTodoCatList(); }, 600);
 }
 
 function openTodoCat(cat) {
@@ -3770,8 +3770,7 @@ function toggleTodoFromTimeView(id, timeVal) {
   const i = todoItems.find(x => x.id === id);
   if (i) i.done = !i.done;
   saveUserdata('steph-todo', todoItems);
-  openTodoTimeView(timeVal); // re-render
-  renderTodo();
+  setTimeout(() => { openTodoTimeView(timeVal); renderTodoPinnedBar(); }, 80);
 }
 
 let _todoTimeFilter = null;
@@ -4029,7 +4028,7 @@ function addTodo() {
   inp.value = '';
   if (timeEl) timeEl.value = '';
   renderTodoCatList();
-  renderTodo();
+  renderTodoPinnedBar();
 }
 
 // ---- GROCERY ----
