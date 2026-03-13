@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v263 2026-03-13 -->
+<!-- v264 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2080,9 +2080,13 @@
   </div>
   <div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:10px;">
     <input id="thrive-note-title-input" class="add-input" placeholder="Title…" style="width:100%;font-size:16px;font-weight:600;box-sizing:border-box;">
+    <!-- Image display (shown when note has an image) -->
+    <div id="thrive-note-image-wrap" style="display:none;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);">
+      <img id="thrive-note-image" src="" style="width:100%;display:block;border-radius:16px;" />
+    </div>
     <textarea id="thrive-note-body-input"
       placeholder="Write your idea, details, links…"
-      style="width:100%;min-height:360px;background:var(--card);border:none;border-radius:16px;padding:16px;font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;line-height:1.7;box-sizing:border-box;box-shadow:var(--shadow);outline:none;"></textarea>
+      style="width:100%;min-height:280px;background:var(--card);border:none;border-radius:16px;padding:16px;font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;line-height:1.7;box-sizing:border-box;box-shadow:var(--shadow);outline:none;"></textarea>
     <button onclick="thriveNoteSave()" style="background:var(--brown);color:#fff;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;width:100%;">Save Note</button>
     <button onclick="thriveNoteDelete()" style="background:none;border:1px solid #c0392b;color:#c0392b;border-radius:14px;padding:11px;font-size:14px;font-family:-apple-system,sans-serif;cursor:pointer;width:100%;">🗑️ Delete Note</button>
   </div>
@@ -6322,13 +6326,16 @@ function renderThriveNotes() {
     const d = new Date(note.updatedAt);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const dateStr = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-    return `<div onclick="thriveNoteOpen('${note.id}')" style="background:var(--card);border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;position:relative;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div style="font-size:15px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;flex:1;padding-right:8px;">${note.pinned ? '📌 ' : ''}${note.title || 'Untitled'}</div>
-        <button onclick="event.stopPropagation();thriveNoteTogglePin('${note.id}')" style="background:none;border:none;font-size:18px;cursor:pointer;padding:0;opacity:${note.pinned?'1':'0.4'};" title="${note.pinned?'Unpin':'Pin'}">📌</button>
+    return `<div onclick="thriveNoteOpen('${note.id}')" style="background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;position:relative;">
+      ${note.image ? `<img src="${note.image}" style="width:100%;height:160px;object-fit:cover;display:block;" />` : ''}
+      <div style="padding:14px 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;flex:1;padding-right:8px;">${note.pinned ? '📌 ' : ''}${note.title || 'Untitled'}</div>
+          <button onclick="event.stopPropagation();thriveNoteTogglePin('${note.id}')" style="background:none;border:none;font-size:18px;cursor:pointer;padding:0;opacity:${note.pinned?'1':'0.4'};" title="${note.pinned?'Unpin':'Pin'}">📌</button>
+        </div>
+        ${preview ? `<div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;margin-bottom:6px;">${preview}</div>` : ''}
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">${dateStr}</div>
       </div>
-      ${preview ? `<div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;margin-bottom:6px;">${preview}</div>` : ''}
-      <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">${dateStr}</div>
     </div>`;
   }).join('');
 }
@@ -6353,6 +6360,16 @@ function thriveNoteOpen(id) {
   if (titleEl) titleEl.value = note.title || '';
   if (bodyEl) bodyEl.value = note.body || '';
   document.getElementById('thrive-note-detail-title').textContent = note.title || 'Note';
+  // Show image if present
+  const imgWrap = document.getElementById('thrive-note-image-wrap');
+  const imgEl = document.getElementById('thrive-note-image');
+  if (note.image && imgWrap && imgEl) {
+    imgEl.src = note.image;
+    imgWrap.style.display = 'block';
+  } else if (imgWrap) {
+    imgWrap.style.display = 'none';
+    if (imgEl) imgEl.src = '';
+  }
   showScreen('thrive-note-detail');
 }
 
