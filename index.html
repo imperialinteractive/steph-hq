@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v257 2026-03-13 -->
+<!-- v258 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3818,7 +3818,8 @@ function toggleTodoPin(id) {
   if (!i) return;
   i.pinned = !i.pinned;
   saveUserdata('steph-todo', todoItems);
-  renderTodoCatList();
+  // Delay re-render so touch events complete before DOM shifts under finger
+  setTimeout(() => { renderTodoCatList(); renderTodoPinnedBar(); }, 80);
 }
 
 function _todoPointerDown(e, id, div) {
@@ -3989,8 +3990,7 @@ function toggleTodo(id) {
   const i = todoItems.find(x=>x.id===id);
   if(i) i.done=!i.done;
   saveUserdata('steph-todo', todoItems);
-  renderTodoCatList();
-  renderTodo();
+  setTimeout(() => { renderTodoCatList(); renderTodo(); }, 80);
 }
 function deleteTodo(id) {
   // Track deleted default IDs (id < 100000 = seeded defaults) so they never come back on version bump
@@ -4001,8 +4001,7 @@ function deleteTodo(id) {
   }
   todoItems = todoItems.filter(x=>x.id!==id);
   saveUserdata('steph-todo', todoItems);
-  renderTodoCatList();
-  renderTodo();
+  setTimeout(() => { renderTodoCatList(); renderTodo(); }, 80);
 }
 function estimateTodoTime(text) {
   const t = text.toLowerCase();
