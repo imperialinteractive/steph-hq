@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v255 2026-03-12 -->
+<!-- v256 2026-03-13 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3645,6 +3645,10 @@ function renderList(containerId, items, toggleFn, deleteFn) {
 function saveEdit(listId, id, text) {
   if (listId === 'todo-list' || listId === 'todo-cat-list') { const i = todoItems.find(x=>x.id===id); if(i) i.text=text.trim(); saveUserdata('steph-todo', todoItems); }
   if (listId === 'grocery-list') { const i = groceryItems.find(x=>x.id===id); if(i) i.text=text.trim(); saveUserdata('steph-grocery', groceryItems); }
+  // Reset contenteditable after edit so next tap toggles instead of editing
+  if (document.activeElement && document.activeElement.contentEditable === 'true') {
+    document.activeElement.contentEditable = 'false';
+  }
 }
 
 // ---- TODO ----
@@ -3907,7 +3911,7 @@ function renderTodoCatList() {
       <span class="todo-drag-handle" title="Hold &amp; drag to reorder">⠿</span>
       <div class="li-check" onclick="toggleTodo(${item.id})"></div>
       ${timeTag}
-      <span class="li-text" contenteditable="true" onblur="saveEdit('todo-cat-list',${item.id},this.textContent)">${item.text}</span>
+      <span class="li-text" contenteditable="false" onclick="enableTodoEdit(this,${item.id})" onblur="saveEdit('todo-cat-list',${item.id},this.textContent)">${item.text}</span>
       <span class="todo-pin-btn" onclick="toggleTodoPin(${item.id})" title="${item.pinned ? 'Unpin' : 'Pin to top'}">${item.pinned ? '📌' : '📍'}</span>
       <span onclick="moveTodoPrompt(${item.id})" title="Move to category" style="cursor:pointer;font-size:15px;padding:0 2px;color:var(--text-light);">⇄</span>
       <span class="li-delete" onclick="deleteTodo(${item.id})">×</span>`;
@@ -3957,6 +3961,28 @@ function moveTodo(id, newCat) {
   saveUserdata('steph-todo', todoItems);
   renderTodoCatList();
   renderTodo();
+}
+
+function enableTodoEdit(span, id) {
+  // Only enable editing on a deliberate double-tap or long press, not first tap
+  if (span._editPending) {
+    // Second tap within 400ms = enable editing
+    clearTimeout(span._editPending);
+    span._editPending = null;
+    span.contentEditable = 'true';
+    span.focus();
+    // place cursor at end
+    const range = document.createRange();
+    range.selectNodeContents(span);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else {
+    // First tap = toggle done
+    toggleTodo(id);
+    span._editPending = setTimeout(() => { span._editPending = null; }, 400);
+  }
 }
 
 function toggleTodo(id) {
